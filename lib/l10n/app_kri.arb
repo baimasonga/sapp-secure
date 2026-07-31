@@ -1,0 +1,177 @@
+{
+  "@@locale": "kri",
+  "appName": "Salone Shield",
+  "appTagline": "Chek fos bifo yu sen.",
+  "actionContinue": "Kɔntinyu",
+  "actionNext": "Nɛks",
+  "actionBack": "Go bak",
+  "actionSkip": "Pas am",
+  "actionGetStarted": "Lɛ wi stat",
+  "actionDone": "I dɔn",
+  "actionCancel": "Kansel",
+  "actionClose": "Klos",
+  "actionTryAgain": "Tray bak",
+  "actionCopy": "Kɔpi",
+  "actionCopied": "I kɔpi",
+  "languageTitle": "Pik yu langwej",
+  "languageSubtitle": "Yu go ebul chenj dis leta na Settings.",
+  "languageEnglish": "English",
+  "languageKrio": "Krio",
+  "onboardingTitle1": "No di message dem wey fishi",
+  "onboardingBody1": "Paste eni WhatsApp message en Salone Shield go sho yu di warnin sain dem wey scammer de yuz.",
+  "onboardingTitle2": "Chek fos bifo yu sen money",
+  "onboardingBody2": "Bikɔs message aks fɔ money nɔ min se na di rayt pesin sen am. Chek di pesin pan nomba wey yu trust.",
+  "onboardingTitle3": "Protect yu code en yu QR",
+  "onboardingBody3": "Nobodi nɔ nid yu six digit code ɔ yu QR. Enibodi wey aks, i want tif yu akaunt.",
+  "onboardingTitle4": "Yu message dem de tinap pan yu fon",
+  "onboardingBody4": "Di chek de apin pan yu fon. Notin nɔ de go ɔp te yu yusef disayd fɔ ripot scam.",
+  "permissionsTitle": "Wetin dis app nid",
+  "permissionsSubtitle": "Salone Shield de aks fɔ smɔl smɔl nɔmɔ, en i de tɛl yu wetin fɔ bifo i aks.",
+  "permissionInternetTitle": "Internet",
+  "permissionInternetBody": "Wi de yuz am fɔ sain in en fɔ sɛn scam ripot nɔmɔ. Di message chek de wok ivin if internet nɔ de.",
+  "permissionPhotosTitle": "Foto dem",
+  "permissionPhotosBody": "Nɔmɔ we yu pik screenshot fɔ skan. Wi de rid di foto pan yu fon, wi nɔ de sɛn am ɔp.",
+  "permissionContactsTitle": "Kɔntakt dem",
+  "permissionContactsBody": "Nɔmɔ we yu ad trusted kɔntakt. Wi nɔ de sɛn yu kɔntakt lis ɔp at ɔl.",
+  "permissionNotificationsTitle": "Notification akses",
+  "permissionNotificationsBody": "Wi nɔ de yuz am yet. We i kam, i go dɛd bay difɔlt en wi go aks yu fos.",
+  "permissionNoneRequestedNote": "Dis vashɔn nɔ de aks fɔ eni sɛnsitiv pamishɔn at ɔl.",
+  "homeTitle": "Salone Shield",
+  "homeGreeting": "Na chek de protect yu, nɔto lɔk.",
+  "homeSecurityStatusTitle": "Sekyuriti stetus",
+  "homeSecurityStatusBody": "Di chek de apin pan dis fon. Wi nɔ sɛn eni message ɔp.",
+  "homeActionAnalyse": "Luk pan di message",
+  "homeActionAnalyseSubtitle": "Paste WhatsApp message wey fishi",
+  "homeActionScreenshot": "Skan screenshot",
+  "homeActionScreenshotSubtitle": "Rid di rayt in na foto",
+  "homeActionLink": "Chek link",
+  "homeActionLinkSubtitle": "Si if di link denjarɔs",
+  "homeActionVerify": "Chek di pesin",
+  "homeActionVerifySubtitle": "Kɔnfam udat rili sɛn di message",
+  "homeActionReport": "Ripot scam",
+  "homeActionReportSubtitle": "Warn ɔda pipul dɛn",
+  "homeActionChecklist": "Sekyuriti chɛklist",
+  "homeActionChecklistSubtitle": "Lɔk yu akaunt dɛn tayt",
+  "homeRecentTitle": "Di chek dem wey yu jɔs du",
+  "homeRecentEmpty": "Yu nɔ du eni chek yet. Paste message fɔ stat.",
+  "homeRecentCleared": "Di chek dem dɔn klia.",
+  "homeClearRecent": "Klia",
+  "comingSoonTitle": "I nɔ redi yet",
+  "comingSoonBody": "Dis wan de kam na leta rilis. Wi put am ya so yu go no se wi plan am, wi nɔ ayd am.",
+  "analyseTitle": "Luk pan di message",
+  "analyseInstruction": "Paste di message jɔs lɛk aw yu bin gɛt am.",
+  "analyseHint": "Paste di WhatsApp message ya…",
+  "analysePaste": "Paste",
+  "analyseClear": "Klia",
+  "analyseRun": "Luk pan am",
+  "analysePrivacyNote": "Wi de chek dis rayt in pan yu fon. Wi nɔ de sɛn am ɔp en wi nɔ de kip am afta yu lɛf di rizɔlt.",
+  "analyseCharacterCount": "{count} pan {max} lɛta",
+  "@analyseCharacterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "analyseEmptyError": "Paste message fos, dɛn tap Luk pan am.",
+  "analyseTooLongError": "Di message tumɔs lɔng fɔ chek. Paste di impɔtant pat nɔmɔ.",
+  "analyseNothingToPaste": "Notin nɔ de na yu clipboard.",
+  "resultTitle": "Rizɔlt",
+  "resultScoreLabel": "Risk skɔ {score} pan 100",
+  "@resultScoreLabel": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "resultSignalsTitle": "Wetin wi fen",
+  "resultSignalsEmpty": "Notin na dis message nɔ match eni scam pattern wey wi no.",
+  "resultSignalCount": "{count, plural, =0{Nɔ warnin sain} =1{1 warnin sain} other{{count} warnin sain dɛn}}",
+  "@resultSignalCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "resultMatchedText": "Wi si: “{text}”",
+  "@resultMatchedText": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "resultConfidence": "Kɔnfidɛns {percent}%",
+  "@resultConfidence": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "resultNumbersTitle": "Nomba dem na dis message",
+  "resultNumbersNote": "Bikɔs nomba de ya nɔ min se na kriminal in nomba.",
+  "resultLinksTitle": "Link dem na dis message",
+  "resultLinksNote": "Wi luk di link dɛn bot wi nɔ opin dɛm.",
+  "resultActionsTitle": "Wetin fɔ du naw",
+  "resultLimitationsTitle": "Wetin wi nɔ ebul chek",
+  "resultVerifyPerson": "Chek di pesin",
+  "resultReport": "Ripot dis wan",
+  "resultMarkSafe": "A dɔn chek am — mak am safe",
+  "resultMarkedSafe": "Wi mak am safe pan dis fon.",
+  "resultCopyWarning": "Kɔpi di warnin fɔ share",
+  "resultCopiedWarning": "Di warnin kɔpi. Yu go ebul paste am fɔ warn sombodi.",
+  "resultAnalyseAnother": "Chek ɔda message",
+  "riskLevelLow": "Smɔl risk",
+  "riskLevelCaution": "Tek tem",
+  "riskLevelHigh": "Big risk",
+  "riskLevelCritical": "Sirios risk",
+  "riskLevelLowShort": "Smɔl",
+  "riskLevelCautionShort": "Tek tem",
+  "riskLevelHighShort": "Big",
+  "riskLevelCriticalShort": "Sirios",
+  "settingsTitle": "Settings en prayvasi",
+  "settingsLanguage": "Langwej",
+  "settingsTheme": "Aw i fɔ luk",
+  "settingsThemeSystem": "Fɔlo mi fon",
+  "settingsThemeLight": "Layt",
+  "settingsThemeDark": "Dak",
+  "settingsPrivacyTitle": "Prayvasi",
+  "settingsClearHistory": "Dilit di lokal ɛstri",
+  "settingsClearHistoryBody": "Dis go rimuv ɛvri chek wey de pan dis fon.",
+  "settingsClearHistoryDone": "Di lokal ɛstri dɔn dilit.",
+  "settingsAnalytics": "Share anonimɔs yuz kɔnt",
+  "settingsAnalyticsBody": "I dɛd bay difɔlt. I nɔ de kɛr eni message kɔntɛnt.",
+  "settingsAbout": "Bɔt Salone Shield",
+  "settingsPrivacyPolicy": "Prayvasi polisi",
+  "settingsVersion": "Vashɔn {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyTitle": "Prayvasi",
+  "privacyBody": "Salone Shield de chek message pan yu fon. Wi nɔ de sɛn di message rayt in ɔp, en wi nɔ de kip am afta yu lɛf di rizɔlt skrin. Na smɔl rikɔd nɔmɔ bɔt di risk lɛvɛl en di rul dem wey match, wi de kip lokal, en yu go ebul dilit am eni tem.\n\nSalone Shield nɔ go eva aks yu fɔ WhatsApp verification code, two-step PIN ɔ mobile money PIN. Nɔbɔdi wey rayt nɔ go eva aks yu.",
+  "neverAskTitle": "Salone Shield nɔ go eva aks fɔ yu code ɔ yu PIN",
+  "errorGeneric": "Sontin gɔn rɔng. Notin nɔ sev. Yu go ebul tray bak, i safe.",
+  "errorRulesFailed": "Wi nɔ ebul lod di scam rul dem, so wi nɔ ebul chek message naw. If yu restat di app, i kin fiks.",
+  "urlFindingNoHttps": "I nɔto sekyɔ (https) link",
+  "urlFindingIpAddress": "I de yuz nɔmba adres, nɔto nem",
+  "urlFindingPunycode": "I de yuz lɛta dɛn wey luk lɛk di rayt wan",
+  "urlFindingSubdomains": "Tumɔs sɔbdomein dɛn",
+  "urlFindingBrandLookalike": "I de mek lɛk se na wan big kɔmpani",
+  "urlFindingShortener": "Dɛn ayd am bihen shɔt link",
+  "urlFindingCredentials": "I gɛt yuznem ɔ paswɔd insay",
+  "urlFindingPort": "I de yuz pɔt wey nɔ kɔmɔn",
+  "urlFindingRedirect": "I de kɛr yu go pan ɔda adres",
+  "urlFindingTld": "Di domein ɛndin na wan wey scam de yuz",
+  "urlFindingExecutable": "I de dawnlod app fayl stret",
+  "urlFindingMismatch": "I de sho wan adres bot i de go pan ɔda wan"
+}

@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/storage/preferences_service.dart';
+import '../core/storage/secure_storage_service.dart';
+import '../services/risk_engine/engine_strings.dart';
+import '../services/risk_engine/risk_engine.dart';
+import '../services/risk_engine/rule_repository.dart';
+
+/// Overridden in `bootstrap.dart` once shared preferences have loaded, and in
+/// tests with an in-memory instance.
+final preferencesServiceProvider = Provider<PreferencesService>(
+  (ref) =>
+      throw UnimplementedError('preferencesServiceProvider not overridden'),
+);
+
+final secureStorageProvider = Provider<SecureStorageService>(
+  (ref) => SecureStorageService.create(),
+);
+
+final ruleRepositoryProvider = Provider<RuleRepository>(
+  (ref) => const RuleRepository(),
+);
+
+/// The engine is built once from the bundled rules and reused for every
+/// analysis. A failure here surfaces as an error state, never as a "safe"
+/// result.
+final riskEngineProvider = FutureProvider<RiskEngine>(
+  (ref) => ref.watch(ruleRepositoryProvider).loadEngine(),
+);
+
+/// The user's chosen language. Null until they pick one, which is what drives
+/// the language screen at first launch.
+class LanguageController extends StateNotifier<String?> {
+  LanguageController(this._preferences) : super(_preferences.languageCode);
+
+  final PreferencesService _preferences;
+
+  Future<void> select(String languageCode) async {
+    if (!EngineStrings.supportedLanguages.contains(languageCode)) return;
+    await _preferences.setLanguageCode(languageCode);
+    state = languageCode;
+  }
+}
+
+final languageControllerProvider =
+    StateNotifierProvider<LanguageController, String?>(
+      (ref) => LanguageController(ref.watch(preferencesServiceProvider)),
+    );
+
+/// The language the engine should explain results in — English until the user
+/// chooses otherwise.
+final engineLanguageProvider = Provider<String>(
+  (ref) =>
+      ref.watch(languageControllerProvider) ?? EngineStrings.defaultLanguage,
+);
+
+class ThemeModeController extends StateNotifier<ThemeMode> {
+  ThemeModeController(this._preferences)
+    : super(_parse(_preferences.themeMode));
+
+  final PreferencesService _preferences;
+
+  static ThemeMode _parse(String value) => switch (value) {
+    'light' => ThemeMode.light,
+    'dark' => ThemeMode.dark,
+    _ => ThemeMode.system,
+  };
+
+  Future<void> set(ThemeMode mode) async {
+    await _preferences.setThemeMode(mode.name);
+    state = mode;
+  }
+}
+
+final themeModeControllerProvider =
+    StateNotifierProvider<ThemeModeController, ThemeMode>(
+      (ref) => ThemeModeController(ref.watch(preferencesServiceProvider)),
+    );

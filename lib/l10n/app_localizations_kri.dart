@@ -1,0 +1,438 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Krio (`kri`).
+class AppLocalizationsKri extends AppLocalizations {
+  AppLocalizationsKri([String locale = 'kri']) : super(locale);
+
+  @override
+  String get appName => 'Salone Shield';
+
+  @override
+  String get appTagline => 'Chek fos bifo yu sen.';
+
+  @override
+  String get actionContinue => 'Kɔntinyu';
+
+  @override
+  String get actionNext => 'Nɛks';
+
+  @override
+  String get actionBack => 'Go bak';
+
+  @override
+  String get actionSkip => 'Pas am';
+
+  @override
+  String get actionGetStarted => 'Lɛ wi stat';
+
+  @override
+  String get actionDone => 'I dɔn';
+
+  @override
+  String get actionCancel => 'Kansel';
+
+  @override
+  String get actionClose => 'Klos';
+
+  @override
+  String get actionTryAgain => 'Tray bak';
+
+  @override
+  String get actionCopy => 'Kɔpi';
+
+  @override
+  String get actionCopied => 'I kɔpi';
+
+  @override
+  String get languageTitle => 'Pik yu langwej';
+
+  @override
+  String get languageSubtitle => 'Yu go ebul chenj dis leta na Settings.';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageKrio => 'Krio';
+
+  @override
+  String get onboardingTitle1 => 'No di message dem wey fishi';
+
+  @override
+  String get onboardingBody1 =>
+      'Paste eni WhatsApp message en Salone Shield go sho yu di warnin sain dem wey scammer de yuz.';
+
+  @override
+  String get onboardingTitle2 => 'Chek fos bifo yu sen money';
+
+  @override
+  String get onboardingBody2 =>
+      'Bikɔs message aks fɔ money nɔ min se na di rayt pesin sen am. Chek di pesin pan nomba wey yu trust.';
+
+  @override
+  String get onboardingTitle3 => 'Protect yu code en yu QR';
+
+  @override
+  String get onboardingBody3 =>
+      'Nobodi nɔ nid yu six digit code ɔ yu QR. Enibodi wey aks, i want tif yu akaunt.';
+
+  @override
+  String get onboardingTitle4 => 'Yu message dem de tinap pan yu fon';
+
+  @override
+  String get onboardingBody4 =>
+      'Di chek de apin pan yu fon. Notin nɔ de go ɔp te yu yusef disayd fɔ ripot scam.';
+
+  @override
+  String get permissionsTitle => 'Wetin dis app nid';
+
+  @override
+  String get permissionsSubtitle =>
+      'Salone Shield de aks fɔ smɔl smɔl nɔmɔ, en i de tɛl yu wetin fɔ bifo i aks.';
+
+  @override
+  String get permissionInternetTitle => 'Internet';
+
+  @override
+  String get permissionInternetBody =>
+      'Wi de yuz am fɔ sain in en fɔ sɛn scam ripot nɔmɔ. Di message chek de wok ivin if internet nɔ de.';
+
+  @override
+  String get permissionPhotosTitle => 'Foto dem';
+
+  @override
+  String get permissionPhotosBody =>
+      'Nɔmɔ we yu pik screenshot fɔ skan. Wi de rid di foto pan yu fon, wi nɔ de sɛn am ɔp.';
+
+  @override
+  String get permissionContactsTitle => 'Kɔntakt dem';
+
+  @override
+  String get permissionContactsBody =>
+      'Nɔmɔ we yu ad trusted kɔntakt. Wi nɔ de sɛn yu kɔntakt lis ɔp at ɔl.';
+
+  @override
+  String get permissionNotificationsTitle => 'Notification akses';
+
+  @override
+  String get permissionNotificationsBody =>
+      'Wi nɔ de yuz am yet. We i kam, i go dɛd bay difɔlt en wi go aks yu fos.';
+
+  @override
+  String get permissionNoneRequestedNote =>
+      'Dis vashɔn nɔ de aks fɔ eni sɛnsitiv pamishɔn at ɔl.';
+
+  @override
+  String get homeTitle => 'Salone Shield';
+
+  @override
+  String get homeGreeting => 'Na chek de protect yu, nɔto lɔk.';
+
+  @override
+  String get homeSecurityStatusTitle => 'Sekyuriti stetus';
+
+  @override
+  String get homeSecurityStatusBody =>
+      'Di chek de apin pan dis fon. Wi nɔ sɛn eni message ɔp.';
+
+  @override
+  String get homeActionAnalyse => 'Luk pan di message';
+
+  @override
+  String get homeActionAnalyseSubtitle => 'Paste WhatsApp message wey fishi';
+
+  @override
+  String get homeActionScreenshot => 'Skan screenshot';
+
+  @override
+  String get homeActionScreenshotSubtitle => 'Rid di rayt in na foto';
+
+  @override
+  String get homeActionLink => 'Chek link';
+
+  @override
+  String get homeActionLinkSubtitle => 'Si if di link denjarɔs';
+
+  @override
+  String get homeActionVerify => 'Chek di pesin';
+
+  @override
+  String get homeActionVerifySubtitle => 'Kɔnfam udat rili sɛn di message';
+
+  @override
+  String get homeActionReport => 'Ripot scam';
+
+  @override
+  String get homeActionReportSubtitle => 'Warn ɔda pipul dɛn';
+
+  @override
+  String get homeActionChecklist => 'Sekyuriti chɛklist';
+
+  @override
+  String get homeActionChecklistSubtitle => 'Lɔk yu akaunt dɛn tayt';
+
+  @override
+  String get homeRecentTitle => 'Di chek dem wey yu jɔs du';
+
+  @override
+  String get homeRecentEmpty => 'Yu nɔ du eni chek yet. Paste message fɔ stat.';
+
+  @override
+  String get homeRecentCleared => 'Di chek dem dɔn klia.';
+
+  @override
+  String get homeClearRecent => 'Klia';
+
+  @override
+  String get comingSoonTitle => 'I nɔ redi yet';
+
+  @override
+  String get comingSoonBody =>
+      'Dis wan de kam na leta rilis. Wi put am ya so yu go no se wi plan am, wi nɔ ayd am.';
+
+  @override
+  String get analyseTitle => 'Luk pan di message';
+
+  @override
+  String get analyseInstruction => 'Paste di message jɔs lɛk aw yu bin gɛt am.';
+
+  @override
+  String get analyseHint => 'Paste di WhatsApp message ya…';
+
+  @override
+  String get analysePaste => 'Paste';
+
+  @override
+  String get analyseClear => 'Klia';
+
+  @override
+  String get analyseRun => 'Luk pan am';
+
+  @override
+  String get analysePrivacyNote =>
+      'Wi de chek dis rayt in pan yu fon. Wi nɔ de sɛn am ɔp en wi nɔ de kip am afta yu lɛf di rizɔlt.';
+
+  @override
+  String analyseCharacterCount(int count, int max) {
+    return '$count pan $max lɛta';
+  }
+
+  @override
+  String get analyseEmptyError => 'Paste message fos, dɛn tap Luk pan am.';
+
+  @override
+  String get analyseTooLongError =>
+      'Di message tumɔs lɔng fɔ chek. Paste di impɔtant pat nɔmɔ.';
+
+  @override
+  String get analyseNothingToPaste => 'Notin nɔ de na yu clipboard.';
+
+  @override
+  String get resultTitle => 'Rizɔlt';
+
+  @override
+  String resultScoreLabel(int score) {
+    return 'Risk skɔ $score pan 100';
+  }
+
+  @override
+  String get resultSignalsTitle => 'Wetin wi fen';
+
+  @override
+  String get resultSignalsEmpty =>
+      'Notin na dis message nɔ match eni scam pattern wey wi no.';
+
+  @override
+  String resultSignalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count warnin sain dɛn',
+      one: '1 warnin sain',
+      zero: 'Nɔ warnin sain',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String resultMatchedText(String text) {
+    return 'Wi si: “$text”';
+  }
+
+  @override
+  String resultConfidence(int percent) {
+    return 'Kɔnfidɛns $percent%';
+  }
+
+  @override
+  String get resultNumbersTitle => 'Nomba dem na dis message';
+
+  @override
+  String get resultNumbersNote =>
+      'Bikɔs nomba de ya nɔ min se na kriminal in nomba.';
+
+  @override
+  String get resultLinksTitle => 'Link dem na dis message';
+
+  @override
+  String get resultLinksNote => 'Wi luk di link dɛn bot wi nɔ opin dɛm.';
+
+  @override
+  String get resultActionsTitle => 'Wetin fɔ du naw';
+
+  @override
+  String get resultLimitationsTitle => 'Wetin wi nɔ ebul chek';
+
+  @override
+  String get resultVerifyPerson => 'Chek di pesin';
+
+  @override
+  String get resultReport => 'Ripot dis wan';
+
+  @override
+  String get resultMarkSafe => 'A dɔn chek am — mak am safe';
+
+  @override
+  String get resultMarkedSafe => 'Wi mak am safe pan dis fon.';
+
+  @override
+  String get resultCopyWarning => 'Kɔpi di warnin fɔ share';
+
+  @override
+  String get resultCopiedWarning =>
+      'Di warnin kɔpi. Yu go ebul paste am fɔ warn sombodi.';
+
+  @override
+  String get resultAnalyseAnother => 'Chek ɔda message';
+
+  @override
+  String get riskLevelLow => 'Smɔl risk';
+
+  @override
+  String get riskLevelCaution => 'Tek tem';
+
+  @override
+  String get riskLevelHigh => 'Big risk';
+
+  @override
+  String get riskLevelCritical => 'Sirios risk';
+
+  @override
+  String get riskLevelLowShort => 'Smɔl';
+
+  @override
+  String get riskLevelCautionShort => 'Tek tem';
+
+  @override
+  String get riskLevelHighShort => 'Big';
+
+  @override
+  String get riskLevelCriticalShort => 'Sirios';
+
+  @override
+  String get settingsTitle => 'Settings en prayvasi';
+
+  @override
+  String get settingsLanguage => 'Langwej';
+
+  @override
+  String get settingsTheme => 'Aw i fɔ luk';
+
+  @override
+  String get settingsThemeSystem => 'Fɔlo mi fon';
+
+  @override
+  String get settingsThemeLight => 'Layt';
+
+  @override
+  String get settingsThemeDark => 'Dak';
+
+  @override
+  String get settingsPrivacyTitle => 'Prayvasi';
+
+  @override
+  String get settingsClearHistory => 'Dilit di lokal ɛstri';
+
+  @override
+  String get settingsClearHistoryBody =>
+      'Dis go rimuv ɛvri chek wey de pan dis fon.';
+
+  @override
+  String get settingsClearHistoryDone => 'Di lokal ɛstri dɔn dilit.';
+
+  @override
+  String get settingsAnalytics => 'Share anonimɔs yuz kɔnt';
+
+  @override
+  String get settingsAnalyticsBody =>
+      'I dɛd bay difɔlt. I nɔ de kɛr eni message kɔntɛnt.';
+
+  @override
+  String get settingsAbout => 'Bɔt Salone Shield';
+
+  @override
+  String get settingsPrivacyPolicy => 'Prayvasi polisi';
+
+  @override
+  String settingsVersion(String version) {
+    return 'Vashɔn $version';
+  }
+
+  @override
+  String get privacyTitle => 'Prayvasi';
+
+  @override
+  String get privacyBody =>
+      'Salone Shield de chek message pan yu fon. Wi nɔ de sɛn di message rayt in ɔp, en wi nɔ de kip am afta yu lɛf di rizɔlt skrin. Na smɔl rikɔd nɔmɔ bɔt di risk lɛvɛl en di rul dem wey match, wi de kip lokal, en yu go ebul dilit am eni tem.\n\nSalone Shield nɔ go eva aks yu fɔ WhatsApp verification code, two-step PIN ɔ mobile money PIN. Nɔbɔdi wey rayt nɔ go eva aks yu.';
+
+  @override
+  String get neverAskTitle => 'Salone Shield nɔ go eva aks fɔ yu code ɔ yu PIN';
+
+  @override
+  String get errorGeneric =>
+      'Sontin gɔn rɔng. Notin nɔ sev. Yu go ebul tray bak, i safe.';
+
+  @override
+  String get errorRulesFailed =>
+      'Wi nɔ ebul lod di scam rul dem, so wi nɔ ebul chek message naw. If yu restat di app, i kin fiks.';
+
+  @override
+  String get urlFindingNoHttps => 'I nɔto sekyɔ (https) link';
+
+  @override
+  String get urlFindingIpAddress => 'I de yuz nɔmba adres, nɔto nem';
+
+  @override
+  String get urlFindingPunycode => 'I de yuz lɛta dɛn wey luk lɛk di rayt wan';
+
+  @override
+  String get urlFindingSubdomains => 'Tumɔs sɔbdomein dɛn';
+
+  @override
+  String get urlFindingBrandLookalike => 'I de mek lɛk se na wan big kɔmpani';
+
+  @override
+  String get urlFindingShortener => 'Dɛn ayd am bihen shɔt link';
+
+  @override
+  String get urlFindingCredentials => 'I gɛt yuznem ɔ paswɔd insay';
+
+  @override
+  String get urlFindingPort => 'I de yuz pɔt wey nɔ kɔmɔn';
+
+  @override
+  String get urlFindingRedirect => 'I de kɛr yu go pan ɔda adres';
+
+  @override
+  String get urlFindingTld => 'Di domein ɛndin na wan wey scam de yuz';
+
+  @override
+  String get urlFindingExecutable => 'I de dawnlod app fayl stret';
+
+  @override
+  String get urlFindingMismatch => 'I de sho wan adres bot i de go pan ɔda wan';
+}

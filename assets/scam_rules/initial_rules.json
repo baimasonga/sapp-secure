@@ -1,0 +1,530 @@
+{
+  "version": 1,
+  "updated_at": "2026-07-31",
+  "notes": "Deterministic, explainable scam-detection rules for Salone Shield. Patterns are matched case-insensitively against normalised text. Krio patterns live alongside English patterns in the same rule so a mixed-language message is scored once.",
+  "rules": [
+    {
+      "id": "financial_request",
+      "category": "payment",
+      "weight": 20,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The message asks for money or a mobile-money transfer.",
+        "kri": "Di message de aks for money or mobile money transfer."
+      },
+      "advice": {
+        "en": "Do not send money until you have spoken to the person on a number you already trust.",
+        "kri": "Nor send money te yu don tok to di person pan nomba wey yu trust."
+      },
+      "patterns": [
+        "send me money",
+        "send money",
+        "send the money",
+        "send some money",
+        "send cash",
+        "financial help",
+        "financial assistance",
+        "help me with money",
+        "urgent transfer",
+        "transfer urgently",
+        "transfer the money",
+        "wire the money",
+        "pay this number",
+        "pay to this number",
+        "top up",
+        "orange money",
+        "afrimoney",
+        "africell money",
+        "qmoney",
+        "q money",
+        "mobile money",
+        "i will refund you",
+        "i will pay you back",
+        "i am stranded",
+        "i'm stranded",
+        "send money quick",
+        "send money kwik",
+        "gi mi money",
+        "gie mi money",
+        "sen mi money",
+        "sen money",
+        "send som money",
+        "a need money",
+        "a nid money",
+        "help mi wit money",
+        "put money pan"
+      ]
+    },
+    {
+      "id": "urgency",
+      "category": "pressure",
+      "weight": 12,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The message uses time pressure so that you act before you can check.",
+        "kri": "Di message de rush yu so dat yu nor go get tem for check."
+      },
+      "advice": {
+        "en": "Real emergencies survive a two-minute phone call. Slow down and verify.",
+        "kri": "If na tru emergency, i go ebul wet two minit. Slow down en check fos."
+      },
+      "patterns": [
+        "immediately",
+        "urgent",
+        "urgently",
+        "right now",
+        "right away",
+        "as soon as possible",
+        "asap",
+        "do not delay",
+        "don't delay",
+        "no time",
+        "before the office closes",
+        "before the bank closes",
+        "i need it tonight",
+        "i need it today",
+        "quickly",
+        "hurry",
+        "emergency",
+        "na emergency",
+        "quick quick",
+        "do am kwik",
+        "do am quick",
+        "naw naw",
+        "nor wet",
+        "nor delay",
+        "jus now"
+      ]
+    },
+    {
+      "id": "new_number_claim",
+      "category": "impersonation",
+      "weight": 18,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "Someone claims to be a person you know writing from a new number.",
+        "kri": "Somebody se na person wey yu no, de rait yu from new nomba."
+      },
+      "advice": {
+        "en": "Call the old saved number first. Impersonators always ask you to use the new one.",
+        "kri": "Call di ol nomba fos. Scammer dem always want mek yu yuz di new wan."
+      },
+      "patterns": [
+        "this is my new number",
+        "my new number",
+        "this is my new contact",
+        "save this new number",
+        "save this number",
+        "save my new number",
+        "i lost my phone",
+        "i lost my old phone",
+        "my phone was stolen",
+        "my old sim is blocked",
+        "my old number is not working",
+        "old number no longer works",
+        "i changed my number",
+        "new nomba",
+        "dis na mi new nomba",
+        "na mi new nomba",
+        "mi ol nomba nor de wok",
+        "a los mi fon",
+        "a los mi ol fon",
+        "sev dis nomba"
+      ]
+    },
+    {
+      "id": "verification_code_request",
+      "category": "account_takeover",
+      "weight": 35,
+      "enabled": true,
+      "escalation_floor": 75,
+      "explanation": {
+        "en": "The message asks for a verification code or OTP. This is how WhatsApp and mobile-money accounts are stolen.",
+        "kri": "Di message de aks for verification code or OTP. Na so dem de tif WhatsApp en mobile money account."
+      },
+      "advice": {
+        "en": "Never share a code that was sent to your phone. Not with family, not with an agent, not with anyone.",
+        "kri": "Nor eva share di code wey dem sen kam na yu fon. Nor to famili, nor to agent, nor to enibodi."
+      },
+      "patterns": [
+        "send the code",
+        "send me the code",
+        "send that code",
+        "share the code",
+        "forward the code",
+        "forward the six digit",
+        "six digit code",
+        "6 digit code",
+        "6-digit code",
+        "the 6 digits",
+        "verification code",
+        "confirmation code",
+        "tell me the otp",
+        "send the otp",
+        "the otp",
+        "one time password",
+        "i mistakenly sent a code",
+        "i mistakenly sent a six digit",
+        "mistakenly sent you a code",
+        "sent a code to your phone",
+        "sent you a code by mistake",
+        "code came to your phone",
+        "help me verify my whatsapp",
+        "verify my whatsapp",
+        "verify my account for me",
+        "sen mi di code",
+        "sen di code",
+        "di six digit",
+        "di code we kam na yu fon",
+        "elp mi verify mi whatsapp"
+      ]
+    },
+    {
+      "id": "qr_code_request",
+      "category": "account_takeover",
+      "weight": 30,
+      "enabled": true,
+      "escalation_floor": 75,
+      "explanation": {
+        "en": "The message asks you to scan a QR code. Scanning a WhatsApp QR code can link your account to someone else's device.",
+        "kri": "Di message de aks yu for scan QR code. If yu scan WhatsApp QR code, somebody else fone go link to yu account."
+      },
+      "advice": {
+        "en": "Do not scan. Open WhatsApp yourself, go to Linked Devices, and remove anything you do not recognise.",
+        "kri": "Nor scan am. Opin WhatsApp yusef, go na Linked Devices, en rimuv enitin wey yu nor no."
+      },
+      "patterns": [
+        "scan this qr",
+        "scan the qr",
+        "scan this code",
+        "qr code",
+        "link your whatsapp",
+        "link whatsapp",
+        "link your account",
+        "vote using this qr",
+        "vote for me using",
+        "confirm your account by scanning",
+        "scan to confirm",
+        "scan to vote",
+        "web.whatsapp",
+        "scan dis qr",
+        "link yu whatsapp"
+      ]
+    },
+    {
+      "id": "refusal_to_call",
+      "category": "pressure",
+      "weight": 20,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The sender avoids a voice call. Impersonators refuse to talk because their voice would give them away.",
+        "kri": "Di person nor want mek una tok pan fon. Scammer dem de refuse bikos yu go no se na nor dem."
+      },
+      "advice": {
+        "en": "Treat refusal to talk as a warning sign. Call the number you have saved, not the one in the message.",
+        "kri": "If di person nor want tok, na warnin. Call di nomba wey yu sev, nor di wan na di message."
+      },
+      "patterns": [
+        "do not call",
+        "don't call",
+        "dont call",
+        "do not call me",
+        "no calls",
+        "i cannot talk",
+        "i can't talk",
+        "i cant talk",
+        "i am in a meeting",
+        "i'm in a meeting",
+        "my phone cannot receive calls",
+        "network is bad for calls",
+        "just text me",
+        "chat only",
+        "nor call",
+        "nor call mi",
+        "a nor go ebul tok",
+        "a nor ebul tok",
+        "a de na meetin"
+      ]
+    },
+    {
+      "id": "third_party_payment",
+      "category": "payment",
+      "weight": 20,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "You are being asked to pay a different person's number instead of the sender's own account.",
+        "kri": "Dem de aks yu for pay to somebody else nomba, nor to di person wey de rait yu."
+      },
+      "advice": {
+        "en": "Money sent to a third-party number is very hard to trace or recover. Verify the person first.",
+        "kri": "Money wey yu sen to sombodi else nomba at for fen or get bak. Check di person fos."
+      },
+      "patterns": [
+        "my brother's number",
+        "my brothers number",
+        "my brother's account",
+        "my sister's number",
+        "my sisters number",
+        "my friend's number",
+        "my friends number",
+        "my colleague's number",
+        "my agent's number",
+        "the agent's number",
+        "my driver's number",
+        "my wife's number",
+        "my husband's number",
+        "send it to this number instead",
+        "use this number instead",
+        "my account is not working",
+        "my account is blocked",
+        "my number is not working",
+        "sen am to mi broda",
+        "mi broda nomba",
+        "mi sista nomba",
+        "mi padi nomba",
+        "mi akaunt nor de wok"
+      ]
+    },
+    {
+      "id": "secrecy",
+      "category": "pressure",
+      "weight": 12,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The message asks you to keep the request secret so nobody can warn you.",
+        "kri": "Di message de aks yu for kip di tin sekret so dat nobodi nor go warn yu."
+      },
+      "advice": {
+        "en": "Secrecy protects the scammer, not you. Tell one person you trust before you act.",
+        "kri": "Sekret de protect di scammer, nor yu. Tell wan person wey yu trust bifo yu du enitin."
+      },
+      "patterns": [
+        "do not tell anyone",
+        "don't tell anyone",
+        "dont tell anyone",
+        "keep this between us",
+        "keep it between us",
+        "our secret",
+        "do not tell my wife",
+        "do not tell my husband",
+        "do not tell the family",
+        "just send it",
+        "no questions",
+        "don't ask questions",
+        "nor tell enibodi",
+        "nor tell posin",
+        "mek i bi wi sekret",
+        "jus sen am"
+      ]
+    },
+    {
+      "id": "account_recovery",
+      "category": "account_takeover",
+      "weight": 20,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The message talks about recovering or restoring an account, a common cover story for account theft.",
+        "kri": "Di message de tok bot recover or restore account. Na di stori wey dem de yuz for tif account."
+      },
+      "advice": {
+        "en": "WhatsApp and mobile-money providers never need your help to recover someone else's account.",
+        "kri": "WhatsApp en mobile money kompani nor de nid yu ep for recover sombodi else account."
+      },
+      "patterns": [
+        "recover my account",
+        "restore my account",
+        "recover my whatsapp",
+        "my account was hacked",
+        "my whatsapp was hacked",
+        "i am locked out",
+        "help me get my account back",
+        "support team",
+        "whatsapp support",
+        "customer care asked",
+        "recover mi akaunt",
+        "dem hack mi akaunt"
+      ]
+    },
+    {
+      "id": "prize_lottery",
+      "category": "fake_opportunity",
+      "weight": 20,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The message claims you have won something. Real prizes never require a payment first.",
+        "kri": "Di message se yu win sontin. Tru prize nor de aks yu for pay money fos."
+      },
+      "advice": {
+        "en": "If you did not enter, you did not win. Never pay a fee to receive a prize.",
+        "kri": "If yu nor bin enta, yu nor win. Nor pay eni fee for kolet prize."
+      },
+      "patterns": [
+        "you have won",
+        "you've won",
+        "you are a winner",
+        "congratulations you have been selected",
+        "lucky winner",
+        "claim your prize",
+        "claim your reward",
+        "lottery",
+        "promotion winner",
+        "cash prize",
+        "yu win",
+        "yu na di winna",
+        "kongratulashon yu win"
+      ]
+    },
+    {
+      "id": "loan_advance_fee",
+      "category": "fake_opportunity",
+      "weight": 25,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The message offers a loan or job but asks for a fee before anything is delivered.",
+        "kri": "Di message de promis loan or wok bot dem want mek yu pay fos."
+      },
+      "advice": {
+        "en": "A lender that asks you to pay first is not a lender. Stop and verify the company independently.",
+        "kri": "Eni pesin wey de gi loan bot want mek yu pay fos, na scam. Stop en check di kompani yusef."
+      },
+      "patterns": [
+        "processing fee",
+        "registration fee",
+        "registration payment",
+        "application fee",
+        "clearance fee",
+        "pay before approval",
+        "pay before we release",
+        "loan approved pay",
+        "guaranteed loan",
+        "instant loan",
+        "job offer pay",
+        "interview fee",
+        "form fee",
+        "pay fos bifo",
+        "pay di fee fos"
+      ]
+    },
+    {
+      "id": "investment_return",
+      "category": "fake_opportunity",
+      "weight": 25,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The message promises guaranteed or unusually large returns on money you send.",
+        "kri": "Di message de promis se yu money go dobul or mek plenti profit."
+      },
+      "advice": {
+        "en": "Guaranteed profit does not exist. Anyone promising it is taking your money, not investing it.",
+        "kri": "Nobodi nor kin garanti profit. Enibodi wey de promis dat de tif yu money."
+      },
+      "patterns": [
+        "guaranteed profit",
+        "guaranteed returns",
+        "double your money",
+        "triple your money",
+        "invest and earn",
+        "daily profit",
+        "weekly profit",
+        "forex investment",
+        "crypto investment opportunity",
+        "bitcoin investment",
+        "limited slots",
+        "limited spaces",
+        "dobul yu money",
+        "yu money go dobul"
+      ]
+    },
+    {
+      "id": "threat_intimidation",
+      "category": "coercion",
+      "weight": 20,
+      "enabled": true,
+      "escalation_floor": 0,
+      "explanation": {
+        "en": "The message threatens you or someone you care about to force a payment.",
+        "kri": "Di message de threaten yu or sombodi wey yu lek so dat yu go pay."
+      },
+      "advice": {
+        "en": "Do not pay and do not reply. Save the message and report it to the police.",
+        "kri": "Nor pay en nor ansa. Sev di message en ripot am to di polis."
+      },
+      "patterns": [
+        "i will expose you",
+        "i will post your",
+        "i will share your photos",
+        "i have your pictures",
+        "if you do not pay",
+        "if you don't pay",
+        "you will regret",
+        "we know where you live",
+        "your account will be deleted",
+        "your account will be blocked",
+        "legal action will be taken",
+        "a go expose yu",
+        "a go post yu foto"
+      ]
+    },
+    {
+      "id": "suspicious_url",
+      "category": "link",
+      "weight": 25,
+      "enabled": true,
+      "escalation_floor": 0,
+      "derived": true,
+      "explanation": {
+        "en": "The message contains a link with characteristics commonly used in phishing.",
+        "kri": "Di message get link wey get di sain dem wey scammer de yuz."
+      },
+      "advice": {
+        "en": "Do not open the link. Type the official address into your browser yourself if you need the service.",
+        "kri": "Nor opin di link. If yu nid di savis, tayp di real adres yusef na yu browser."
+      },
+      "patterns": []
+    },
+    {
+      "id": "reported_indicator",
+      "category": "community",
+      "weight": 30,
+      "enabled": true,
+      "escalation_floor": 0,
+      "derived": true,
+      "explanation": {
+        "en": "A number or link in this message has been reported by other users.",
+        "kri": "Wan nomba or link na dis message, oda pipul dem don ripot am."
+      },
+      "advice": {
+        "en": "Other people have flagged this. Treat any request from it as unverified.",
+        "kri": "Oda pipul dem don flag dis wan. Nor trust eni tin wey kam from am."
+      },
+      "patterns": []
+    },
+    {
+      "id": "unverified_sender",
+      "category": "identity",
+      "weight": 10,
+      "enabled": true,
+      "escalation_floor": 0,
+      "derived": true,
+      "explanation": {
+        "en": "The sender's number is not one of your trusted contacts.",
+        "kri": "Di nomba wey sen dis message nor de na yu trusted contact dem."
+      },
+      "advice": {
+        "en": "Add people you deal with regularly as trusted contacts so the app can compare numbers for you.",
+        "kri": "Put di pipul wey yu de dil wit as trusted contact so dat di app go ebul compare di nomba dem."
+      },
+      "patterns": []
+    }
+  ]
+}

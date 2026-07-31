@@ -1,0 +1,180 @@
+{
+  "@@locale": "en",
+  "appName": "Salone Shield",
+  "appTagline": "Check before you send.",
+  "@appTagline": {
+    "description": "Shown under the logo on the splash screen."
+  },
+  "actionContinue": "Continue",
+  "actionNext": "Next",
+  "actionBack": "Back",
+  "actionSkip": "Skip",
+  "actionGetStarted": "Get started",
+  "actionDone": "Done",
+  "actionCancel": "Cancel",
+  "actionClose": "Close",
+  "actionTryAgain": "Try again",
+  "actionCopy": "Copy",
+  "actionCopied": "Copied",
+  "languageTitle": "Choose your language",
+  "languageSubtitle": "You can change this later in Settings.",
+  "languageEnglish": "English",
+  "languageKrio": "Krio",
+  "onboardingTitle1": "Spot suspicious requests",
+  "onboardingBody1": "Paste any WhatsApp message and Salone Shield will show you the warning signs scammers use.",
+  "onboardingTitle2": "Verify before you send money",
+  "onboardingBody2": "A message asking for money is not proof of who sent it. Check the person on a number you already trust.",
+  "onboardingTitle3": "Protect your codes and QR access",
+  "onboardingBody3": "Nobody needs your six-digit code or your QR screen. Anyone who asks is trying to take your account.",
+  "onboardingTitle4": "Your messages stay on your phone",
+  "onboardingBody4": "Analysis runs on your device. Nothing is uploaded unless you choose to report a scam.",
+  "permissionsTitle": "What this app needs",
+  "permissionsSubtitle": "Salone Shield asks for as little as possible, and explains everything before asking.",
+  "permissionInternetTitle": "Internet",
+  "permissionInternetBody": "Only used for signing in and for sending a scam report. Message analysis works offline.",
+  "permissionPhotosTitle": "Photos",
+  "permissionPhotosBody": "Only when you choose a screenshot to scan. The image is read on your device and is not uploaded.",
+  "permissionContactsTitle": "Contacts",
+  "permissionContactsBody": "Only if you add a trusted contact. Your contact list is never uploaded.",
+  "permissionNotificationsTitle": "Notification access",
+  "permissionNotificationsBody": "Not used yet. When it arrives it will be off by default and you will be asked first.",
+  "permissionNoneRequestedNote": "This version requests no sensitive permissions at all.",
+  "homeTitle": "Salone Shield",
+  "homeGreeting": "You are protected by checking, not by luck.",
+  "homeSecurityStatusTitle": "Security status",
+  "homeSecurityStatusBody": "Analysis runs on this phone. No message has been uploaded.",
+  "homeActionAnalyse": "Analyse message",
+  "homeActionAnalyseSubtitle": "Paste a suspicious WhatsApp message",
+  "homeActionScreenshot": "Scan screenshot",
+  "homeActionScreenshotSubtitle": "Read the text from a picture",
+  "homeActionLink": "Check a link",
+  "homeActionLinkSubtitle": "See if a link looks dangerous",
+  "homeActionVerify": "Verify a person",
+  "homeActionVerifySubtitle": "Confirm who really sent a message",
+  "homeActionReport": "Report a scam",
+  "homeActionReportSubtitle": "Warn other people",
+  "homeActionChecklist": "Security checklist",
+  "homeActionChecklistSubtitle": "Lock down your accounts",
+  "homeRecentTitle": "Recent checks",
+  "homeRecentEmpty": "No checks yet. Paste a message to get started.",
+  "homeRecentCleared": "Recent checks cleared.",
+  "homeClearRecent": "Clear",
+  "comingSoonTitle": "Not ready yet",
+  "comingSoonBody": "This feature arrives in a later release. It is listed here so you know it is planned, not hidden.",
+  "analyseTitle": "Analyse message",
+  "analyseInstruction": "Paste the message exactly as you received it.",
+  "analyseHint": "Paste the WhatsApp message here…",
+  "analysePaste": "Paste",
+  "analyseClear": "Clear",
+  "analyseRun": "Analyse",
+  "analysePrivacyNote": "This text is checked on your phone and is not uploaded or saved after you leave the result.",
+  "analyseCharacterCount": "{count} of {max} characters",
+  "@analyseCharacterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "analyseEmptyError": "Paste a message first, then tap Analyse.",
+  "analyseTooLongError": "That message is too long to check. Paste the important part only.",
+  "analyseNothingToPaste": "Your clipboard is empty.",
+  "resultTitle": "Result",
+  "resultScoreLabel": "Risk score {score} out of 100",
+  "@resultScoreLabel": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "resultSignalsTitle": "What we found",
+  "resultSignalsEmpty": "No known scam pattern matched this message.",
+  "resultSignalCount": "{count, plural, =0{No warning signs} =1{1 warning sign} other{{count} warning signs}}",
+  "@resultSignalCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "resultMatchedText": "Matched: “{text}”",
+  "@resultMatchedText": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "resultConfidence": "Confidence {percent}%",
+  "@resultConfidence": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "resultNumbersTitle": "Phone numbers in this message",
+  "resultNumbersNote": "A number appearing here does not mean it belongs to a criminal.",
+  "resultLinksTitle": "Links in this message",
+  "resultLinksNote": "Links were examined but not opened.",
+  "resultActionsTitle": "What to do now",
+  "resultLimitationsTitle": "What we could not check",
+  "resultVerifyPerson": "Verify the person",
+  "resultReport": "Report this",
+  "resultMarkSafe": "I verified it — mark safe",
+  "resultMarkedSafe": "Marked as verified safe on this phone.",
+  "resultCopyWarning": "Copy warning to share",
+  "resultCopiedWarning": "Warning copied. You can paste it to warn someone.",
+  "resultAnalyseAnother": "Check another message",
+  "riskLevelLow": "Low risk",
+  "riskLevelCaution": "Be careful",
+  "riskLevelHigh": "High risk",
+  "riskLevelCritical": "Critical risk",
+  "riskLevelLowShort": "Low",
+  "riskLevelCautionShort": "Caution",
+  "riskLevelHighShort": "High",
+  "riskLevelCriticalShort": "Critical",
+  "settingsTitle": "Settings and privacy",
+  "settingsLanguage": "Language",
+  "settingsTheme": "Appearance",
+  "settingsThemeSystem": "Match my phone",
+  "settingsThemeLight": "Light",
+  "settingsThemeDark": "Dark",
+  "settingsPrivacyTitle": "Privacy",
+  "settingsClearHistory": "Delete local history",
+  "settingsClearHistoryBody": "Removes every check stored on this phone.",
+  "settingsClearHistoryDone": "Local history deleted.",
+  "settingsAnalytics": "Share anonymous usage counts",
+  "settingsAnalyticsBody": "Off by default. Never includes message content.",
+  "settingsAbout": "About Salone Shield",
+  "settingsPrivacyPolicy": "Privacy policy",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyTitle": "Privacy",
+  "privacyBody": "Salone Shield analyses messages on your phone. Message text is never uploaded, and is not kept after you leave the result screen. Only a small record of the risk level and which rules matched is stored locally, and you can delete it at any time.\n\nSalone Shield will never ask you for a WhatsApp verification code, a two-step PIN, or a mobile-money PIN. Nobody legitimate ever will.",
+  "neverAskTitle": "Salone Shield will never ask for your code or PIN",
+  "errorGeneric": "Something went wrong. Nothing was saved. You can try again safely.",
+  "errorRulesFailed": "The scam rules could not be loaded, so messages cannot be checked right now. Restarting the app usually fixes this.",
+  "urlFindingNoHttps": "Not a secure (https) link",
+  "urlFindingIpAddress": "Uses a raw IP address instead of a name",
+  "urlFindingPunycode": "Uses look-alike foreign characters",
+  "urlFindingSubdomains": "Unusually many subdomains",
+  "urlFindingBrandLookalike": "Imitates a well-known brand",
+  "urlFindingShortener": "Hidden behind a link shortener",
+  "urlFindingCredentials": "Contains a username or password",
+  "urlFindingPort": "Uses an unusual port",
+  "urlFindingRedirect": "Sends you on to another address",
+  "urlFindingTld": "Uses a domain ending often used by scams",
+  "urlFindingExecutable": "Downloads an app file directly",
+  "urlFindingMismatch": "Shows one address but goes to another"
+}
