@@ -6,6 +6,7 @@ import '../core/storage/secure_storage_service.dart';
 import '../services/risk_engine/engine_strings.dart';
 import '../services/risk_engine/risk_engine.dart';
 import '../services/risk_engine/rule_repository.dart';
+import '../services/sharing/shared_text_service.dart';
 
 /// Overridden in `bootstrap.dart` once shared preferences have loaded, and in
 /// tests with an in-memory instance.
@@ -16,6 +17,11 @@ final preferencesServiceProvider = Provider<PreferencesService>(
 
 final secureStorageProvider = Provider<SecureStorageService>(
   (ref) => SecureStorageService.create(),
+);
+
+/// Receives messages shared into the app from WhatsApp. Overridden in tests.
+final sharedTextServiceProvider = Provider<SharedTextService>(
+  (ref) => const SharedTextService(),
 );
 
 final ruleRepositoryProvider = Provider<RuleRepository>(

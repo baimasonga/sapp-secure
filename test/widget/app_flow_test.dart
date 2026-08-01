@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:salone_shield/app/providers.dart';
 import 'package:salone_shield/features/dashboard/presentation/home_screen.dart';
 import 'package:salone_shield/features/onboarding/presentation/language_screen.dart';
 import 'package:salone_shield/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:salone_shield/features/onboarding/presentation/permissions_screen.dart';
 import 'package:salone_shield/features/settings/presentation/settings_screen.dart';
+import 'package:salone_shield/services/sharing/shared_text_service.dart';
 
 import '../support/test_harness.dart';
 
@@ -124,5 +127,35 @@ void main() {
 
     expect(find.byType(PrivacyScreen), findsOneWidget);
     expect(find.text(l10n.neverAskTitle), findsOneWidget);
+  });
+
+  testWidgets('a message shared from another app opens the analyser', (
+    tester,
+  ) async {
+    const channel = MethodChannel('test/shared_text');
+    const shared = 'This is my new number, send money urgently';
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async => shared);
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, null),
+    );
+
+    final l10n = await localisationsFor('en');
+    await pumpApp(
+      tester,
+      preferences: await createOnboardedPreferences(),
+      overrides: [
+        sharedTextServiceProvider.overrideWithValue(
+          const SharedTextService(channel: channel),
+        ),
+      ],
+    );
+    await tester.pumpAndSettle();
+
+    // The analyser opens with the shared message already in the field, so the
+    // user only has to press Analyse.
+    expect(find.text(l10n.analyseInstruction), findsOneWidget);
+    expect(find.text(shared), findsOneWidget);
   });
 }
