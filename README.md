@@ -45,7 +45,7 @@ Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** and **M
 | Local, message-free analysis history (30-day retention) | Working |
 | Settings: theme, delete local data, privacy | Working |
 | Optional Supabase bootstrap | Wired, inert until configured |
-| Supabase schema and RLS | **Verified against a live project** — 22 of 24 checks pass; see below |
+| Supabase schema and RLS | **Verified against a live project** — 19 of 24 checks pass; see below |
 | Supabase Edge Function, auth and report UI | **Written but disabled** — see below |
 | Notification monitoring (listener, guard, interrupt filter, controls) | **Written but disabled** — see below |
 | Moderation dashboard | Not built — the app says so plainly rather than hiding it |
@@ -76,9 +76,11 @@ specification requires. Both are fixed in `0003_moderation_fixes.sql`, and the
 whole run is recorded in
 [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md#verification-record).
 
-Twenty-two of the twenty-four checks pass. The remaining two cover the Edge
-Function, which needs an HTTPS call the environment this ran from could not
-make.
+Nineteen of the twenty-four checks pass, including both Edge Function checks
+that can be run before a hashing pepper exists. The remaining five need
+`INDICATOR_PEPPER` set on the project, because they require a report to
+actually be stored — and until the pepper exists the function correctly
+refuses to store one.
 
 ### Reporting is deliberately switched off
 
@@ -143,7 +145,7 @@ flutter run --dart-define-from-file=.env
 | `ENABLE_ANALYTICS` | Off by default; analytics also require in-app consent |
 | `ENABLE_NOTIFICATION_MONITORING` | Off. Do not enable until the hardware checks in docs/ANDROID_NOTIFICATION_SERVICE.md are done |
 | `ENABLE_EXTERNAL_URL_REPUTATION` | Off; link analysis is local-only |
-| `ENABLE_REPORTING` | Off. The RLS half of the plan now passes; the Edge Function checks (16–22) remain |
+| `ENABLE_REPORTING` | Off. RLS verified; Edge Function checks 17–21 still need INDICATOR_PEPPER |
 
 ## Commands
 

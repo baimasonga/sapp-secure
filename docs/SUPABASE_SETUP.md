@@ -118,7 +118,9 @@ it so nobody tries again.
 | 13 | moderator edits the audit log | **pass** — 0 rows changed |
 | 14 | moderator deletes from the audit log | **pass** — 0 rows changed |
 | 15 | A reads B's evidence | **pass** — 0 rows |
-| 16–22 | Edge Function | **not run** — see below |
+| 16 | `submit-report` with no `Authorization` header | **pass** — 401 `UNAUTHORIZED_NO_AUTH_HEADER`, refused by the platform before the function runs |
+| 17–21 | Edge Function behaviour with a real reporter | **not run** — needs `INDICATOR_PEPPER`; see below |
+| 22 | Deployed without `INDICATOR_PEPPER` | **pass** — 500 `not_configured`, and nothing was stored |
 | 23 | delete account A | **pass** after 0003; profile gone, report survives detached |
 | 24 | excerpt and district cleared | **pass** |
 
@@ -133,15 +135,31 @@ Also verified beyond the plan, because the fixes needed proving:
   `refresh_indicator_confidence` and `bootstrap_grant_role` are executable by
   `postgres` and `service_role` only.
 
+**19 of the 24 checks pass. Five have not been run.**
+
 ### Still outstanding
 
-**Checks 16–22 (the Edge Function) were not run.** `submit-report` is deployed
-and active with `verify_jwt` on, but calling it requires an HTTPS request to
-`*.supabase.co`, which the environment this was run from blocks. They need to
-be run by someone who can reach the project over the network, and
-`INDICATOR_PEPPER` must be set first — until it is, the function correctly
-refuses every request with `not_configured`, which is check 22 satisfied by
-construction rather than by test.
+**Checks 17–21 need `INDICATOR_PEPPER`.** `submit-report` is deployed and
+active with `verify_jwt` on. Checks 16 and 22 were executed against the live
+function and pass; the rest require a report to actually be stored, which the
+function correctly refuses to do until the pepper exists:
+
+```bash
+supabase secrets set INDICATOR_PEPPER="$(openssl rand -hex 32)"
+```
+
+or Dashboard → Edge Functions → Secrets. Then 17–21 can be run: sign a test
+user in through `/auth/v1/token`, submit with `reporter_id` set to somebody
+else (17), submit eleven times in an hour (18), submit the same number twice
+(19), inspect the stored row for a raw number (20), and read the function logs
+for anything that should not be there (21).
+
+**A note on how 16 and 22 were run.** The environment this was executed from
+cannot reach `*.supabase.co` — its network policy refuses the connection. The
+requests were issued by the database itself, using the `http` extension
+enabled for the duration and dropped afterwards, so the project is left as it
+was found. Anyone repeating this from a machine with normal network access
+should just use `curl`.
 
 **Leaked-password protection is off.** Supabase's linter flags it; enable it
 in Authentication → Policies. It is a dashboard setting, not schema.
