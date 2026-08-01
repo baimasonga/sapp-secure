@@ -1,0 +1,104 @@
+name: Android build
+
+on:
+  pull_request:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: '3.44.8'
+
+jobs:
+  debug-apk:
+    name: Debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      - name: Check the app declares no sensitive permissions
+        # The manifest should carry INTERNET and nothing else at this
+        # milestone. Broadening the permission set must be a deliberate,
+        # reviewed change rather than something a dependency slips in.
+        run: |
+          MANIFEST=android/app/src/main/AndroidManifest.xml
+          UNEXPECTED=$(grep -oE 'android:name="android\.permission\.[A-Z_]+"' "$MANIFEST" \
+            | grep -v 'android.permission.INTERNET' || true)
+          if [ -n "$UNEXPECTED" ]; then
+            echo "::error::Unexpected permissions declared:"
+            echo "$UNEXPECTED"
+            exit 1
+          fi
+
+      - name: Confirm backups stay disabled
+        run: grep -q 'android:allowBackup="false"' android/app/src/main/AndroidManifest.xml
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: salone-shield-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 14
+
+  release-bundle:
+    name: Release app bundle
+    # Release builds only on the default branch; pull requests get the debug
+    # build, which is what reviewers need.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Validate the version number
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          echo "Version: $VERSION"
+          echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+$' \
+            || (echo "::error::pubspec version must look like 1.2.3+4" && exit 1)
+
+      - name: Build release bundle
+        # Unsigned: no signing material is stored in the repository. Signing
+        # happens in the release pipeline with secrets held outside CI config.
+        run: |
+          flutter build appbundle --release \
+            --dart-define=APP_ENV=production \
+            --dart-define=ENABLE_ANALYTICS=false \
+            --dart-define=ENABLE_NOTIFICATION_MONITORING=false \
+            --dart-define=ENABLE_EXTERNAL_URL_REPUTATION=false
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: salone-shield-release-bundle
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 14

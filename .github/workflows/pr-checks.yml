@@ -1,0 +1,98 @@
+name: PR checks
+
+on:
+  pull_request:
+  push:
+    branches: ['**']
+
+# Least privilege: these jobs only need to read the code.
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: '3.44.8'
+
+jobs:
+  verify:
+    name: Format, analyse, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyse
+        # Warnings are failures: a warning in a security tool is a defect.
+        run: flutter analyze --fatal-infos --fatal-warnings
+
+      - name: Verify generated localisations are up to date
+        run: |
+          flutter gen-l10n
+          git diff --exit-code lib/l10n \
+            || (echo "::error::lib/l10n is stale. Run 'flutter gen-l10n' and commit the result." && exit 1)
+
+      - name: Test
+        run: flutter test --reporter expanded
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fail if a .env file is committed
+        run: |
+          if git ls-files --error-unmatch .env >/dev/null 2>&1; then
+            echo "::error::.env must never be committed. Use .env.example."
+            exit 1
+          fi
+
+      - name: Scan for credential-shaped strings
+        run: |
+          # Supabase service-role keys, private keys and hard-coded project URLs
+          # must never reach the repository. .env.example holds keys with no
+          # values. This file is excluded because it contains the patterns.
+          if grep -rInE 'service_role|BEGIN [A-Z ]*PRIVATE KEY|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}' \
+               --exclude-dir=.git --exclude-dir=build --exclude-dir=.dart_tool \
+               --exclude=pr-checks.yml . ; then
+            echo "::error::Possible credential committed. Review the matches above."
+            exit 1
+          fi
+          if grep -rInE 'https://[a-z0-9]{20}\.supabase\.(co|in)' \
+               --exclude-dir=.git --exclude-dir=build --exclude-dir=.dart_tool \
+               --exclude=pr-checks.yml . ; then
+            echo "::error::Hard-coded Supabase project URL. Pass it with --dart-define."
+            exit 1
+          fi
+
+  dependencies:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Report outdated dependencies
+        # Informational: a stale dependency is worth seeing, but it must not
+        # block a security fix from merging.
+        continue-on-error: true
+        run: flutter pub outdated

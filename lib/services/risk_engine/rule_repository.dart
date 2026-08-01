@@ -24,7 +24,12 @@ class RuleRepository {
       // Malformed rules must fail loudly in development and degrade to a clear
       // message in production, never to a silent "everything looks safe".
       throw AnalysisFailure(debugMessage: 'invalid rule set: ${error.message}');
-    } on Exception {
+    } on AnalysisFailure {
+      rethrow;
+    } catch (_) {
+      // A missing asset raises FlutterError, which is an Error rather than an
+      // Exception, so this catch is deliberately broad. The original object is
+      // dropped: it can carry a file path we do not want in a log.
       throw const AnalysisFailure(debugMessage: 'rule asset unavailable');
     }
   }
