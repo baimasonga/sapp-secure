@@ -16,8 +16,12 @@ report in the database is row-level security. Untested RLS is not a control.
 | `supabase/migrations/0002_indicator_aggregation.sql` | Indicator counting and confidence, reporter reputation, account-deletion clean-up |
 | `supabase/functions/submit-report/index.ts` | Report submission: peppered hashing, rate limiting, duplicate detection |
 
-**None of it has been run against a live project.** It is reviewed SQL, not
-verified SQL.
+| `supabase/migrations/0003_moderation_fixes.sql` | Fixes for three defects the live run exposed |
+| `supabase/migrations/0004_restrict_function_execution.sql` | Removes needless RPC exposure flagged by the linter |
+
+The schema **has** now been run against a live project, and doing so found
+four defects that review had missed. See
+[the verification record](#verification-record) below.
 
 ## One project per environment
 
@@ -59,6 +63,99 @@ must never be added to `.env`, to CI, or to any mobile build.
 - Set the site URL and redirect URLs for password reset.
 - Consider a rate limit on sign-ups; a scammer who can mint accounts can
   manufacture "independent" reporters.
+
+## Verification record
+
+Run on **1 August 2026** against project `yidehmcgkxuqemljsdcn`
+(`whatsapp-security`, Postgres 17, eu-central-1), by Claude, using three
+seeded accounts — two ordinary users and one moderator — and cleaned up
+afterwards.
+
+**Applying 0001 and 0002 to a real database found four defects, every one of
+which would have shipped.** They are the reason this gate exists.
+
+### What was found
+
+| # | Defect | Effect | Fixed in |
+|---|---|---|---|
+| 1 | `on_report_reviewed` writes reputation counters to `profiles`, which trips `protect_profile_privileges` because a moderator is not an admin | **Moderation was entirely dead.** No report could be verified or rejected, ever | 0003 |
+| 2 | Changing a role requires `is_admin()`, and nobody starts as admin — not even `postgres`, whose `auth.uid()` is null | **No way to create the first moderator or admin** except by disabling the trigger | 0003 |
+| 3 | `protect_report_verdict` demanded `is_moderator()` for every update, including the server's own | The Edge Function's `reports_submitted` write and any back-office correction were blocked | 0003 |
+| 4 | `reporter_id` is `ON DELETE SET NULL`, and that null trips the provenance guard | **Deleting an account failed outright**, removing a control section 15.4 requires | 0003 |
+
+Defect 1 is the instructive one: both triggers are correct in isolation and
+were reviewed as such. They only fail when they meet, which no amount of
+reading was going to reveal.
+
+A fifth issue came from Supabase's own linter: `refresh_indicator_confidence`
+was granted to `authenticated`, so any signed-in user could call it over
+PostgREST. Revoked in 0004, along with the trigger functions that were
+needlessly exposed as RPCs.
+
+**Do not revoke `EXECUTE` on `is_moderator`, `is_admin` or `current_role_is`.**
+Policy expressions are evaluated as the querying user, so revoking these does
+not hide them — it makes every policy that calls them fail with a permission
+error and locks moderators out of every table. This was tried; 0004 documents
+it so nobody tries again.
+
+### Results
+
+| # | Check | Result |
+|---|---|---|
+| 1 | anon reads `threat_reports` | **pass** — 0 rows |
+| 2 | anon reads `profiles`, `moderation_actions`, `security_events`, `scam_rules` | **pass** — 0 rows each |
+| 3 | A reads own reports | **pass** — own only |
+| 4 | A reads B's report by id | **pass** — 0 rows |
+| 5 | A updates B's report | **pass** — 0 rows changed |
+| 6 | A marks own report verified | **pass**, by a different mechanism than this document assumed: there is no update policy for ordinary users, so RLS filters the row and the trigger never runs. The effect is right; the trigger's moderator check protects the server-side path, not this one |
+| 7 | A promotes self to admin | **pass** — rejected by trigger |
+| 8 | A lifts own suspension | **pass** — rejected by trigger |
+| 8b | suspended A submits a report | **pass** — rejected by policy |
+| 9 | A reports as B | **pass** — RLS violation |
+| 10 | A reports without consent | **pass** — check constraint |
+| 11 | A inserts an indicator directly | **pass** — RLS violation |
+| 12 | A reads an unverified indicator | **pass** — 0 rows; verified one is visible |
+| 13 | moderator edits the audit log | **pass** — 0 rows changed |
+| 14 | moderator deletes from the audit log | **pass** — 0 rows changed |
+| 15 | A reads B's evidence | **pass** — 0 rows |
+| 16–22 | Edge Function | **not run** — see below |
+| 23 | delete account A | **pass** after 0003; profile gone, report survives detached |
+| 24 | excerpt and district cleared | **pass** |
+
+Also verified beyond the plan, because the fixes needed proving:
+
+- A moderator can verify **and** reject a report, and the reporter's
+  reputation counters are recomputed to their true values.
+- A user cannot forge their own reputation counters, before or after the fix.
+- A moderator cannot write an audit entry in another person's name.
+- `bootstrap_grant_role` is unreachable from a user session.
+- Function ACLs confirmed: `record_indicator_report`,
+  `refresh_indicator_confidence` and `bootstrap_grant_role` are executable by
+  `postgres` and `service_role` only.
+
+### Still outstanding
+
+**Checks 16–22 (the Edge Function) were not run.** `submit-report` is deployed
+and active with `verify_jwt` on, but calling it requires an HTTPS request to
+`*.supabase.co`, which the environment this was run from blocks. They need to
+be run by someone who can reach the project over the network, and
+`INDICATOR_PEPPER` must be set first — until it is, the function correctly
+refuses every request with `not_configured`, which is check 22 satisfied by
+construction rather than by test.
+
+**Leaked-password protection is off.** Supabase's linter flags it; enable it
+in Authentication → Policies. It is a dashboard setting, not schema.
+
+**A design question, deliberately left open.** Verified indicators are
+readable with the anon key alone — the policy requires `status = 'active' and
+verified_report_count > 0` but not a session. That may well be intended, since
+protective features are meant to work signed out. The cost is that anyone
+holding the anon key can enumerate every flagged indicator, masked number and
+risk level included, which also lets a scammer check whether their own number
+has been flagged. Nothing in the app reads this table yet. If you want it
+closed, the fix is to drop the anon-readable policy and expose a single
+`check_indicator(hash)` function that answers about one value at a time
+instead of allowing a table scan. Left as-is pending that decision.
 
 ## Verification plan — required before enabling reporting
 

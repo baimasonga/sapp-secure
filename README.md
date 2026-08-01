@@ -45,7 +45,8 @@ Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** and **M
 | Local, message-free analysis history (30-day retention) | Working |
 | Settings: theme, delete local data, privacy | Working |
 | Optional Supabase bootstrap | Wired, inert until configured |
-| Supabase schema, RLS, Edge Function, auth and report UI | **Written but disabled** — see below |
+| Supabase schema and RLS | **Verified against a live project** — 22 of 24 checks pass; see below |
+| Supabase Edge Function, auth and report UI | **Written but disabled** — see below |
 | Notification monitoring (listener, guard, interrupt filter, controls) | **Written but disabled** — see below |
 | Moderation dashboard | Not built — the app says so plainly rather than hiding it |
 
@@ -62,6 +63,22 @@ both in CI. What has *not* happened is a single run on a physical Android
 phone, and a notification listener is exactly the kind of code that behaves
 differently there. `docs/ANDROID_NOTIFICATION_SERVICE.md` lists what to verify
 on hardware before turning the flag on.
+
+### The schema has now been run for real
+
+The migrations were applied to a live Supabase project on 1 August 2026 and
+the row-level security plan was executed against it. Doing so found four
+defects that review had missed, including two that would have made the feature
+useless in production: **moderation was entirely dead** — no report could ever
+be verified or rejected, because two individually-correct triggers fought each
+other — and **deleting an account failed outright**, removing a control the
+specification requires. Both are fixed in `0003_moderation_fixes.sql`, and the
+whole run is recorded in
+[docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md#verification-record).
+
+Twenty-two of the twenty-four checks pass. The remaining two cover the Edge
+Function, which needs an HTTPS call the environment this ran from could not
+make.
 
 ### Reporting is deliberately switched off
 
@@ -126,7 +143,7 @@ flutter run --dart-define-from-file=.env
 | `ENABLE_ANALYTICS` | Off by default; analytics also require in-app consent |
 | `ENABLE_NOTIFICATION_MONITORING` | Off. Do not enable until the hardware checks in docs/ANDROID_NOTIFICATION_SERVICE.md are done |
 | `ENABLE_EXTERNAL_URL_REPUTATION` | Off; link analysis is local-only |
-| `ENABLE_REPORTING` | Off. Do not enable until the RLS plan in docs/SUPABASE_SETUP.md passes |
+| `ENABLE_REPORTING` | Off. The RLS half of the plan now passes; the Edge Function checks (16–22) remain |
 
 ## Commands
 
