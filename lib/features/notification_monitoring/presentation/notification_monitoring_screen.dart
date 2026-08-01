@@ -8,6 +8,7 @@ import '../../../app/router.dart';
 import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../services/notifications/notification_access_service.dart';
+import '../../message_analysis/application/analysis_controller.dart';
 import '../application/notification_monitor_controller.dart';
 import '../domain/monitored_app.dart';
 
@@ -331,14 +332,31 @@ class _PendingSection extends StatelessWidget {
   }
 }
 
-class _PendingTile extends StatelessWidget {
+class _PendingTile extends ConsumerWidget {
   const _PendingTile({required this.message, required this.controller});
 
   final MonitoredMessage message;
   final NotificationMonitorController controller;
 
+  /// Runs the message through the same engine the paste flow uses and goes
+  /// straight to the explanation. The user already asked for this by tapping;
+  /// making them press Analyse on a pre-filled field would be a tap that
+  /// exists only because of how the code is arranged.
+  Future<void> _check(BuildContext context, WidgetRef ref) async {
+    controller.dismiss(message.id);
+    await ref.read(analysisControllerProvider.notifier).analyse(message.text);
+    if (!context.mounted) return;
+    if (ref.read(analysisControllerProvider) is AnalysisSuccess) {
+      context.pushNamed(AppRoute.analysisResult.name);
+    } else {
+      // The engine could not load, or the text was rejected. The analyser
+      // screen states the reason rather than this tile guessing at it.
+      context.pushNamed(AppRoute.analyse.name, extra: message.text);
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
 
@@ -361,13 +379,7 @@ class _PendingTile extends StatelessWidget {
               children: [
                 Expanded(
                   child: FilledButton(
-                    onPressed: () {
-                      controller.dismiss(message.id);
-                      context.pushNamed(
-                        AppRoute.analyse.name,
-                        extra: message.text,
-                      );
-                    },
+                    onPressed: () => _check(context, ref),
                     child: Text(l10n.notificationsCheckNow),
                   ),
                 ),

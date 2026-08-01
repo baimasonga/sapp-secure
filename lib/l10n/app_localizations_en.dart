@@ -120,7 +120,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permissionNotificationsBody =>
-      'Not used yet. When it arrives it will be off by default and you will be asked first.';
+      'Only if you turn on watching for scams as they arrive. Then Salone Shield can tell you a message is worth checking — the alert never repeats the message itself.';
 
   @override
   String get permissionNoneRequestedNote =>
@@ -1248,6 +1248,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsForgotten => 'Waiting messages have been forgotten.';
+
+  @override
+  String notificationsWaitingBanner(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count messages are waiting to be checked',
+      one: '1 message is waiting to be checked',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationsWaitingAction => 'See them';
 
   @override
   String get settingsNotifications => 'Watch for scams as they arrive';

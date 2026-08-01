@@ -5,6 +5,8 @@ import 'package:salone_shield/app/providers.dart';
 import 'package:salone_shield/core/storage/preferences_service.dart';
 import 'package:salone_shield/features/notification_monitoring/application/notification_monitor_controller.dart';
 import 'package:salone_shield/features/notification_monitoring/domain/monitored_app.dart';
+import 'package:salone_shield/features/dashboard/presentation/home_screen.dart';
+import 'package:salone_shield/features/message_analysis/presentation/risk_result_screen.dart';
 import 'package:salone_shield/features/notification_monitoring/presentation/notification_monitoring_screen.dart';
 import 'package:salone_shield/l10n/app_localizations.dart';
 
@@ -242,6 +244,43 @@ void main() {
       expect(find.text(l10n.notificationsAccessMissing), findsOneWidget);
     });
 
+    testWidgets('checking a waiting message goes straight to the result', (
+      tester,
+    ) async {
+      final access = FakeNotificationAccess(granted: true);
+      final preferences = await createTestPreferences();
+      await preferences.setNotificationMonitoringEnabled(true);
+      await preferences.setAppMonitored(
+        MonitoredApp.whatsApp.packageName,
+        true,
+      );
+      access.queued.add(
+        monitoredMessage(
+          text:
+              'I mistakenly sent a six digit code to your phone. '
+              'Send it urgently.',
+        ),
+      );
+
+      await tester.pumpWidget(
+        wrapForTest(
+          const NotificationMonitoringScreen(),
+          preferences: preferences,
+          overrides: notificationOverrides(access),
+        ),
+      );
+      await tester.pumpAndSettle();
+      addTearDown(access.close);
+
+      await scrollTo(tester, find.text(l10n.notificationsCheckNow));
+      await tester.tap(find.text(l10n.notificationsCheckNow));
+      await tester.pumpAndSettle();
+
+      // No pre-filled analyser screen in between: the engine has already run.
+      expect(find.byType(RiskResultScreen), findsOneWidget);
+      expect(find.text(l10n.riskLevelCritical), findsOneWidget);
+    });
+
     testWidgets('per-app switches stay locked until monitoring is on', (
       tester,
     ) async {
@@ -262,6 +301,57 @@ void main() {
       );
       expect(appSwitch.onChanged, isNull);
       expect(appSwitch.value, isFalse);
+    });
+  });
+
+  group('the dashboard', () {
+    testWidgets('says nothing about monitoring when the build has it off', (
+      tester,
+    ) async {
+      final access = FakeNotificationAccess(
+        granted: true,
+        queued: [monitoredMessage()],
+      );
+      addTearDown(access.close);
+      await tester.pumpWidget(
+        wrapForTest(
+          const HomeScreen(),
+          preferences: await createTestPreferences(),
+          overrides: [
+            notificationAccessServiceProvider.overrideWithValue(access),
+            notificationMonitoringAvailableProvider.overrideWithValue(false),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.notificationsWaitingAction), findsNothing);
+    });
+
+    testWidgets('surfaces waiting messages without being gone looking for', (
+      tester,
+    ) async {
+      final access = FakeNotificationAccess(granted: true);
+      final preferences = await createTestPreferences();
+      await preferences.setNotificationMonitoringEnabled(true);
+      await preferences.setAppMonitored(
+        MonitoredApp.whatsApp.packageName,
+        true,
+      );
+      access.queued.add(monitoredMessage());
+
+      await tester.pumpWidget(
+        wrapForTest(
+          const HomeScreen(),
+          preferences: preferences,
+          overrides: notificationOverrides(access),
+        ),
+      );
+      await tester.pumpAndSettle();
+      addTearDown(access.close);
+
+      expect(find.text(l10n.notificationsWaitingBanner(1)), findsOneWidget);
+      expect(find.text(l10n.notificationsWaitingAction), findsOneWidget);
     });
   });
 }

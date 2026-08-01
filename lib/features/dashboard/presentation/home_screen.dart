@@ -13,6 +13,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../services/risk_engine/models/risk_level.dart';
 import '../../message_analysis/application/analysis_controller.dart';
 import '../../message_analysis/presentation/widgets/risk_level_banner.dart';
+import '../../notification_monitoring/application/notification_monitor_controller.dart';
 import '../../trusted_contacts/application/trusted_contacts_controller.dart';
 
 /// Home dashboard (specification section 7.5).
@@ -50,6 +51,7 @@ class HomeScreen extends ConsumerWidget {
                 contactCount: contacts.length,
               ),
             ),
+            const _WaitingMessagesBanner(),
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 DsSpace.screenGutter,
@@ -114,6 +116,77 @@ class HomeScreen extends ConsumerWidget {
                 0,
               ),
               child: _RecentSection(entries: recent),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Messages the notification listener queued while the app was closed.
+///
+/// Shown on the dashboard rather than only in settings: a warning the user has
+/// to go looking for is not a warning. Nothing is rendered at all when the
+/// build has monitoring switched off, so the provider is not even read.
+class _WaitingMessagesBanner extends ConsumerWidget {
+  const _WaitingMessagesBanner();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (!ref.watch(notificationMonitoringAvailableProvider)) {
+      return const SizedBox.shrink();
+    }
+
+    final waiting = ref.watch(notificationMonitorControllerProvider).pending;
+    if (waiting.isEmpty) return const SizedBox.shrink();
+
+    final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final urgent = waiting.any((message) => message.interrupt);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        DsSpace.screenGutter,
+        DsSpace.x4,
+        DsSpace.screenGutter,
+        0,
+      ),
+      child: DsCard(
+        onTap: () => context.pushNamed(AppRoute.notifications.name),
+        background: urgent ? scheme.errorContainer : scheme.primaryContainer,
+        borderColor: Colors.transparent,
+        child: Row(
+          children: [
+            Icon(
+              urgent
+                  ? Icons.warning_amber_rounded
+                  : Icons.mark_email_unread_outlined,
+              size: 20,
+              color: urgent
+                  ? scheme.onErrorContainer
+                  : scheme.onPrimaryContainer,
+            ),
+            const SizedBox(width: DsSpace.x3),
+            Expanded(
+              child: Text(
+                l10n.notificationsWaitingBanner(waiting.length),
+                style: AppType.bodySm.copyWith(
+                  color: urgent
+                      ? scheme.onErrorContainer
+                      : scheme.onPrimaryContainer,
+                  fontWeight: AppType.semibold,
+                ),
+              ),
+            ),
+            Text(
+              l10n.notificationsWaitingAction,
+              style: AppType.caption.copyWith(
+                color: urgent
+                    ? scheme.onErrorContainer
+                    : scheme.onPrimaryContainer,
+                fontWeight: AppType.semibold,
+              ),
             ),
           ],
         ),

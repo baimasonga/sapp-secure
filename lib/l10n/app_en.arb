@@ -37,7 +37,7 @@
   "permissionContactsTitle": "Contacts",
   "permissionContactsBody": "Only if you add a trusted contact. Your contact list is never uploaded.",
   "permissionNotificationsTitle": "Notification access",
-  "permissionNotificationsBody": "Not used yet. When it arrives it will be off by default and you will be asked first.",
+  "permissionNotificationsBody": "Only if you turn on watching for scams as they arrive. Then Salone Shield can tell you a message is worth checking — the alert never repeats the message itself.",
   "permissionNoneRequestedNote": "This version requests no sensitive permissions at all.",
   "homeTitle": "Salone Shield",
   "homeGreeting": "You are protected by checking, not by luck.",
@@ -494,6 +494,15 @@
   "notificationsDismiss": "Ignore",
   "notificationsForgetAll": "Forget all waiting messages",
   "notificationsForgotten": "Waiting messages have been forgotten.",
+  "notificationsWaitingBanner": "{count, plural, =1{1 message is waiting to be checked} other{{count} messages are waiting to be checked}}",
+  "@notificationsWaitingBanner": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsWaitingAction": "See them",
   "settingsNotifications": "Watch for scams as they arrive",
   "settingsNotificationsBody": "Check messages as your phone receives them",
   "settingsDataTitle": "Your data"

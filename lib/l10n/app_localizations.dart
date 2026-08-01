@@ -301,7 +301,7 @@ abstract class AppLocalizations {
   /// No description provided for @permissionNotificationsBody.
   ///
   /// In en, this message translates to:
-  /// **'Not used yet. When it arrives it will be off by default and you will be asked first.'**
+  /// **'Only if you turn on watching for scams as they arrive. Then Salone Shield can tell you a message is worth checking — the alert never repeats the message itself.'**
   String get permissionNotificationsBody;
 
   /// No description provided for @permissionNoneRequestedNote.
@@ -2247,6 +2247,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Waiting messages have been forgotten.'**
   String get notificationsForgotten;
+
+  /// No description provided for @notificationsWaitingBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 message is waiting to be checked} other{{count} messages are waiting to be checked}}'**
+  String notificationsWaitingBanner(int count);
+
+  /// No description provided for @notificationsWaitingAction.
+  ///
+  /// In en, this message translates to:
+  /// **'See them'**
+  String get notificationsWaitingAction;
 
   /// No description provided for @settingsNotifications.
   ///
