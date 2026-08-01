@@ -106,17 +106,41 @@ stays optional and off.
 
 ## Permissions
 
-This build declares `INTERNET` only, and requests **no runtime permissions** —
-not even for contacts, which is why the system picker is used instead of
-`READ_CONTACTS`.
+This build declares `INTERNET` and `POST_NOTIFICATIONS`, and requests no other
+runtime permission — not even for contacts, which is why the system picker is
+used instead of `READ_CONTACTS`.
 Internet access is used solely for optional Supabase sign-in, which is inert
-until the app is configured with a backend.
+until the app is configured with a backend. `POST_NOTIFICATIONS` lets the app
+tell you that a message which just arrived is worth checking; that notification
+never contains any part of the message.
 
 Android cloud backup and device-to-device transfer are disabled for app data,
 so nothing syncs to a Google account.
 
-Future permissions (notification access) will each be explained on their own
-screen before they are requested, and each will be optional.
+### Notification access
+
+Reading other applications' notifications is not a runtime permission. It is a
+grant you make in Android's own settings, and Salone Shield cannot make it for
+you — the most the app can do is open that screen. You can withdraw it there at
+any time without opening the app.
+
+Even with the grant, nothing is read until you also turn monitoring on inside
+the app and tick at least one messaging app. Those are three separate
+decisions on purpose.
+
+What monitoring can see is the notification you already see on your lock
+screen — Salone Shield cannot look inside WhatsApp, and it does not use an
+Accessibility Service. Text from a monitored notification is checked on the
+phone, held in memory for fifteen minutes at most, and is never written to
+storage or uploaded. Turning monitoring off forgets anything already seen.
+
+Notifications from apps you did not tick are never read. The list of apps that
+*can* be ticked is fixed in the code and contains messaging apps only, so
+one-time codes from your bank, your email or an authenticator are outside the
+app's reach entirely.
+
+Notification monitoring is switched off in this build. See
+[docs/ANDROID_NOTIFICATION_SERVICE.md](docs/ANDROID_NOTIFICATION_SERVICE.md).
 
 ## Analytics
 

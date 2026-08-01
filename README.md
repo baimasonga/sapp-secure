@@ -46,10 +46,22 @@ Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** and **M
 | Settings: theme, delete local data, privacy | Working |
 | Optional Supabase bootstrap | Wired, inert until configured |
 | Supabase schema, RLS, Edge Function, auth and report UI | **Written but disabled** — see below |
-| Moderation dashboard, notification monitoring | Not built — the dashboard says so plainly rather than hiding them |
+| Notification monitoring (listener, guard, interrupt filter, controls) | **Written but disabled** — see below |
+| Moderation dashboard | Not built — the app says so plainly rather than hiding it |
 
 Nothing in the table above is claimed as working unless it is covered by a test
 that runs in CI.
+
+### Notification monitoring is deliberately switched off
+
+`ENABLE_NOTIFICATION_MONITORING` defaults to `false`. The listener, the guard
+that decides what may be read, the interrupt filter, the three separate
+switches and the settings screen are all written and covered by tests — Kotlin
+unit tests on the JVM for the guard and filter, Dart tests for everything else,
+both in CI. What has *not* happened is a single run on a physical Android
+phone, and a notification listener is exactly the kind of code that behaves
+differently there. `docs/ANDROID_NOTIFICATION_SERVICE.md` lists what to verify
+on hardware before turning the flag on.
 
 ### Reporting is deliberately switched off
 
@@ -112,7 +124,7 @@ flutter run --dart-define-from-file=.env
 | `SUPABASE_URL` | Supabase project URL. Empty means local-only mode |
 | `SUPABASE_ANON_KEY` | Supabase anon/publishable key. **Never** the service-role key |
 | `ENABLE_ANALYTICS` | Off by default; analytics also require in-app consent |
-| `ENABLE_NOTIFICATION_MONITORING` | Off; the feature is not implemented yet |
+| `ENABLE_NOTIFICATION_MONITORING` | Off. Do not enable until the hardware checks in docs/ANDROID_NOTIFICATION_SERVICE.md are done |
 | `ENABLE_EXTERNAL_URL_REPUTATION` | Off; link analysis is local-only |
 | `ENABLE_REPORTING` | Off. Do not enable until the RLS plan in docs/SUPABASE_SETUP.md passes |
 
@@ -190,7 +202,15 @@ passes it to Dart over a method channel.
 exactly one person, and only that row comes back — so the app needs no
 `READ_CONTACTS` permission and can never enumerate or upload the address book.
 
-There is no notification listener and no Accessibility Service.
+`NotificationSecurityService.kt` is a `NotificationListenerService`. It reads
+notifications only from the messaging apps the user ticked, holds the text in
+memory for at most fifteen minutes, never writes or uploads it, and never
+repeats it in a notification of its own. It is guarded by
+`BIND_NOTIFICATION_LISTENER_SERVICE`, which only the system holds. The whole
+feature is off unless the build enables it — see
+[docs/ANDROID_NOTIFICATION_SERVICE.md](docs/ANDROID_NOTIFICATION_SERVICE.md).
+
+There is no Accessibility Service, and CI fails the build if one appears.
 
 ## Documentation
 
@@ -206,7 +226,5 @@ There is no notification listener and no Accessibility Service.
 | [DATABASE.md](DATABASE.md) | Schema, what is deliberately absent, what the database enforces |
 | [MODERATION_POLICY.md](MODERATION_POLICY.md) | How reports are judged, and by whom |
 | [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Backend setup and the RLS verification plan |
+| [docs/ANDROID_NOTIFICATION_SERVICE.md](docs/ANDROID_NOTIFICATION_SERVICE.md) | The notification listener, what it refuses to do, and what to verify on hardware |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Working agreements |
-
-`docs/ANDROID_NOTIFICATION_SERVICE.md` will be written alongside the milestone
-that introduces it.

@@ -1152,5 +1152,110 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSettings => 'Settings';
 
   @override
+  String get notificationsTitle => 'Watch for scams as they arrive';
+
+  @override
+  String get notificationsIntro =>
+      'Salone Shield can read the notifications from your messaging apps and tell you when a message that just arrived matches a known scam pattern.';
+
+  @override
+  String get notificationsUnavailableTitle => 'Not available in this build';
+
+  @override
+  String get notificationsUnavailableBody =>
+      'Notification monitoring is switched off in this build of the app. Everything else works: paste a message, scan a screenshot, or share a message into Salone Shield to check it.';
+
+  @override
+  String get notificationsWhatItReads => 'What it reads';
+
+  @override
+  String get notificationsWhatItReadsBody =>
+      'Only the notifications from the apps you tick below. Nothing from your bank, your email, or any app that sends you a one-time code.';
+
+  @override
+  String get notificationsWhereItGoes => 'Where it goes';
+
+  @override
+  String get notificationsWhereItGoesBody =>
+      'The text is checked on this phone and held in memory for fifteen minutes at most. It is never saved to storage and never uploaded.';
+
+  @override
+  String get notificationsWhatYouSee => 'What you will see';
+
+  @override
+  String get notificationsWhatYouSeeBody =>
+      'If a message looks like a scam, you get a notification saying it is worth checking. The message itself is never repeated in that notification.';
+
+  @override
+  String get notificationsNotAccessibility =>
+      'Salone Shield cannot see inside WhatsApp. It reads the same notification you see on your lock screen, and nothing more.';
+
+  @override
+  String get notificationsAccessTitle => 'Notification access';
+
+  @override
+  String get notificationsAccessGranted => 'Granted in Android settings';
+
+  @override
+  String get notificationsAccessMissing => 'Not granted yet';
+
+  @override
+  String get notificationsAccessAction => 'Open Android settings';
+
+  @override
+  String get notificationsAccessUnavailable =>
+      'This device has no notification-access screen.';
+
+  @override
+  String get notificationsAccessRevokeNote =>
+      'You can withdraw this at any time in Android settings, without opening Salone Shield.';
+
+  @override
+  String get notificationsSwitchTitle => 'Watch my messages';
+
+  @override
+  String get notificationsSwitchBody =>
+      'The master switch. Turning it off stops monitoring immediately and forgets anything already seen.';
+
+  @override
+  String get notificationsAppsTitle => 'Apps to watch';
+
+  @override
+  String get notificationsAppsBody =>
+      'Nothing is read until you tick at least one.';
+
+  @override
+  String get notificationsStatusActive => 'Watching now';
+
+  @override
+  String get notificationsStatusInactive => 'Not watching';
+
+  @override
+  String get notificationsPendingTitle => 'Waiting to be checked';
+
+  @override
+  String get notificationsPendingEmpty =>
+      'Nothing waiting. Messages appear here only when one arrives that is worth a look.';
+
+  @override
+  String get notificationsCheckNow => 'Check this message';
+
+  @override
+  String get notificationsDismiss => 'Ignore';
+
+  @override
+  String get notificationsForgetAll => 'Forget all waiting messages';
+
+  @override
+  String get notificationsForgotten => 'Waiting messages have been forgotten.';
+
+  @override
+  String get settingsNotifications => 'Watch for scams as they arrive';
+
+  @override
+  String get settingsNotificationsBody =>
+      'Check messages as your phone receives them';
+
+  @override
   String get settingsDataTitle => 'Your data';
 }

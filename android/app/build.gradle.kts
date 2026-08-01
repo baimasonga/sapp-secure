@@ -32,6 +32,26 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    testOptions {
+        unitTests {
+            // The notification guard is deliberately free of Android types so
+            // it can be tested here rather than only on a device.
+            isIncludeAndroidResources = false
+        }
+    }
+}
+
+dependencies {
+    // NotificationCompat and NotificationManagerCompat, used by the
+    // notification listener. Declared rather than inherited so an embedding
+    // change cannot quietly remove it.
+    implementation("androidx.core:core-ktx:1.13.1")
+
+    testImplementation("junit:junit:4.13.2")
+    // android.jar's org.json is a stub that throws; the real implementation is
+    // needed to parse the rules asset under a JVM test.
+    testImplementation("org.json:json:20240303")
 }
 
 kotlin {

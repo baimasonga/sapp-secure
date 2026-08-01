@@ -228,6 +228,55 @@ Sierra Leone, not for a hardened enterprise device.
 - **Residual risk:** Medium. Requires Play Store distribution, a published
   signing fingerprint, and user education.
 
+### T16 — Notification monitoring reading more than it should
+
+- **Asset:** every notification the phone receives, including one-time codes
+  from banks, e-mail and authenticator apps
+- **Actor:** a careless implementation, or a later change that widens the net
+- **Vector:** a `NotificationListenerService` sees *all* notifications; what
+  keeps it honest is entirely in the app's own filtering
+- **Impact:** Critical — a listener that read one-time codes would be the exact
+  attack the app exists to prevent, running with the user's blessing
+- **Likelihood:** Low, but the consequence of getting it wrong is total
+- **Mitigation:** the monitored set is a closed list of two messaging packages
+  and cannot be widened at runtime, so a code from any other app is dropped
+  before its text is touched. Three separate switches must all be on: Android's
+  grant, the app's master switch, and a per-app tick. Text is held in memory
+  only, capped at twenty entries and fifteen minutes, and is never written or
+  uploaded. Turning monitoring off clears the queue. Every rule about what may
+  be read lives in `NotificationGuard`, which is free of Android types and unit
+  tested on the JVM in CI. The feature ships disabled.
+- **Residual risk:** Medium until the hardware checks in
+  docs/ANDROID_NOTIFICATION_SERVICE.md are done. The filtering is verified; the
+  service's behaviour on a real device is not.
+
+### T17 — A warning that leaks the message it is warning about
+
+- **Asset:** the contents of a suspicious message
+- **Actor:** anyone who can see the user's lock screen
+- **Vector:** a "this looks like a scam" notification that quotes the message
+- **Impact:** Medium
+- **Likelihood:** High, if not designed against — quoting the message is the
+  obvious way to write this notification
+- **Mitigation:** the notification carries fixed text from `strings.xml` and no
+  message content of any kind. The text is shown only inside the app, on a
+  screen the user opened deliberately.
+- **Residual risk:** Low.
+
+### T18 — Accessibility Service creep
+
+- **Asset:** everything on the screen, in every app
+- **Actor:** a future contributor reaching for the easy solution to "read the
+  message, not just the notification"
+- **Vector:** adding `BIND_ACCESSIBILITY_SERVICE` to the manifest
+- **Impact:** Critical
+- **Likelihood:** Low
+- **Mitigation:** forbidden by specification section 14, stated in the README
+  and the privacy policy, and enforced in CI: the Android workflow fails the
+  build if an accessibility service appears in the manifest, and separately
+  fails if the notification listener loses its system bind guard.
+- **Residual risk:** Low.
+
 ---
 
 ## Review

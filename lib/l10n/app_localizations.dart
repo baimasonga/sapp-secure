@@ -2074,6 +2074,192 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get navSettings;
 
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch for scams as they arrive'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Salone Shield can read the notifications from your messaging apps and tell you when a message that just arrived matches a known scam pattern.'**
+  String get notificationsIntro;
+
+  /// No description provided for @notificationsUnavailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available in this build'**
+  String get notificationsUnavailableTitle;
+
+  /// No description provided for @notificationsUnavailableBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification monitoring is switched off in this build of the app. Everything else works: paste a message, scan a screenshot, or share a message into Salone Shield to check it.'**
+  String get notificationsUnavailableBody;
+
+  /// No description provided for @notificationsWhatItReads.
+  ///
+  /// In en, this message translates to:
+  /// **'What it reads'**
+  String get notificationsWhatItReads;
+
+  /// No description provided for @notificationsWhatItReadsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the notifications from the apps you tick below. Nothing from your bank, your email, or any app that sends you a one-time code.'**
+  String get notificationsWhatItReadsBody;
+
+  /// No description provided for @notificationsWhereItGoes.
+  ///
+  /// In en, this message translates to:
+  /// **'Where it goes'**
+  String get notificationsWhereItGoes;
+
+  /// No description provided for @notificationsWhereItGoesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The text is checked on this phone and held in memory for fifteen minutes at most. It is never saved to storage and never uploaded.'**
+  String get notificationsWhereItGoesBody;
+
+  /// No description provided for @notificationsWhatYouSee.
+  ///
+  /// In en, this message translates to:
+  /// **'What you will see'**
+  String get notificationsWhatYouSee;
+
+  /// No description provided for @notificationsWhatYouSeeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If a message looks like a scam, you get a notification saying it is worth checking. The message itself is never repeated in that notification.'**
+  String get notificationsWhatYouSeeBody;
+
+  /// No description provided for @notificationsNotAccessibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Salone Shield cannot see inside WhatsApp. It reads the same notification you see on your lock screen, and nothing more.'**
+  String get notificationsNotAccessibility;
+
+  /// No description provided for @notificationsAccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification access'**
+  String get notificationsAccessTitle;
+
+  /// No description provided for @notificationsAccessGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Granted in Android settings'**
+  String get notificationsAccessGranted;
+
+  /// No description provided for @notificationsAccessMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Not granted yet'**
+  String get notificationsAccessMissing;
+
+  /// No description provided for @notificationsAccessAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Android settings'**
+  String get notificationsAccessAction;
+
+  /// No description provided for @notificationsAccessUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no notification-access screen.'**
+  String get notificationsAccessUnavailable;
+
+  /// No description provided for @notificationsAccessRevokeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You can withdraw this at any time in Android settings, without opening Salone Shield.'**
+  String get notificationsAccessRevokeNote;
+
+  /// No description provided for @notificationsSwitchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch my messages'**
+  String get notificationsSwitchTitle;
+
+  /// No description provided for @notificationsSwitchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The master switch. Turning it off stops monitoring immediately and forgets anything already seen.'**
+  String get notificationsSwitchBody;
+
+  /// No description provided for @notificationsAppsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps to watch'**
+  String get notificationsAppsTitle;
+
+  /// No description provided for @notificationsAppsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is read until you tick at least one.'**
+  String get notificationsAppsBody;
+
+  /// No description provided for @notificationsStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Watching now'**
+  String get notificationsStatusActive;
+
+  /// No description provided for @notificationsStatusInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Not watching'**
+  String get notificationsStatusInactive;
+
+  /// No description provided for @notificationsPendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to be checked'**
+  String get notificationsPendingTitle;
+
+  /// No description provided for @notificationsPendingEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing waiting. Messages appear here only when one arrives that is worth a look.'**
+  String get notificationsPendingEmpty;
+
+  /// No description provided for @notificationsCheckNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Check this message'**
+  String get notificationsCheckNow;
+
+  /// No description provided for @notificationsDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore'**
+  String get notificationsDismiss;
+
+  /// No description provided for @notificationsForgetAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget all waiting messages'**
+  String get notificationsForgetAll;
+
+  /// No description provided for @notificationsForgotten.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting messages have been forgotten.'**
+  String get notificationsForgotten;
+
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch for scams as they arrive'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsNotificationsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Check messages as your phone receives them'**
+  String get settingsNotificationsBody;
+
   /// No description provided for @settingsDataTitle.
   ///
   /// In en, this message translates to:

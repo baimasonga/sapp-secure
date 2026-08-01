@@ -4,6 +4,13 @@
          all message analysis runs on the device. No contacts, SMS, storage or
          accessibility permissions are declared in this milestone. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- POST_NOTIFICATIONS lets the app tell you that a message which just
+         arrived is worth checking. The notification carries no message text.
+         Notification *access* (reading other apps' notifications) is not a
+         uses-permission: it is the BIND_NOTIFICATION_LISTENER_SERVICE guard on
+         the service below, which only the system can bind to and which the
+         user must switch on themselves in Android settings. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="Salone Shield"
         android:allowBackup="false"
@@ -40,6 +47,22 @@
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
+        <!-- Reads messaging notifications so a scam can be caught as it
+             arrives. Only the system may bind to it, and only after the user
+             grants notification access in Android's own settings — the app
+             cannot grant this to itself. exported="true" is required for the
+             system to bind it at all; what keeps everyone else out is the
+             bind permission below, which is signature-level and held only by
+             the system. -->
+        <service
+            android:name=".NotificationSecurityService"
+            android:label="@string/notification_listener_label"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService"/>
+            </intent-filter>
+        </service>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

@@ -1,19 +1,24 @@
 package com.gsit.saloneshield
 
 import android.content.Intent
+import com.gsit.saloneshield.notifications.NotificationAccessDelegate
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 /**
- * The whole of the native surface: text shared into the app, and the system
- * contact picker.
+ * The native surface: text shared into the app, the system contact picker, and
+ * the bridge to the notification listener.
  *
  * The activity reads only [Intent.EXTRA_TEXT] from a share the user performed
  * deliberately, and only the single contact row the system picker hands back.
- * It never reads another application's data, notifications or accessibility
- * events, declares no contacts permission, and stores nothing: values are
- * passed to Dart and forgotten.
+ * It declares no contacts permission, uses no accessibility events, and stores
+ * nothing: values are passed to Dart and forgotten.
+ *
+ * Notification monitoring is the one thing here the activity does not do
+ * itself. It can report whether Android has granted access and open the
+ * settings page where the user grants it, but the reading happens in
+ * [NotificationSecurityService], which only the system can start.
  */
 class MainActivity : FlutterActivity() {
 
@@ -24,10 +29,14 @@ class MainActivity : FlutterActivity() {
 
     private val contactPicker by lazy { ContactPickerDelegate(this) }
 
+    private val notificationAccess by lazy { NotificationAccessDelegate(this) }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
         pendingSharedText = extractSharedText(intent)
+
+        notificationAccess.attach(flutterEngine.dartExecutor.binaryMessenger)
 
         channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).apply {
             setMethodCallHandler { call, result ->
@@ -66,6 +75,7 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun onDestroy() {
+        notificationAccess.detach()
         contactPicker.dispose()
         channel?.setMethodCallHandler(null)
         channel = null

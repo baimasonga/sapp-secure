@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The only strings the app shows from outside Flutter.
+
+  They are deliberately vague about the message itself: this text can appear on
+  a locked screen, next to the very notification it is warning about, and
+  repeating any part of a suspicious message there would undo the care taken
+  everywhere else.
+-->
+<resources>
+    <string name="notification_channel_name">Message checks</string>
+    <string name="notification_channel_description">Tells you when a message that just arrived is worth checking.</string>
+    <string name="notification_check_title">Worth checking</string>
+    <string name="notification_check_body">A message that just arrived matches a known scam pattern. Open Salone Shield to see why.</string>
+    <string name="notification_listener_label">Salone Shield message checks</string>
+</resources>

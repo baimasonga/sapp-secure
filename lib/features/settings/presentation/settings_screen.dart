@@ -78,6 +78,12 @@ class SettingsScreen extends ConsumerWidget {
                       : null,
                 ),
                 DsListRow(
+                  leading: Icons.notifications_active_outlined,
+                  title: l10n.settingsNotifications,
+                  subtitle: l10n.settingsNotificationsBody,
+                  onTap: () => context.pushNamed(AppRoute.notifications.name),
+                ),
+                DsListRow(
                   leading: Icons.policy_outlined,
                   title: l10n.settingsPrivacyPolicy,
                   onTap: () => context.pushNamed(AppRoute.privacy.name),

@@ -20,6 +20,17 @@ class PreferencesService {
   static const String _keyAnalyticsConsent = 'privacy.analytics_consent';
   static const String _keyRecentAnalyses = 'history.recent_analyses';
 
+  /// Notification monitoring, read from Kotlin as well as from Dart.
+  ///
+  /// The listener service reads these same keys directly out of the
+  /// shared-preferences file, so turning monitoring off here stops the next
+  /// notification being read rather than the next time the service restarts.
+  /// The names must not change without changing `MonitoringSettings.kt`.
+  static const String _keyNotificationsEnabled =
+      'notifications.monitoring_enabled';
+  static String _keyMonitoredApp(String packageName) =>
+      'notifications.app.$packageName';
+
   /// Retention limits from section 15.3.
   static const int maxRecentAnalyses = 20;
   static const Duration recentAnalysisRetention = Duration(days: 30);
@@ -44,6 +55,25 @@ class PreferencesService {
   bool get analyticsConsent => _prefs.getBool(_keyAnalyticsConsent) ?? false;
   Future<void> setAnalyticsConsent(bool value) =>
       _prefs.setBool(_keyAnalyticsConsent, value);
+
+  /// The master switch for notification monitoring.
+  ///
+  /// Off until the user turns it on inside the app, even if Android has
+  /// already granted notification access: a system grant is permission to
+  /// read, not an instruction to start.
+  bool get notificationMonitoringEnabled =>
+      _prefs.getBool(_keyNotificationsEnabled) ?? false;
+
+  Future<void> setNotificationMonitoringEnabled(bool value) =>
+      _prefs.setBool(_keyNotificationsEnabled, value);
+
+  /// Whether a particular messaging app is monitored. Off by default, so
+  /// enabling monitoring alone still reads nothing until an app is chosen.
+  bool isAppMonitored(String packageName) =>
+      _prefs.getBool(_keyMonitoredApp(packageName)) ?? false;
+
+  Future<void> setAppMonitored(String packageName, bool value) =>
+      _prefs.setBool(_keyMonitoredApp(packageName), value);
 
   /// Reads the local history, dropping anything past the retention window.
   List<Map<String, Object?>> recentAnalyses() {

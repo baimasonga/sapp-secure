@@ -35,14 +35,41 @@ jobs:
       - name: Build debug APK
         run: flutter build apk --debug
 
+      - name: Run the native unit tests
+        # The notification guard and the interrupt filter decide what the
+        # listener is allowed to read. They are written free of Android types
+        # precisely so that decision can be tested here rather than only on a
+        # device.
+        working-directory: android
+        run: ./gradlew :app:testDebugUnitTest
+
       - name: Check the source manifest declares no sensitive permissions
+        # INTERNET is for optional sign-in and reporting. POST_NOTIFICATIONS
+        # lets the app tell you a message is worth checking; the notification
+        # it posts contains no message text. Reading other apps' notifications
+        # is not a uses-permission at all — it is the bind guard on the
+        # listener service, checked separately below.
         run: |
           MANIFEST=android/app/src/main/AndroidManifest.xml
           UNEXPECTED=$(grep -oE 'android:name="android\.permission\.[A-Z_]+"' "$MANIFEST" \
-            | grep -v 'android.permission.INTERNET' || true)
+            | grep -vE 'android.permission.(INTERNET|POST_NOTIFICATIONS)' || true)
           if [ -n "$UNEXPECTED" ]; then
             echo "::error::Unexpected permissions declared in the manifest:"
             echo "$UNEXPECTED"
+            exit 1
+          fi
+
+      - name: Check the notification listener stays behind the system bind guard
+        # A listener service without this attribute could be bound by any
+        # application on the device. An accessibility service must never
+        # appear here at all: the specification rules it out, and it is the
+        # single most abusable capability an app of this kind could ask for.
+        run: |
+          MANIFEST=android/app/src/main/AndroidManifest.xml
+          grep -q 'android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"' "$MANIFEST" \
+            || (echo "::error::The notification listener is not guarded by the system bind permission." && exit 1)
+          if grep -q 'BIND_ACCESSIBILITY_SERVICE\|accessibilityservice' "$MANIFEST"; then
+            echo "::error::An accessibility service was declared. Section 14 forbids this."
             exit 1
           fi
 
@@ -63,7 +90,10 @@ jobs:
             | grep -oE 'android\.permission\.[A-Z_]+' | sort -u || true)
           echo "Permissions in the APK:"
           echo "$PERMS"
-          FORBIDDEN='READ_CONTACTS|WRITE_CONTACTS|READ_SMS|RECEIVE_SMS|SEND_SMS|READ_PHONE_STATE|READ_CALL_LOG|RECORD_AUDIO|CAMERA|ACCESS_FINE_LOCATION|ACCESS_COARSE_LOCATION|READ_EXTERNAL_STORAGE|WRITE_EXTERNAL_STORAGE|READ_MEDIA_IMAGES|SYSTEM_ALERT_WINDOW|BIND_ACCESSIBILITY_SERVICE|BIND_NOTIFICATION_LISTENER_SERVICE'
+          # BIND_NOTIFICATION_LISTENER_SERVICE stays on the list: it belongs
+          # on the service element as a guard, never as a permission the app
+          # requests for itself.
+          FORBIDDEN='READ_CONTACTS|WRITE_CONTACTS|READ_SMS|RECEIVE_SMS|SEND_SMS|READ_PHONE_STATE|READ_CALL_LOG|RECORD_AUDIO|CAMERA|ACCESS_FINE_LOCATION|ACCESS_COARSE_LOCATION|READ_EXTERNAL_STORAGE|WRITE_EXTERNAL_STORAGE|READ_MEDIA_IMAGES|SYSTEM_ALERT_WINDOW|BIND_ACCESSIBILITY_SERVICE'
           MATCHES=$(echo "$PERMS" | grep -E "$FORBIDDEN" || true)
           if [ -n "$MATCHES" ]; then
             echo "::error::The APK requests permissions Salone Shield must not have:"

@@ -7,6 +7,7 @@ import '../features/identity_verification/presentation/verify_person_screen.dart
 import '../features/link_analysis/presentation/link_checker_screen.dart';
 import '../features/message_analysis/presentation/analyse_message_screen.dart';
 import '../features/message_analysis/presentation/risk_result_screen.dart';
+import '../features/notification_monitoring/presentation/notification_monitoring_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/screenshot_analysis/presentation/screenshot_scanner_screen.dart';
 import '../features/threat_reporting/presentation/report_history_screen.dart';
@@ -32,6 +33,7 @@ enum AppRoute {
   reports('/reports'),
   trustedContacts('/trusted-contacts'),
   settings('/settings'),
+  notifications('/notifications'),
   privacy('/privacy');
 
   const AppRoute(this.path);
@@ -152,6 +154,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                 (prefill['signals'] as List?)?.cast<String>() ?? const [],
           );
         },
+      ),
+      GoRoute(
+        path: AppRoute.notifications.path,
+        name: AppRoute.notifications.name,
+        builder: (context, state) => const NotificationMonitoringScreen(),
       ),
       GoRoute(
         path: AppRoute.privacy.path,
