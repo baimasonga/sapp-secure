@@ -302,5 +302,50 @@
   "settingsDeleteContactsDone": "Trusted contacts deleted.",
   "settingsDeleteVerifications": "Delete verification history",
   "settingsDeleteVerificationsBody": "Removes the record of numbers you have checked.",
-  "settingsDeleteVerificationsDone": "Verification history deleted."
+  "settingsDeleteVerificationsDone": "Verification history deleted.",
+  "screenshotTitle": "Scan a screenshot",
+  "screenshotIntro": "Pick a screenshot of the message. The text is read on your phone, and the app's copy of the picture is deleted straight afterwards.",
+  "screenshotChoose": "Choose a screenshot",
+  "screenshotChooseAnother": "Choose a different picture",
+  "screenshotReading": "Reading the text…",
+  "screenshotReviewTitle": "Check the text",
+  "screenshotReviewBody": "Reading text from a picture is not perfect. Fix anything that came out wrong before you analyse it.",
+  "screenshotEmpty": "No text could be read from that picture. Try a clearer screenshot, or type the message instead.",
+  "screenshotAnalyse": "Analyse this text",
+  "screenshotFailed": "The text could not be read. The picture was not saved. You can try another one.",
+  "screenshotPrivacyNote": "The picture is read on your phone and never uploaded. Your own photo stays in your gallery; only the app's copy is deleted.",
+  "screenshotUnsupported": "That file type is not supported. Use a PNG, JPG or WEBP screenshot.",
+  "linkCheckTitle": "Check a link",
+  "linkCheckIntro": "Paste a link, or the whole message it came in. The link is examined on your phone and never opened.",
+  "linkCheckHint": "Paste the link here…",
+  "linkCheckRun": "Check the link",
+  "linkCheckEmptyError": "Paste a link first.",
+  "linkCheckInvalid": "That does not look like a web address. Check it and try again.",
+  "linkCheckTooLong": "That link is too long to check.",
+  "linkCheckResultSafeTitle": "Nothing suspicious found",
+  "linkCheckResultSafeBody": "This link has none of the warning signs the app knows about. That is not the same as safe — the app cannot see what the page actually does.",
+  "linkCheckResultWarnTitle": "This link has warning signs",
+  "linkCheckResultDangerTitle": "Do not open this link",
+  "linkCheckAddress": "Address",
+  "linkCheckDomain": "Real domain",
+  "linkCheckHttps": "Secure connection (https)",
+  "linkCheckHttpsYes": "Yes",
+  "linkCheckHttpsNo": "No",
+  "linkCheckFindings": "What we found",
+  "linkCheckWhatToDo": "What to do",
+  "linkCheckAdviceDanger": "Do not open it. If you need the service, type the official address into your browser yourself.",
+  "linkCheckAdviceWarn": "Be careful. Do not sign in or enter any code or PIN on a page you reached from a message.",
+  "linkCheckAdviceSafe": "If you were not expecting this link, ask the sender on a number you trust before opening it.",
+  "linkCheckCopy": "Copy the link",
+  "linkCheckCopied": "Link copied.",
+  "linkCheckAnother": "Check another link",
+  "linkCheckNotOpened": "Salone Shield never opens links for you.",
+  "linkCheckBrandWarning": "This address is made to look like {brand}, but it is not their real website.",
+  "@linkCheckBrandWarning": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  }
 }

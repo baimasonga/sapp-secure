@@ -6,6 +6,8 @@ import '../core/storage/secure_storage_service.dart';
 import '../services/risk_engine/engine_strings.dart';
 import '../services/risk_engine/risk_engine.dart';
 import '../services/contacts/contact_picker_service.dart';
+import '../services/images/screenshot_picker_service.dart';
+import '../services/ocr/text_recogniser.dart';
 import '../services/risk_engine/rule_repository.dart';
 import '../services/sharing/shared_text_service.dart';
 
@@ -19,6 +21,20 @@ final preferencesServiceProvider = Provider<PreferencesService>(
 final secureStorageProvider = Provider<SecureStorageService>(
   (ref) => SecureStorageService.create(),
 );
+
+/// Chooses a screenshot through the platform photo picker. Overridden in
+/// tests, which must not touch the gallery.
+final screenshotPickerServiceProvider = Provider<ScreenshotPickerService>(
+  (ref) => ScreenshotPickerService(),
+);
+
+/// On-device OCR. Overridden in tests, because ML Kit needs a real device.
+final textRecogniserProvider = Provider<TextRecogniser>((ref) {
+  final recogniser = MlKitTextRecogniser();
+  // The recogniser holds native resources; release them with the provider.
+  ref.onDispose(recogniser.dispose);
+  return recogniser;
+});
 
 /// Opens the system contact picker. Overridden in tests.
 final contactPickerServiceProvider = Provider<ContactPickerService>(

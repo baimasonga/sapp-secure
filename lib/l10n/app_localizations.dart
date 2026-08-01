@@ -1329,6 +1329,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Verification history deleted.'**
   String get settingsDeleteVerificationsDone;
+
+  /// No description provided for @screenshotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a screenshot'**
+  String get screenshotTitle;
+
+  /// No description provided for @screenshotIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a screenshot of the message. The text is read on your phone, and the app\'s copy of the picture is deleted straight afterwards.'**
+  String get screenshotIntro;
+
+  /// No description provided for @screenshotChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a screenshot'**
+  String get screenshotChoose;
+
+  /// No description provided for @screenshotChooseAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a different picture'**
+  String get screenshotChooseAnother;
+
+  /// No description provided for @screenshotReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the text…'**
+  String get screenshotReading;
+
+  /// No description provided for @screenshotReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the text'**
+  String get screenshotReviewTitle;
+
+  /// No description provided for @screenshotReviewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading text from a picture is not perfect. Fix anything that came out wrong before you analyse it.'**
+  String get screenshotReviewBody;
+
+  /// No description provided for @screenshotEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No text could be read from that picture. Try a clearer screenshot, or type the message instead.'**
+  String get screenshotEmpty;
+
+  /// No description provided for @screenshotAnalyse.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyse this text'**
+  String get screenshotAnalyse;
+
+  /// No description provided for @screenshotFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The text could not be read. The picture was not saved. You can try another one.'**
+  String get screenshotFailed;
+
+  /// No description provided for @screenshotPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The picture is read on your phone and never uploaded. Your own photo stays in your gallery; only the app\'s copy is deleted.'**
+  String get screenshotPrivacyNote;
+
+  /// No description provided for @screenshotUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'That file type is not supported. Use a PNG, JPG or WEBP screenshot.'**
+  String get screenshotUnsupported;
+
+  /// No description provided for @linkCheckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check a link'**
+  String get linkCheckTitle;
+
+  /// No description provided for @linkCheckIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a link, or the whole message it came in. The link is examined on your phone and never opened.'**
+  String get linkCheckIntro;
+
+  /// No description provided for @linkCheckHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the link here…'**
+  String get linkCheckHint;
+
+  /// No description provided for @linkCheckRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the link'**
+  String get linkCheckRun;
+
+  /// No description provided for @linkCheckEmptyError.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a link first.'**
+  String get linkCheckEmptyError;
+
+  /// No description provided for @linkCheckInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That does not look like a web address. Check it and try again.'**
+  String get linkCheckInvalid;
+
+  /// No description provided for @linkCheckTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'That link is too long to check.'**
+  String get linkCheckTooLong;
+
+  /// No description provided for @linkCheckResultSafeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing suspicious found'**
+  String get linkCheckResultSafeTitle;
+
+  /// No description provided for @linkCheckResultSafeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This link has none of the warning signs the app knows about. That is not the same as safe — the app cannot see what the page actually does.'**
+  String get linkCheckResultSafeBody;
+
+  /// No description provided for @linkCheckResultWarnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This link has warning signs'**
+  String get linkCheckResultWarnTitle;
+
+  /// No description provided for @linkCheckResultDangerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not open this link'**
+  String get linkCheckResultDangerTitle;
+
+  /// No description provided for @linkCheckAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get linkCheckAddress;
+
+  /// No description provided for @linkCheckDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Real domain'**
+  String get linkCheckDomain;
+
+  /// No description provided for @linkCheckHttps.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure connection (https)'**
+  String get linkCheckHttps;
+
+  /// No description provided for @linkCheckHttpsYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get linkCheckHttpsYes;
+
+  /// No description provided for @linkCheckHttpsNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get linkCheckHttpsNo;
+
+  /// No description provided for @linkCheckFindings.
+  ///
+  /// In en, this message translates to:
+  /// **'What we found'**
+  String get linkCheckFindings;
+
+  /// No description provided for @linkCheckWhatToDo.
+  ///
+  /// In en, this message translates to:
+  /// **'What to do'**
+  String get linkCheckWhatToDo;
+
+  /// No description provided for @linkCheckAdviceDanger.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not open it. If you need the service, type the official address into your browser yourself.'**
+  String get linkCheckAdviceDanger;
+
+  /// No description provided for @linkCheckAdviceWarn.
+  ///
+  /// In en, this message translates to:
+  /// **'Be careful. Do not sign in or enter any code or PIN on a page you reached from a message.'**
+  String get linkCheckAdviceWarn;
+
+  /// No description provided for @linkCheckAdviceSafe.
+  ///
+  /// In en, this message translates to:
+  /// **'If you were not expecting this link, ask the sender on a number you trust before opening it.'**
+  String get linkCheckAdviceSafe;
+
+  /// No description provided for @linkCheckCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the link'**
+  String get linkCheckCopy;
+
+  /// No description provided for @linkCheckCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied.'**
+  String get linkCheckCopied;
+
+  /// No description provided for @linkCheckAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Check another link'**
+  String get linkCheckAnother;
+
+  /// No description provided for @linkCheckNotOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'Salone Shield never opens links for you.'**
+  String get linkCheckNotOpened;
+
+  /// No description provided for @linkCheckBrandWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This address is made to look like {brand}, but it is not their real website.'**
+  String linkCheckBrandWarning(String brand);
 }
 
 class _AppLocalizationsDelegate

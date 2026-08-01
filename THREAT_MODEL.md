@@ -65,8 +65,10 @@ Sierra Leone, not for a hardened enterprise device.
 - **Impact:** High
 - **Likelihood:** Medium
 - **Mitigation:** twelve offline checks including brand look-alikes for
-  WhatsApp, Orange Money and Afrimoney; flagged links are shown as plain text
-  and are never tappable
+  WhatsApp, Orange Money and Afrimoney. Flagged links are shown as plain text
+  and are never tappable, and the dedicated link checker offers to copy a link
+  but never to open one — a test asserts no "open" action exists. A link that
+  imitates a brand is named as such in plain words.
 - **Residual risk:** Medium. The analyser never opens or follows a link, so a
   clean-looking URL that redirects to a malicious page is not caught. The
   registrable-domain comparison is a heuristic, not a public-suffix list.
@@ -107,11 +109,16 @@ Sierra Leone, not for a hardened enterprise device.
 - **Actor:** the user, unintentionally
 - **Vector:** importing a screenshot that shows a whole conversation
 - **Impact:** Medium
-- **Likelihood:** High once screenshot import ships
-- **Mitigation:** not applicable yet — the feature is not built
-- **Residual risk:** Deferred. Requirements are already fixed: OCR runs locally,
-  extracted text is editable before analysis, the image is deleted unless the
-  user saves it, and uploading needs separate consent.
+- **Likelihood:** High
+- **Mitigation:** OCR runs on the device and nothing is uploaded, so unrelated
+  content in the screenshot never leaves the phone. The app's copy of the image
+  is deleted as soon as the text is read, including when recognition fails. The
+  user sees and can edit the extracted text before it is analysed, so anything
+  irrelevant can be removed first. Selection goes through the system photo
+  picker, so the app cannot reach any other image.
+- **Residual risk:** Low while analysis is local. It rises when reporting ships:
+  attaching a screenshot to a report must be a separate, explicit consent, and
+  crop or blur tools should land before that.
 
 ### T8 — Contact-data over-collection
 

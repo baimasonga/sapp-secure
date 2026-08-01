@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../features/dashboard/presentation/home_screen.dart';
 import '../features/identity_verification/presentation/verify_person_screen.dart';
+import '../features/link_analysis/presentation/link_checker_screen.dart';
 import '../features/message_analysis/presentation/analyse_message_screen.dart';
 import '../features/message_analysis/presentation/risk_result_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
+import '../features/screenshot_analysis/presentation/screenshot_scanner_screen.dart';
 import '../features/onboarding/presentation/permissions_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/trusted_contacts/presentation/trusted_contacts_screen.dart';
@@ -20,6 +22,8 @@ enum AppRoute {
   home('/home'),
   analyse('/analyse'),
   analysisResult('/analysis-result'),
+  screenshot('/screenshot'),
+  linkCheck('/link-check'),
   verify('/verify'),
   trustedContacts('/trusted-contacts'),
   settings('/settings'),
@@ -71,6 +75,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoute.analysisResult.path,
         name: AppRoute.analysisResult.name,
         builder: (context, state) => const RiskResultScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.screenshot.path,
+        name: AppRoute.screenshot.name,
+        builder: (context, state) => const ScreenshotScannerScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.linkCheck.path,
+        name: AppRoute.linkCheck.name,
+        builder: (context, state) => LinkCheckerScreen(
+          initialUrl: state.extra is String ? state.extra! as String : null,
+        ),
       ),
       GoRoute(
         path: AppRoute.verify.path,

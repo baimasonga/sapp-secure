@@ -713,4 +713,132 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsDeleteVerificationsDone => 'Verification history deleted.';
+
+  @override
+  String get screenshotTitle => 'Scan a screenshot';
+
+  @override
+  String get screenshotIntro =>
+      'Pick a screenshot of the message. The text is read on your phone, and the app\'s copy of the picture is deleted straight afterwards.';
+
+  @override
+  String get screenshotChoose => 'Choose a screenshot';
+
+  @override
+  String get screenshotChooseAnother => 'Choose a different picture';
+
+  @override
+  String get screenshotReading => 'Reading the text…';
+
+  @override
+  String get screenshotReviewTitle => 'Check the text';
+
+  @override
+  String get screenshotReviewBody =>
+      'Reading text from a picture is not perfect. Fix anything that came out wrong before you analyse it.';
+
+  @override
+  String get screenshotEmpty =>
+      'No text could be read from that picture. Try a clearer screenshot, or type the message instead.';
+
+  @override
+  String get screenshotAnalyse => 'Analyse this text';
+
+  @override
+  String get screenshotFailed =>
+      'The text could not be read. The picture was not saved. You can try another one.';
+
+  @override
+  String get screenshotPrivacyNote =>
+      'The picture is read on your phone and never uploaded. Your own photo stays in your gallery; only the app\'s copy is deleted.';
+
+  @override
+  String get screenshotUnsupported =>
+      'That file type is not supported. Use a PNG, JPG or WEBP screenshot.';
+
+  @override
+  String get linkCheckTitle => 'Check a link';
+
+  @override
+  String get linkCheckIntro =>
+      'Paste a link, or the whole message it came in. The link is examined on your phone and never opened.';
+
+  @override
+  String get linkCheckHint => 'Paste the link here…';
+
+  @override
+  String get linkCheckRun => 'Check the link';
+
+  @override
+  String get linkCheckEmptyError => 'Paste a link first.';
+
+  @override
+  String get linkCheckInvalid =>
+      'That does not look like a web address. Check it and try again.';
+
+  @override
+  String get linkCheckTooLong => 'That link is too long to check.';
+
+  @override
+  String get linkCheckResultSafeTitle => 'Nothing suspicious found';
+
+  @override
+  String get linkCheckResultSafeBody =>
+      'This link has none of the warning signs the app knows about. That is not the same as safe — the app cannot see what the page actually does.';
+
+  @override
+  String get linkCheckResultWarnTitle => 'This link has warning signs';
+
+  @override
+  String get linkCheckResultDangerTitle => 'Do not open this link';
+
+  @override
+  String get linkCheckAddress => 'Address';
+
+  @override
+  String get linkCheckDomain => 'Real domain';
+
+  @override
+  String get linkCheckHttps => 'Secure connection (https)';
+
+  @override
+  String get linkCheckHttpsYes => 'Yes';
+
+  @override
+  String get linkCheckHttpsNo => 'No';
+
+  @override
+  String get linkCheckFindings => 'What we found';
+
+  @override
+  String get linkCheckWhatToDo => 'What to do';
+
+  @override
+  String get linkCheckAdviceDanger =>
+      'Do not open it. If you need the service, type the official address into your browser yourself.';
+
+  @override
+  String get linkCheckAdviceWarn =>
+      'Be careful. Do not sign in or enter any code or PIN on a page you reached from a message.';
+
+  @override
+  String get linkCheckAdviceSafe =>
+      'If you were not expecting this link, ask the sender on a number you trust before opening it.';
+
+  @override
+  String get linkCheckCopy => 'Copy the link';
+
+  @override
+  String get linkCheckCopied => 'Link copied.';
+
+  @override
+  String get linkCheckAnother => 'Check another link';
+
+  @override
+  String get linkCheckNotOpened => 'Salone Shield never opens links for you.';
+
+  @override
+  String linkCheckBrandWarning(String brand) {
+    return 'This address is made to look like $brand, but it is not their real website.';
+  }
 }

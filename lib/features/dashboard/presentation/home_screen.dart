@@ -48,14 +48,13 @@ class HomeScreen extends ConsumerWidget {
               icon: Icons.image_search_outlined,
               title: l10n.homeActionScreenshot,
               subtitle: l10n.homeActionScreenshotSubtitle,
-              onTap: () =>
-                  showComingSoonSheet(context, l10n.homeActionScreenshot),
+              onTap: () => context.pushNamed(AppRoute.screenshot.name),
             ),
             _ActionTile(
               icon: Icons.link_outlined,
               title: l10n.homeActionLink,
               subtitle: l10n.homeActionLinkSubtitle,
-              onTap: () => showComingSoonSheet(context, l10n.homeActionLink),
+              onTap: () => context.pushNamed(AppRoute.linkCheck.name),
             ),
             _ActionTile(
               icon: Icons.contacts_outlined,

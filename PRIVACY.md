@@ -84,6 +84,26 @@ holds no contacts permission and cannot read the rest of your address book.
 A verification record keeps the number you checked, who the message claimed to
 be, and what you concluded. It holds no message text.
 
+### Screenshots
+
+You choose the image through the platform photo picker, which shows the
+system's own UI and hands back only the picture you selected — so the app holds
+no photo or storage permission and cannot browse your gallery.
+
+The text is read on the device. The picture is never uploaded. The picker makes
+a copy of your image in the app's cache; that copy is deleted as soon as the
+text has been read, whether or not recognition succeeded. Your own photo is
+left alone.
+
+Recognised text is shown to you for correction before anything is analysed, and
+is treated exactly like a pasted message after that: not retained.
+
+### Links
+
+Links are examined entirely on the device and are **never opened** by the app.
+No part of a message and no URL is sent to a reputation service; that feature
+stays optional and off.
+
 ## Permissions
 
 This build declares `INTERNET` only, and requests **no runtime permissions** —
@@ -95,9 +115,8 @@ until the app is configured with a backend.
 Android cloud backup and device-to-device transfer are disabled for app data,
 so nothing syncs to a Google account.
 
-Future permissions (photos for screenshots, notification access) will each be
-explained on their own screen before they are requested, and each will be
-optional.
+Future permissions (notification access) will each be explained on their own
+screen before they are requested, and each will be optional.
 
 ## Analytics
 

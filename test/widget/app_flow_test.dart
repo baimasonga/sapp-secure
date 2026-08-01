@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:salone_shield/app/providers.dart';
 import 'package:salone_shield/features/dashboard/presentation/home_screen.dart';
+import 'package:salone_shield/features/link_analysis/presentation/link_checker_screen.dart';
 import 'package:salone_shield/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:salone_shield/features/onboarding/presentation/permissions_screen.dart';
+import 'package:salone_shield/features/screenshot_analysis/presentation/screenshot_scanner_screen.dart';
 import 'package:salone_shield/features/settings/presentation/settings_screen.dart';
 import 'package:salone_shield/services/sharing/shared_text_service.dart';
 
@@ -78,10 +80,33 @@ void main() {
     final l10n = await localisationsFor('en');
     await pumpApp(tester, preferences: await createOnboardedPreferences());
 
-    await tester.tap(find.text(l10n.homeActionScreenshot));
+    await scrollTo(tester, find.text(l10n.homeActionReport));
+    await tester.tap(find.text(l10n.homeActionReport));
     await tester.pumpAndSettle();
 
     expect(find.text(l10n.comingSoonTitle), findsOneWidget);
+  });
+
+  testWidgets('the dashboard opens the screenshot scanner', (tester) async {
+    final l10n = await localisationsFor('en');
+    await pumpApp(tester, preferences: await createOnboardedPreferences());
+
+    await tester.tap(find.text(l10n.homeActionScreenshot));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ScreenshotScannerScreen), findsOneWidget);
+    expect(find.text(l10n.screenshotPrivacyNote), findsOneWidget);
+  });
+
+  testWidgets('the dashboard opens the link checker', (tester) async {
+    final l10n = await localisationsFor('en');
+    await pumpApp(tester, preferences: await createOnboardedPreferences());
+
+    await tester.tap(find.text(l10n.homeActionLink));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LinkCheckerScreen), findsOneWidget);
+    expect(find.text(l10n.linkCheckNotOpened), findsOneWidget);
   });
 
   testWidgets('the privacy screen states that codes are never requested', (

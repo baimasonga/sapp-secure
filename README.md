@@ -23,8 +23,8 @@ It also avoids accusing anyone. Results are phrased as "potential scam",
 ## Current status
 
 This repository contains **Milestone 1 (Foundation)**, **Milestone 2 (Manual
-Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** of the
-build specification.
+Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** and **Milestone 4
+(Screenshot and Link Analysis)** of the build specification.
 
 | Feature | State |
 |---|---|
@@ -36,13 +36,15 @@ build specification.
 | Deterministic, explainable risk engine | Working |
 | Sierra Leone phone-number extraction | Working |
 | Offline link analysis | Working (feeds the risk score) |
+| Screenshot scanning with on-device OCR and an editable result | Working |
+| Link checker screen | Working |
 | Trusted contacts, stored encrypted on the device | Working |
 | Number comparison: is this a number that person actually uses? | Working |
 | Verification workflow with call/SMS actions and recorded outcomes | Working |
 | Local, message-free analysis history (30-day retention) | Working |
 | Settings: theme, delete local data, privacy | Working |
 | Optional Supabase bootstrap | Wired, inert until configured |
-| Screenshot OCR, link-checker screen, reporting, moderation, notification monitoring | Not built — the dashboard says so plainly rather than hiding them |
+| Reporting, moderation, notification monitoring | Not built — the dashboard says so plainly rather than hiding them |
 
 Nothing in the table above is claimed as working unless it is covered by a test
 that runs in CI.
@@ -55,10 +57,12 @@ Feature-first, with a pure-Dart core that has no Flutter dependency:
 lib/
 ├── app/           bootstrap, router, theme, providers
 ├── core/          config, typed failures, localisation delegates, storage, shared widgets
-├── features/      onboarding, dashboard, message_analysis, trusted_contacts,
-│                  identity_verification, settings
+├── features/      onboarding, dashboard, message_analysis, screenshot_analysis,
+│                  link_analysis, trusted_contacts, identity_verification,
+│                  settings
 ├── l10n/          app_en.arb, generated localisations
-└── services/      risk_engine (pure Dart), contacts, sharing, supabase
+└── services/      risk_engine (pure Dart), contacts, images, ocr, sharing,
+                   supabase
 ```
 
 `lib/services/risk_engine/` imports nothing from Flutter, so the scoring logic
@@ -116,6 +120,9 @@ flutter build appbundle --release --dart-define-from-file=.env
   including for contacts, which uses the system picker instead.
 - Trusted contacts and verification outcomes live in encrypted storage
   (Android Keystore) and are never uploaded.
+- Screenshots are read on the device by ML Kit; the app's copy of the image is
+  deleted as soon as the text is out of it, and the original stays in the
+  gallery untouched.
 - Android cloud backup and device-to-device transfer are disabled for app data.
 - Analytics are opt-in and never include message content.
 
@@ -136,9 +143,15 @@ See [PRIVACY.md](PRIVACY.md) and [THREAT_MODEL.md](THREAT_MODEL.md).
 - Link analysis is heuristic and offline. It does not follow redirects, does not
   open pages, and its registrable-domain comparison is not a public-suffix list.
 - Phone-number extraction assumes Sierra Leone for 8- and 9-digit local formats.
-- The **contact picker has not been exercised on a device**. Its Kotlin compiles
-  in CI and the Dart side is tested against a mocked channel, but the
-  system-picker round trip needs a real phone. Typing a number always works.
+- The **contact picker and OCR have not been exercised on a device**. They
+  compile in CI and the Dart around them is tested against fakes, but the
+  system-picker round trip and ML Kit's actual recognition quality need a real
+  phone. Typing a number and pasting text always work.
+- **OCR accuracy is unmeasured.** Recognised text is always shown for
+  correction before analysis, which is the mitigation, but nobody has yet
+  checked how it copes with WhatsApp screenshots on a small screen.
+- ML Kit adds meaningfully to the APK size. Measure it against typical data
+  costs before release; the model can be made downloadable if needed.
 - A number matching a trusted contact is reassuring, not proof: a stolen phone
   or a hijacked account still sends from the right number. The verification
   screen says so.
