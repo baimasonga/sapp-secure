@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:salone_shield/app/providers.dart';
 import 'package:salone_shield/features/dashboard/presentation/home_screen.dart';
-import 'package:salone_shield/features/onboarding/presentation/language_screen.dart';
 import 'package:salone_shield/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:salone_shield/features/onboarding/presentation/permissions_screen.dart';
 import 'package:salone_shield/features/settings/presentation/settings_screen.dart';
@@ -12,10 +11,10 @@ import 'package:salone_shield/services/sharing/shared_text_service.dart';
 import '../support/test_harness.dart';
 
 void main() {
-  testWidgets('a first-time user starts at language selection', (tester) async {
+  testWidgets('a first-time user starts at onboarding', (tester) async {
     await pumpApp(tester, preferences: await createTestPreferences());
 
-    expect(find.byType(LanguageScreen), findsOneWidget);
+    expect(find.byType(OnboardingScreen), findsOneWidget);
   });
 
   testWidgets('a returning user goes straight to the dashboard', (
@@ -26,29 +25,19 @@ void main() {
     expect(find.byType(HomeScreen), findsOneWidget);
   });
 
-  testWidgets('language, onboarding and permissions lead to the dashboard', (
+  testWidgets('onboarding and permissions lead to the dashboard', (
     tester,
   ) async {
     final l10n = await localisationsFor('en');
     await pumpApp(tester, preferences: await createTestPreferences());
 
-    await tester.tap(find.text('Krio'));
-    await tester.pumpAndSettle();
-    final krio = await localisationsFor('kri');
+    expect(find.text(l10n.onboardingTitle1), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(FilledButton, krio.actionContinue));
-    await tester.pumpAndSettle();
-    expect(find.byType(OnboardingScreen), findsOneWidget);
-
-    // Onboarding is now in Krio, which is the point of asking first.
-    expect(find.text(krio.onboardingTitle1), findsOneWidget);
-    expect(find.text(l10n.onboardingTitle1), findsNothing);
-
-    await tester.tap(find.widgetWithText(TextButton, krio.actionSkip));
+    await tester.tap(find.widgetWithText(TextButton, l10n.actionSkip));
     await tester.pumpAndSettle();
     expect(find.byType(PermissionsScreen), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(FilledButton, krio.actionContinue));
+    await tester.tap(find.widgetWithText(FilledButton, l10n.actionContinue));
     await tester.pumpAndSettle();
     expect(find.byType(HomeScreen), findsOneWidget);
   });
@@ -58,8 +47,6 @@ void main() {
     await pumpApp(tester, preferences: preferences);
     final l10n = await localisationsFor('en');
 
-    await tester.tap(find.widgetWithText(FilledButton, l10n.actionContinue));
-    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, l10n.actionSkip));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, l10n.actionContinue));
@@ -95,22 +82,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(l10n.comingSoonTitle), findsOneWidget);
-  });
-
-  testWidgets('settings can switch the whole app to Krio', (tester) async {
-    final english = await localisationsFor('en');
-    final krio = await localisationsFor('kri');
-    await pumpApp(tester, preferences: await createOnboardedPreferences());
-
-    await tester.tap(find.byIcon(Icons.settings_outlined));
-    await tester.pumpAndSettle();
-    expect(find.byType(SettingsScreen), findsOneWidget);
-
-    await tester.tap(find.text(english.languageKrio));
-    await tester.pumpAndSettle();
-
-    expect(find.text(krio.settingsTitle), findsOneWidget);
-    expect(find.text(english.settingsTitle), findsNothing);
   });
 
   testWidgets('the privacy screen states that codes are never requested', (

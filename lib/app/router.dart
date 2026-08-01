@@ -6,7 +6,6 @@ import '../features/dashboard/presentation/home_screen.dart';
 import '../features/identity_verification/presentation/verify_person_screen.dart';
 import '../features/message_analysis/presentation/analyse_message_screen.dart';
 import '../features/message_analysis/presentation/risk_result_screen.dart';
-import '../features/onboarding/presentation/language_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/onboarding/presentation/permissions_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
@@ -16,7 +15,6 @@ import 'providers.dart';
 /// Named routes, so navigation cannot be broken by a typo in a path string.
 enum AppRoute {
   splash('/'),
-  language('/language'),
   onboarding('/onboarding'),
   permissions('/permissions'),
   home('/home'),
@@ -41,19 +39,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.splash.path,
         name: AppRoute.splash.name,
-        redirect: (context, state) {
-          // First launch goes through language selection; afterwards straight
-          // to the dashboard.
-          if (preferences.onboardingComplete) return AppRoute.home.path;
-          if (preferences.languageCode == null) return AppRoute.language.path;
-          return AppRoute.onboarding.path;
-        },
+        redirect: (context, state) => preferences.onboardingComplete
+            ? AppRoute.home.path
+            : AppRoute.onboarding.path,
         builder: (context, state) => const SizedBox.shrink(),
-      ),
-      GoRoute(
-        path: AppRoute.language.path,
-        name: AppRoute.language.name,
-        builder: (context, state) => const LanguageScreen(),
       ),
       GoRoute(
         path: AppRoute.onboarding.path,

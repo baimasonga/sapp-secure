@@ -53,8 +53,6 @@ class _SaloneShieldAppState extends ConsumerState<SaloneShieldApp> {
 
   @override
   Widget build(BuildContext context) {
-    final language = ref.watch(languageControllerProvider);
-
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       debugShowCheckedModeBanner: false,
@@ -62,8 +60,6 @@ class _SaloneShieldAppState extends ConsumerState<SaloneShieldApp> {
       darkTheme: AppTheme.dark(),
       themeMode: ref.watch(themeModeControllerProvider),
       routerConfig: ref.watch(routerProvider),
-      // Null means "follow the phone"; once the user chooses, we obey them.
-      locale: language == null ? null : Locale(language),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: appLocalizationsDelegates,
     );

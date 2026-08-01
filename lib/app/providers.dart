@@ -41,30 +41,11 @@ final riskEngineProvider = FutureProvider<RiskEngine>(
   (ref) => ref.watch(ruleRepositoryProvider).loadEngine(),
 );
 
-/// The user's chosen language. Null until they pick one, which is what drives
-/// the language screen at first launch.
-class LanguageController extends StateNotifier<String?> {
-  LanguageController(this._preferences) : super(_preferences.languageCode);
-
-  final PreferencesService _preferences;
-
-  Future<void> select(String languageCode) async {
-    if (!EngineStrings.supportedLanguages.contains(languageCode)) return;
-    await _preferences.setLanguageCode(languageCode);
-    state = languageCode;
-  }
-}
-
-final languageControllerProvider =
-    StateNotifierProvider<LanguageController, String?>(
-      (ref) => LanguageController(ref.watch(preferencesServiceProvider)),
-    );
-
-/// The language the engine should explain results in — English until the user
-/// chooses otherwise.
+/// The language the engine explains results in. Fixed while the app ships in
+/// English only; becomes a user setting again when Krio returns
+/// (see LOCALISATION.md).
 final engineLanguageProvider = Provider<String>(
-  (ref) =>
-      ref.watch(languageControllerProvider) ?? EngineStrings.defaultLanguage,
+  (ref) => EngineStrings.defaultLanguage,
 );
 
 class ThemeModeController extends StateNotifier<ThemeMode> {

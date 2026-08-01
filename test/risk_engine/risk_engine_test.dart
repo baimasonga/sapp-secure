@@ -21,6 +21,8 @@ void main() {
       expect(engine.rules, isNotEmpty);
       for (final rule in engine.rules) {
         expect(rule.weight, inInclusiveRange(0, 100), reason: rule.id);
+        // The Krio text ships in the rule set even though the UI is English
+        // only, so the draft cannot rot before it is reviewed.
         for (final language in ['en', 'kri']) {
           expect(
             rule.explanation(language),
@@ -214,18 +216,17 @@ void main() {
       expect(result.recommendedActions, isNotEmpty);
     });
 
-    test('results are localised into Krio', () {
+    test('an unsupported language falls back to English, not to silence', () {
+      // Krio is drafted but not shipped. Asking for it must produce usable
+      // English rather than empty explanations.
       final english = engine.analyse('send me money urgently');
       final krio = engine.analyse(
         'send me money urgently',
         languageCode: 'kri',
       );
       expect(krio.score, english.score);
-      expect(krio.summary, isNot(english.summary));
-      expect(
-        krio.signals.first.explanation,
-        isNot(english.signals.first.explanation),
-      );
+      expect(krio.summary, english.summary);
+      expect(krio.signals.first.explanation, isNotEmpty);
     });
 
     test('an unknown language falls back to English rather than failing', () {

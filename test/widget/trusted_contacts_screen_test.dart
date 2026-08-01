@@ -190,20 +190,4 @@ void main() {
       hasLength(1),
     );
   });
-
-  testWidgets('the screen is translated into Krio', (tester) async {
-    final krio = await localisationsFor('kri');
-    await tester.pumpWidget(
-      wrapForTest(
-        const TrustedContactsScreen(),
-        preferences: await createOnboardedPreferences(language: 'kri'),
-        locale: 'kri',
-        overrides: [storage.override],
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    expect(find.text(krio.trustedContactsIntro), findsOneWidget);
-    expect(find.text(l10n.trustedContactsIntro), findsNothing);
-  });
 }

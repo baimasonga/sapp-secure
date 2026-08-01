@@ -88,24 +88,6 @@ void main() {
     expect(history.single['level'], isNotNull);
   });
 
-  testWidgets('the screen is fully translated into Krio', (tester) async {
-    final preferences = await createTestPreferences();
-    final english = await localisationsFor('en');
-    final krio = await localisationsFor('kri');
-
-    await tester.pumpWidget(
-      wrapForTest(
-        const AnalyseMessageScreen(),
-        preferences: preferences,
-        locale: 'kri',
-      ),
-    );
-
-    expect(krio.analyseRun, isNot(english.analyseRun));
-    expect(find.text(krio.analyseRun), findsOneWidget);
-    expect(find.text(english.analyseRun), findsNothing);
-  });
-
   testWidgets('text shared into the app is pre-filled', (tester) async {
     final preferences = await createTestPreferences();
 

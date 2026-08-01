@@ -153,20 +153,4 @@ void main() {
 
     expect(find.text(l10n.verifyPreviousImpersonation), findsOneWidget);
   });
-
-  testWidgets('the screen is translated into Krio', (tester) async {
-    final krio = await localisationsFor('kri');
-    await tester.pumpWidget(
-      wrapForTest(
-        const VerifyPersonScreen(numberE164: '+23276123456'),
-        preferences: await createOnboardedPreferences(language: 'kri'),
-        locale: 'kri',
-        overrides: [storage.override],
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    expect(find.text(krio.verifyIntro), findsOneWidget);
-    expect(find.text(l10n.verifyIntro), findsNothing);
-  });
 }

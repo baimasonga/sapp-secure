@@ -118,29 +118,4 @@ void main() {
 
     expect(find.text(l10n.comingSoonTitle), findsOneWidget);
   });
-
-  testWidgets('results are rendered in Krio when Krio is selected', (
-    tester,
-  ) async {
-    final preferences = await createTestPreferences({
-      'flutter.settings.language': 'kri',
-    });
-    final krio = await localisationsFor('kri');
-    final english = await localisationsFor('en');
-
-    await tester.pumpWidget(
-      wrapForTest(
-        const AnalyseMessageScreen(),
-        preferences: preferences,
-        locale: 'kri',
-      ),
-    );
-    await tester.enterText(find.byType(TextField), 'send me money urgently');
-    await tester.pump();
-    await tester.tap(find.widgetWithText(FilledButton, krio.analyseRun));
-    await tester.pumpAndSettle();
-
-    expect(find.text(krio.resultSignalsTitle), findsOneWidget);
-    expect(find.text(english.resultSignalsTitle), findsNothing);
-  });
 }

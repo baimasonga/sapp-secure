@@ -20,7 +20,6 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final language = ref.watch(languageControllerProvider) ?? 'en';
     final themeMode = ref.watch(themeModeControllerProvider);
     final preferences = ref.watch(preferencesServiceProvider);
 
@@ -29,24 +28,6 @@ class SettingsScreen extends ConsumerWidget {
       body: SafeArea(
         child: ListView(
           children: [
-            _SectionLabel(text: l10n.settingsLanguage),
-            RadioGroup<String>(
-              groupValue: language,
-              onChanged: (value) => _selectLanguage(ref, value),
-              child: Column(
-                children: [
-                  RadioListTile<String>(
-                    value: 'en',
-                    title: Text(l10n.languageEnglish),
-                  ),
-                  RadioListTile<String>(
-                    value: 'kri',
-                    title: Text(l10n.languageKrio),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(),
             _SectionLabel(text: l10n.settingsTheme),
             RadioGroup<ThemeMode>(
               groupValue: themeMode,
@@ -141,11 +122,6 @@ class SettingsScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  void _selectLanguage(WidgetRef ref, String? value) {
-    if (value == null) return;
-    ref.read(languageControllerProvider.notifier).select(value);
   }
 
   void _selectTheme(WidgetRef ref, ThemeMode? mode) {

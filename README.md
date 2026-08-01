@@ -28,8 +28,8 @@ build specification.
 
 | Feature | State |
 |---|---|
-| English and Krio localisation | Working |
-| Language selection, onboarding, permission explanations | Working |
+| English UI, with every string in ARB files | Working |
+| Onboarding and permission explanations | Working |
 | Home dashboard | Working |
 | Paste-and-analyse a message | Working |
 | Share a message from WhatsApp into the app | Working |
@@ -40,7 +40,7 @@ build specification.
 | Number comparison: is this a number that person actually uses? | Working |
 | Verification workflow with call/SMS actions and recorded outcomes | Working |
 | Local, message-free analysis history (30-day retention) | Working |
-| Settings: language, theme, delete local history, privacy | Working |
+| Settings: theme, delete local data, privacy | Working |
 | Optional Supabase bootstrap | Wired, inert until configured |
 | Screenshot OCR, link-checker screen, reporting, moderation, notification monitoring | Not built — the dashboard says so plainly rather than hiding them |
 
@@ -57,7 +57,7 @@ lib/
 ├── core/          config, typed failures, localisation delegates, storage, shared widgets
 ├── features/      onboarding, dashboard, message_analysis, trusted_contacts,
 │                  identity_verification, settings
-├── l10n/          app_en.arb, app_kri.arb, generated localisations
+├── l10n/          app_en.arb, generated localisations
 └── services/      risk_engine (pure Dart), contacts, sharing, supabase
 ```
 
@@ -125,10 +125,11 @@ See [PRIVACY.md](PRIVACY.md) and [THREAT_MODEL.md](THREAT_MODEL.md).
 
 - The app has **not been run on a physical device or emulator**. The debug APK
   builds in CI and every screen is covered by widget tests, but nothing here
-  substitutes for holding it in your hand — check the Krio layout, contrast and
-  touch targets on a real low-end phone before release.
-- The Krio strings are a first draft and **must be reviewed by native speakers**
-  before any public release. See [LOCALISATION.md](LOCALISATION.md).
+  substitutes for holding it in your hand — check layout, contrast and touch
+  targets on a real low-end phone before release.
+- **English only.** Krio is drafted but parked until native speakers review it;
+  the draft is in `l10n_drafts/`. Krio scam *patterns* are still detected — only
+  the interface language is English. See [LOCALISATION.md](LOCALISATION.md).
 - The rules engine is keyword-based. It will miss reworded scams and can
   produce false positives; every result therefore states what could not be
   checked, and no result is presented as proof.
