@@ -438,4 +438,279 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get urlFindingMismatch => 'Shows one address but goes to another';
+
+  @override
+  String get trustedContactsTitle => 'Trusted contacts';
+
+  @override
+  String get trustedContactsIntro =>
+      'Save the people who might ask you for money. Salone Shield can then tell you when a message claims to be one of them but comes from a different number.';
+
+  @override
+  String get trustedContactsEmpty =>
+      'No trusted contacts yet. Add the people you would actually send money to.';
+
+  @override
+  String get trustedContactsPrivacyNote =>
+      'Only the people you add are saved, on this phone only. Your contact list is never read or uploaded.';
+
+  @override
+  String trustedContactsFull(int max) {
+    return 'You have reached the limit of $max trusted contacts.';
+  }
+
+  @override
+  String get trustedContactAdd => 'Add a trusted contact';
+
+  @override
+  String get trustedContactFromPhone => 'Choose from my contacts';
+
+  @override
+  String get trustedContactManually => 'Type it in myself';
+
+  @override
+  String get trustedContactPickerUnavailable =>
+      'Could not open your contacts. You can type the number instead.';
+
+  @override
+  String get trustedContactName => 'Name';
+
+  @override
+  String get trustedContactNameHint => 'How you know them';
+
+  @override
+  String get trustedContactNumber => 'Phone number';
+
+  @override
+  String get trustedContactNumberHint => '076 123 456';
+
+  @override
+  String get trustedContactAddNumber => 'Add another number';
+
+  @override
+  String get trustedContactRelationship => 'Relationship (optional)';
+
+  @override
+  String get trustedContactRelationshipHint => 'Brother, boss, susu group…';
+
+  @override
+  String get trustedContactQuestion =>
+      'Question only they can answer (optional)';
+
+  @override
+  String get trustedContactQuestionHint => 'Where did we meet last Christmas?';
+
+  @override
+  String get trustedContactQuestionNote =>
+      'Never use a password, a PIN, or anything a bank would ask you.';
+
+  @override
+  String get trustedContactSave => 'Save contact';
+
+  @override
+  String get trustedContactSaved => 'Trusted contact saved.';
+
+  @override
+  String get trustedContactInvalid =>
+      'Enter a name and at least one phone number we can read.';
+
+  @override
+  String get trustedContactRemove => 'Remove';
+
+  @override
+  String get trustedContactRemoved => 'Trusted contact removed.';
+
+  @override
+  String trustedContactRemoveConfirm(String name) {
+    return 'Remove $name from your trusted contacts?';
+  }
+
+  @override
+  String get trustedContactPrimary => 'Main number';
+
+  @override
+  String get trustedContactSetPrimary => 'Use as main number';
+
+  @override
+  String trustedContactNumberCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numbers',
+      one: '1 number',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get verifyTitle => 'Verify the person';
+
+  @override
+  String get verifyIntro =>
+      'Before you send anything, make sure the person is who they say they are.';
+
+  @override
+  String get verifyNumberInMessage => 'Number in this message';
+
+  @override
+  String get verifyWhoClaims => 'Who does the message claim to be?';
+
+  @override
+  String get verifyChooseContact => 'Choose a trusted contact';
+
+  @override
+  String get verifyNoContactsYet =>
+      'You have not saved any trusted contacts yet.';
+
+  @override
+  String get verifyAddContactsFirst => 'Add trusted contacts';
+
+  @override
+  String get verifyClaimedNameHint => 'Name they used';
+
+  @override
+  String get verifyMatchTitle => 'Number check';
+
+  @override
+  String verifyMatchMatches(String name) {
+    return 'This is a number $name already uses.';
+  }
+
+  @override
+  String get verifyMatchMatchesBody =>
+      'That is reassuring, but a stolen phone or a hijacked account still sends messages from the right number. If money is involved, call and hear their voice.';
+
+  @override
+  String verifyMatchDiffers(String name) {
+    return 'This is NOT a number $name has used before.';
+  }
+
+  @override
+  String get verifyMatchDiffersBody =>
+      'This is the most common impersonation scam. Do not send anything. Call the number you already have saved for them.';
+
+  @override
+  String get verifyMatchUnknown => 'No saved number to compare against.';
+
+  @override
+  String get verifyMatchUnknownBody =>
+      'Save this person as a trusted contact once you know their real number, and the next message can be checked automatically.';
+
+  @override
+  String get verifyPreviousImpersonation =>
+      'You checked this number before and confirmed it was an impersonator.';
+
+  @override
+  String verifyPreviousChecks(int count) {
+    return 'You have checked this number $count times before.';
+  }
+
+  @override
+  String get verifyHowTitle => 'How to check';
+
+  @override
+  String get verifyMethodCall => 'Call the saved number';
+
+  @override
+  String get verifyMethodCallBody =>
+      'Call the number you already have, not the one in the message.';
+
+  @override
+  String get verifyMethodSms => 'Send a text to the saved number';
+
+  @override
+  String get verifyMethodSmsBody => 'Useful when the line is bad.';
+
+  @override
+  String get verifyMethodQuestion => 'Ask a private question';
+
+  @override
+  String get verifyMethodQuestionBody =>
+      'Something only the real person knows.';
+
+  @override
+  String get verifyMethodRelative => 'Ask a relative who knows them';
+
+  @override
+  String get verifyMethodRelativeBody =>
+      'Someone else who can reach the real person.';
+
+  @override
+  String get verifyDialFailed =>
+      'Could not open the phone app. Dial the number yourself.';
+
+  @override
+  String get verifyNoSavedNumber =>
+      'Choose a trusted contact first so there is a number to call.';
+
+  @override
+  String get verifyOutcomeTitle => 'What did you find out?';
+
+  @override
+  String get verifyOutcomeSafe => 'I reached them — it is really them';
+
+  @override
+  String get verifyOutcomeUnsure => 'I could not reach them';
+
+  @override
+  String get verifyOutcomeImpersonation =>
+      'It is not them — someone is pretending';
+
+  @override
+  String get verifyOutcomeSafeNote =>
+      'Saved. Remember that verifying the person does not make the request itself sensible.';
+
+  @override
+  String get verifyOutcomeUnsureNote =>
+      'Saved. Not reaching someone is not the same as it being safe — do not send anything yet.';
+
+  @override
+  String get verifyOutcomeImpersonationNote =>
+      'Saved. Do not send anything, and warn the real person that someone is using their name.';
+
+  @override
+  String get verifySaveOutcome => 'Save what I found';
+
+  @override
+  String get verifyHistoryTitle => 'Past checks';
+
+  @override
+  String get verifyHistoryEmpty => 'No checks recorded yet.';
+
+  @override
+  String get verifyOutcomeSafeShort => 'Verified safe';
+
+  @override
+  String get verifyOutcomeUnsureShort => 'Could not verify';
+
+  @override
+  String get verifyOutcomeImpersonationShort => 'Impersonation';
+
+  @override
+  String verifyKnownContactBadge(String name) {
+    return 'Saved as $name';
+  }
+
+  @override
+  String get verifyChooseNumber => 'Which number are you checking?';
+
+  @override
+  String get settingsDeleteContacts => 'Delete trusted contacts';
+
+  @override
+  String get settingsDeleteContactsBody =>
+      'Removes everyone you have saved on this phone.';
+
+  @override
+  String get settingsDeleteContactsDone => 'Trusted contacts deleted.';
+
+  @override
+  String get settingsDeleteVerifications => 'Delete verification history';
+
+  @override
+  String get settingsDeleteVerificationsBody =>
+      'Removes the record of numbers you have checked.';
+
+  @override
+  String get settingsDeleteVerificationsDone => 'Verification history deleted.';
 }

@@ -58,10 +58,10 @@ class HomeScreen extends ConsumerWidget {
               onTap: () => showComingSoonSheet(context, l10n.homeActionLink),
             ),
             _ActionTile(
-              icon: Icons.person_search_outlined,
-              title: l10n.homeActionVerify,
-              subtitle: l10n.homeActionVerifySubtitle,
-              onTap: () => showComingSoonSheet(context, l10n.homeActionVerify),
+              icon: Icons.contacts_outlined,
+              title: l10n.trustedContactsTitle,
+              subtitle: l10n.trustedContactsIntro,
+              onTap: () => context.pushNamed(AppRoute.trustedContacts.name),
             ),
             _ActionTile(
               icon: Icons.flag_outlined,

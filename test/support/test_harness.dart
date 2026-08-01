@@ -16,6 +16,8 @@ import 'package:salone_shield/l10n/app_localizations.dart';
 import 'package:salone_shield/services/risk_engine/risk_engine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fake_secure_storage.dart';
+
 /// Builds the real engine from the shipped rules so widget tests exercise the
 /// same detection logic as the app.
 RiskEngine loadShippedEngine() => RiskEngine.fromJsonString(
@@ -55,6 +57,7 @@ Widget wrapForTest(
   String locale = 'en',
   List<Override> overrides = const [],
 }) {
+  ensureFakeSecureStorage();
   final router = GoRouter(
     routes: [
       GoRoute(path: '/', builder: (context, state) => child),
@@ -99,6 +102,7 @@ Future<void> pumpApp(
   required PreferencesService preferences,
   List<Override> overrides = const [],
 }) async {
+  ensureFakeSecureStorage();
   await tester.pumpWidget(
     ProviderScope(
       overrides: [

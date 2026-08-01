@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/providers.dart';
 import '../../../core/errors/app_failure.dart';
 import '../../../core/storage/preferences_service.dart';
+import '../../../features/trusted_contacts/application/trusted_contacts_controller.dart';
 import '../../../services/risk_engine/models/risk_assessment.dart';
 import '../../../services/risk_engine/risk_engine.dart';
 
@@ -58,9 +59,15 @@ class AnalysisController extends StateNotifier<AnalysisState> {
     state = const AnalysisRunning();
     try {
       final engine = await _ref.read(riskEngineProvider.future);
+      // Trusted numbers let the engine recognise a sender the user already
+      // knows. They never leave the device.
+      final trustedNumbers = await _ref
+          .read(trustedContactRepositoryProvider)
+          .trustedNumbers();
       final assessment = engine.analyse(
         trimmed,
         languageCode: _ref.read(engineLanguageProvider),
+        context: AnalysisContext(trustedNumbersE164: trustedNumbers),
       );
       state = AnalysisSuccess(assessment);
       await _recordMetadata(assessment);

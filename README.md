@@ -22,8 +22,9 @@ It also avoids accusing anyone. Results are phrased as "potential scam",
 
 ## Current status
 
-This repository contains **Milestone 1 (Foundation)** and **Milestone 2 (Manual
-Risk Analysis)** of the build specification.
+This repository contains **Milestone 1 (Foundation)**, **Milestone 2 (Manual
+Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** of the
+build specification.
 
 | Feature | State |
 |---|---|
@@ -35,10 +36,13 @@ Risk Analysis)** of the build specification.
 | Deterministic, explainable risk engine | Working |
 | Sierra Leone phone-number extraction | Working |
 | Offline link analysis | Working (feeds the risk score) |
+| Trusted contacts, stored encrypted on the device | Working |
+| Number comparison: is this a number that person actually uses? | Working |
+| Verification workflow with call/SMS actions and recorded outcomes | Working |
 | Local, message-free analysis history (30-day retention) | Working |
 | Settings: language, theme, delete local history, privacy | Working |
 | Optional Supabase bootstrap | Wired, inert until configured |
-| Screenshot OCR, link-checker screen, verify person, trusted contacts, reporting, moderation, notification monitoring | Not built — the dashboard says so plainly rather than hiding them |
+| Screenshot OCR, link-checker screen, reporting, moderation, notification monitoring | Not built — the dashboard says so plainly rather than hiding them |
 
 Nothing in the table above is claimed as working unless it is covered by a test
 that runs in CI.
@@ -51,9 +55,10 @@ Feature-first, with a pure-Dart core that has no Flutter dependency:
 lib/
 ├── app/           bootstrap, router, theme, providers
 ├── core/          config, typed failures, localisation delegates, storage, shared widgets
-├── features/      onboarding, dashboard, message_analysis, settings
+├── features/      onboarding, dashboard, message_analysis, trusted_contacts,
+│                  identity_verification, settings
 ├── l10n/          app_en.arb, app_kri.arb, generated localisations
-└── services/      risk_engine (pure Dart), sharing, supabase
+└── services/      risk_engine (pure Dart), contacts, sharing, supabase
 ```
 
 `lib/services/risk_engine/` imports nothing from Flutter, so the scoring logic
@@ -107,8 +112,10 @@ flutter build appbundle --release --dart-define-from-file=.env
 - Message text is not retained after the result screen is closed.
 - Only message-free metadata (risk level, which rules matched, a timestamp) is
   stored locally, capped at 20 entries and 30 days, deletable at any time.
-- The app declares only `INTERNET`, and requests no runtime permissions at all
-  in this milestone.
+- The app declares only `INTERNET`, and requests no runtime permissions at all —
+  including for contacts, which uses the system picker instead.
+- Trusted contacts and verification outcomes live in encrypted storage
+  (Android Keystore) and are never uploaded.
 - Android cloud backup and device-to-device transfer are disabled for app data.
 - Analytics are opt-in and never include message content.
 
@@ -128,15 +135,29 @@ See [PRIVACY.md](PRIVACY.md) and [THREAT_MODEL.md](THREAT_MODEL.md).
 - Link analysis is heuristic and offline. It does not follow redirects, does not
   open pages, and its registrable-domain comparison is not a public-suffix list.
 - Phone-number extraction assumes Sierra Leone for 8- and 9-digit local formats.
+- The **contact picker has not been exercised on a device**. Its Kotlin compiles
+  in CI and the Dart side is tested against a mocked channel, but the
+  system-picker round trip needs a real phone. Typing a number always works.
+- A number matching a trusted contact is reassuring, not proof: a stolen phone
+  or a hijacked account still sends from the right number. The verification
+  screen says so.
 - Supabase tables, row-level security and reporting are not implemented yet, so
   the community-indicator rule has no data source and never fires in practice.
 - No release signing configuration is committed.
 
 ## Native code
 
-One Kotlin file, `MainActivity.kt`, and nothing else. It reads
-`Intent.EXTRA_TEXT` from a share the user performed and passes it to Dart over a
-method channel. There is no notification listener and no Accessibility Service.
+Two Kotlin files and nothing else.
+
+`MainActivity.kt` reads `Intent.EXTRA_TEXT` from a share the user performed and
+passes it to Dart over a method channel.
+
+`ContactPickerDelegate.kt` opens the **system contact picker** with
+`Intent.ACTION_PICK`. The picker runs in the system's own UI, the user chooses
+exactly one person, and only that row comes back — so the app needs no
+`READ_CONTACTS` permission and can never enumerate or upload the address book.
+
+There is no notification listener and no Accessibility Service.
 
 ## Documentation
 

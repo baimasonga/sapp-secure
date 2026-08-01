@@ -47,9 +47,15 @@ Sierra Leone, not for a hardened enterprise device.
 - **Likelihood:** High
 - **Mitigation:** new-number, financial-request, urgency and third-party-payment
   rules combine to High risk; advice is always to call the previously saved
-  number, never the one in the message
-- **Residual risk:** Medium-High until trusted contacts ship, because the app
-  cannot yet compare the sending number against a known-good one.
+  number, never the one in the message. The verification workflow compares the
+  number against the trusted contact the message claims to be and states
+  plainly when it is one that person has never used, then offers to dial the
+  saved number instead. A confirmed impersonation is remembered, so the same
+  number is recognised next time.
+- **Residual risk:** Medium. The comparison only helps for people the user has
+  saved, and it depends on the user identifying who the message claims to be. A
+  matching number is still not proof: a stolen phone or hijacked account sends
+  from the right number, which the screen says explicitly.
 
 ### T4 — Malicious link
 
@@ -86,12 +92,13 @@ Sierra Leone, not for a hardened enterprise device.
 - **Asset:** local analysis history, settings
 - **Actor:** thief, or an abusive family member
 - **Vector:** physical access to an unlocked phone
-- **Impact:** Low-Medium — history reveals that someone was checking messages,
-  and roughly when
+- **Impact:** Medium — history reveals that someone was checking messages and
+  roughly when, and trusted contacts reveal who the user deals with
 - **Likelihood:** Medium
-- **Mitigation:** message text is never stored; history holds no numbers, links
-  or excerpts; history is capped at 20 entries and 30 days and can be deleted in
-  one tap; app data is excluded from backup and device transfer
+- **Mitigation:** message text is never stored; analysis history holds no
+  numbers, links or excerpts; trusted contacts and verification outcomes are in
+  Keystore-backed encrypted storage; every category can be deleted separately
+  from Settings; app data is excluded from backup and device transfer
 - **Residual risk:** Medium until the optional biometric app lock ships.
 
 ### T7 — Screenshot containing unrelated private data
@@ -113,9 +120,12 @@ Sierra Leone, not for a hardened enterprise device.
 - **Vector:** reading the device contact list wholesale
 - **Impact:** High
 - **Likelihood:** Low
-- **Mitigation:** no contacts permission is declared; the trusted-contacts
-  design stores only individually chosen entries
-- **Residual risk:** Low, enforced by review.
+- **Mitigation:** no contacts permission is declared, and none is needed: adding
+  from the phone goes through the system contact picker, which returns only the
+  single row the user tapped. Contacts are stored in the Keystore, capped at 50,
+  never uploaded, and deletable in one tap. A CI check fails the build if any
+  permission beyond INTERNET appears in the manifest.
+- **Residual risk:** Low.
 
 ### T9 — Rule poisoning
 

@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/widgets/coming_soon_sheet.dart';
+import '../../trusted_contacts/application/trusted_contacts_controller.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../services/risk_engine/models/risk_assessment.dart';
 import '../../../services/risk_engine/url_analyser.dart';
@@ -203,13 +205,13 @@ class _Chip extends StatelessWidget {
   }
 }
 
-class _NumbersSection extends StatelessWidget {
+class _NumbersSection extends ConsumerWidget {
   const _NumbersSection({required this.assessment});
 
   final RiskAssessment assessment;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,12 +225,37 @@ class _NumbersSection extends StatelessWidget {
           child: Column(
             children: [
               for (final number in assessment.phoneNumbers)
-                ListTile(
-                  leading: const Icon(Icons.dialpad),
-                  title: Text(number.normalised),
-                  subtitle: number.raw.trim() == number.normalised
-                      ? null
-                      : Text(number.raw.trim()),
+                Builder(
+                  builder: (context) {
+                    // A number belonging to someone the user already trusts is
+                    // worth saying out loud — it is the one piece of good news
+                    // the app can offer honestly.
+                    final contact = ref.watch(
+                      contactForNumberProvider(number.normalised),
+                    );
+                    return ListTile(
+                      leading: Icon(
+                        contact == null
+                            ? Icons.dialpad
+                            : Icons.verified_user_outlined,
+                      ),
+                      title: Text(number.normalised),
+                      subtitle: contact != null
+                          ? Text(
+                              l10n.verifyKnownContactBadge(contact.displayName),
+                            )
+                          : (number.raw.trim() == number.normalised
+                                ? null
+                                : Text(number.raw.trim())),
+                      trailing: TextButton(
+                        onPressed: () => context.pushNamed(
+                          AppRoute.verify.name,
+                          extra: number.normalised,
+                        ),
+                        child: Text(l10n.resultVerifyPerson),
+                      ),
+                    );
+                  },
                 ),
             ],
           ),
@@ -409,6 +436,52 @@ class _ResultButtons extends ConsumerWidget {
 
   final RiskAssessment assessment;
 
+  /// Sends the user to the verification flow. With several numbers in the
+  /// message the app must not guess which one matters, so it asks.
+  Future<void> _startVerification(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) async {
+    final numbers = assessment.phoneNumbers;
+    if (numbers.isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l10n.verifyMatchUnknown)));
+      return;
+    }
+    if (numbers.length == 1) {
+      context.pushNamed(AppRoute.verify.name, extra: numbers.single.normalised);
+      return;
+    }
+    final chosen = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+              child: Text(
+                l10n.verifyChooseNumber,
+                style: Theme.of(sheetContext).textTheme.titleMedium,
+              ),
+            ),
+            for (final number in numbers)
+              ListTile(
+                leading: const Icon(Icons.dialpad),
+                title: Text(number.normalised),
+                onTap: () => Navigator.of(sheetContext).pop(number.normalised),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (chosen == null || !context.mounted) return;
+    if (!context.mounted) return;
+    context.pushNamed(AppRoute.verify.name, extra: chosen);
+  }
+
   String _warningText(AppLocalizations l10n) => [
     '${l10n.appName}: ${assessment.level.label(l10n)}',
     l10n.resultScoreLabel(assessment.score),
@@ -425,8 +498,7 @@ class _ResultButtons extends ConsumerWidget {
         // are shown, and clearly labelled as not working yet, rather than
         // hidden.
         OutlinedButton.icon(
-          onPressed: () =>
-              showComingSoonSheet(context, l10n.resultVerifyPerson),
+          onPressed: () => _startVerification(context, l10n),
           icon: const Icon(Icons.person_search_outlined),
           label: Text(l10n.resultVerifyPerson),
         ),

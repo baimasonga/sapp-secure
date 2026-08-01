@@ -6,7 +6,9 @@ import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../core/config/app_config.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../identity_verification/application/verification_controller.dart';
 import '../../message_analysis/application/analysis_controller.dart';
+import '../../trusted_contacts/application/trusted_contacts_controller.dart';
 
 /// Settings and privacy (section 7.15). The controls that exist here are the
 /// ones that actually work in this build.
@@ -95,6 +97,30 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.person_remove_outlined),
+              title: Text(l10n.settingsDeleteContacts),
+              subtitle: Text(l10n.settingsDeleteContactsBody),
+              onTap: () async {
+                await ref.read(trustedContactRepositoryProvider).clear();
+                await ref
+                    .read(trustedContactsControllerProvider.notifier)
+                    .load();
+                if (!context.mounted) return;
+                _snack(context, l10n.settingsDeleteContactsDone);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history_toggle_off),
+              title: Text(l10n.settingsDeleteVerifications),
+              subtitle: Text(l10n.settingsDeleteVerificationsBody),
+              onTap: () async {
+                await ref.read(verificationHistoryRepositoryProvider).clear();
+                ref.invalidate(verificationHistoryProvider);
+                if (!context.mounted) return;
+                _snack(context, l10n.settingsDeleteVerificationsDone);
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.policy_outlined),
               title: Text(l10n.settingsPrivacyPolicy),
               onTap: () => context.pushNamed(AppRoute.privacy.name),
@@ -109,6 +135,12 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  static void _snack(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _selectLanguage(WidgetRef ref, String? value) {

@@ -6,12 +6,14 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 /**
- * Receives text shared into Salone Shield from WhatsApp or any other app.
+ * The whole of the native surface: text shared into the app, and the system
+ * contact picker.
  *
- * This is the whole of the native surface. The activity reads only
- * [Intent.EXTRA_TEXT] from a share the user performed deliberately. It never
- * reads another application's data, notifications or accessibility events, and
- * it stores nothing: the text is handed to Dart and forgotten.
+ * The activity reads only [Intent.EXTRA_TEXT] from a share the user performed
+ * deliberately, and only the single contact row the system picker hands back.
+ * It never reads another application's data, notifications or accessibility
+ * events, declares no contacts permission, and stores nothing: values are
+ * passed to Dart and forgotten.
  */
 class MainActivity : FlutterActivity() {
 
@@ -19,6 +21,8 @@ class MainActivity : FlutterActivity() {
 
     /** Text from a share that arrived before Dart was ready to receive it. */
     private var pendingSharedText: String? = null
+
+    private val contactPicker by lazy { ContactPickerDelegate(this) }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -34,6 +38,7 @@ class MainActivity : FlutterActivity() {
                         result.success(pendingSharedText)
                         pendingSharedText = null
                     }
+                    METHOD_PICK_CONTACT -> contactPicker.pick(result)
                     else -> result.notImplemented()
                 }
             }
@@ -53,7 +58,15 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    @Deprecated("Required while the app targets the classic activity result API.")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (contactPicker.onActivityResult(requestCode, resultCode, data)) return
+        @Suppress("DEPRECATION")
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     override fun onDestroy() {
+        contactPicker.dispose()
         channel?.setMethodCallHandler(null)
         channel = null
         pendingSharedText = null
@@ -71,6 +84,7 @@ class MainActivity : FlutterActivity() {
         const val CHANNEL = "com.gsit.saloneshield/shared_text"
         const val METHOD_GET_SHARED_TEXT = "getSharedText"
         const val METHOD_ON_SHARED_TEXT = "onSharedText"
+        const val METHOD_PICK_CONTACT = "pickContact"
         const val MIME_PLAIN_TEXT = "text/plain"
     }
 }

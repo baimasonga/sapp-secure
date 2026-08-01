@@ -5,6 +5,7 @@ import '../core/storage/preferences_service.dart';
 import '../core/storage/secure_storage_service.dart';
 import '../services/risk_engine/engine_strings.dart';
 import '../services/risk_engine/risk_engine.dart';
+import '../services/contacts/contact_picker_service.dart';
 import '../services/risk_engine/rule_repository.dart';
 import '../services/sharing/shared_text_service.dart';
 
@@ -17,6 +18,11 @@ final preferencesServiceProvider = Provider<PreferencesService>(
 
 final secureStorageProvider = Provider<SecureStorageService>(
   (ref) => SecureStorageService.create(),
+);
+
+/// Opens the system contact picker. Overridden in tests.
+final contactPickerServiceProvider = Provider<ContactPickerService>(
+  (ref) => const ContactPickerService(),
 );
 
 /// Receives messages shared into the app from WhatsApp. Overridden in tests.

@@ -176,5 +176,131 @@
   "urlFindingRedirect": "Sends you on to another address",
   "urlFindingTld": "Uses a domain ending often used by scams",
   "urlFindingExecutable": "Downloads an app file directly",
-  "urlFindingMismatch": "Shows one address but goes to another"
+  "urlFindingMismatch": "Shows one address but goes to another",
+  "trustedContactsTitle": "Trusted contacts",
+  "trustedContactsIntro": "Save the people who might ask you for money. Salone Shield can then tell you when a message claims to be one of them but comes from a different number.",
+  "trustedContactsEmpty": "No trusted contacts yet. Add the people you would actually send money to.",
+  "trustedContactsPrivacyNote": "Only the people you add are saved, on this phone only. Your contact list is never read or uploaded.",
+  "trustedContactsFull": "You have reached the limit of {max} trusted contacts.",
+  "@trustedContactsFull": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "trustedContactAdd": "Add a trusted contact",
+  "trustedContactFromPhone": "Choose from my contacts",
+  "trustedContactManually": "Type it in myself",
+  "trustedContactPickerUnavailable": "Could not open your contacts. You can type the number instead.",
+  "trustedContactName": "Name",
+  "trustedContactNameHint": "How you know them",
+  "trustedContactNumber": "Phone number",
+  "trustedContactNumberHint": "076 123 456",
+  "trustedContactAddNumber": "Add another number",
+  "trustedContactRelationship": "Relationship (optional)",
+  "trustedContactRelationshipHint": "Brother, boss, susu group…",
+  "trustedContactQuestion": "Question only they can answer (optional)",
+  "trustedContactQuestionHint": "Where did we meet last Christmas?",
+  "trustedContactQuestionNote": "Never use a password, a PIN, or anything a bank would ask you.",
+  "trustedContactSave": "Save contact",
+  "trustedContactSaved": "Trusted contact saved.",
+  "trustedContactInvalid": "Enter a name and at least one phone number we can read.",
+  "trustedContactRemove": "Remove",
+  "trustedContactRemoved": "Trusted contact removed.",
+  "trustedContactRemoveConfirm": "Remove {name} from your trusted contacts?",
+  "@trustedContactRemoveConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trustedContactPrimary": "Main number",
+  "trustedContactSetPrimary": "Use as main number",
+  "trustedContactNumberCount": "{count, plural, =1{1 number} other{{count} numbers}}",
+  "@trustedContactNumberCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verifyTitle": "Verify the person",
+  "verifyIntro": "Before you send anything, make sure the person is who they say they are.",
+  "verifyNumberInMessage": "Number in this message",
+  "verifyWhoClaims": "Who does the message claim to be?",
+  "verifyChooseContact": "Choose a trusted contact",
+  "verifyNoContactsYet": "You have not saved any trusted contacts yet.",
+  "verifyAddContactsFirst": "Add trusted contacts",
+  "verifyClaimedNameHint": "Name they used",
+  "verifyMatchTitle": "Number check",
+  "verifyMatchMatches": "This is a number {name} already uses.",
+  "@verifyMatchMatches": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyMatchMatchesBody": "That is reassuring, but a stolen phone or a hijacked account still sends messages from the right number. If money is involved, call and hear their voice.",
+  "verifyMatchDiffers": "This is NOT a number {name} has used before.",
+  "@verifyMatchDiffers": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyMatchDiffersBody": "This is the most common impersonation scam. Do not send anything. Call the number you already have saved for them.",
+  "verifyMatchUnknown": "No saved number to compare against.",
+  "verifyMatchUnknownBody": "Save this person as a trusted contact once you know their real number, and the next message can be checked automatically.",
+  "verifyPreviousImpersonation": "You checked this number before and confirmed it was an impersonator.",
+  "verifyPreviousChecks": "You have checked this number {count} times before.",
+  "@verifyPreviousChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verifyHowTitle": "How to check",
+  "verifyMethodCall": "Call the saved number",
+  "verifyMethodCallBody": "Call the number you already have, not the one in the message.",
+  "verifyMethodSms": "Send a text to the saved number",
+  "verifyMethodSmsBody": "Useful when the line is bad.",
+  "verifyMethodQuestion": "Ask a private question",
+  "verifyMethodQuestionBody": "Something only the real person knows.",
+  "verifyMethodRelative": "Ask a relative who knows them",
+  "verifyMethodRelativeBody": "Someone else who can reach the real person.",
+  "verifyDialFailed": "Could not open the phone app. Dial the number yourself.",
+  "verifyNoSavedNumber": "Choose a trusted contact first so there is a number to call.",
+  "verifyOutcomeTitle": "What did you find out?",
+  "verifyOutcomeSafe": "I reached them — it is really them",
+  "verifyOutcomeUnsure": "I could not reach them",
+  "verifyOutcomeImpersonation": "It is not them — someone is pretending",
+  "verifyOutcomeSafeNote": "Saved. Remember that verifying the person does not make the request itself sensible.",
+  "verifyOutcomeUnsureNote": "Saved. Not reaching someone is not the same as it being safe — do not send anything yet.",
+  "verifyOutcomeImpersonationNote": "Saved. Do not send anything, and warn the real person that someone is using their name.",
+  "verifySaveOutcome": "Save what I found",
+  "verifyHistoryTitle": "Past checks",
+  "verifyHistoryEmpty": "No checks recorded yet.",
+  "verifyOutcomeSafeShort": "Verified safe",
+  "verifyOutcomeUnsureShort": "Could not verify",
+  "verifyOutcomeImpersonationShort": "Impersonation",
+  "verifyKnownContactBadge": "Saved as {name}",
+  "@verifyKnownContactBadge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyChooseNumber": "Which number are you checking?",
+  "settingsDeleteContacts": "Delete trusted contacts",
+  "settingsDeleteContactsBody": "Removes everyone you have saved on this phone.",
+  "settingsDeleteContactsDone": "Trusted contacts deleted.",
+  "settingsDeleteVerifications": "Delete verification history",
+  "settingsDeleteVerificationsBody": "Removes the record of numbers you have checked.",
+  "settingsDeleteVerificationsDone": "Verification history deleted."
 }

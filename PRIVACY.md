@@ -62,23 +62,42 @@ enforced by a test that fails if any of those appear in stored data.
 |---|---|
 | Message content | Not retained after analysis |
 | Analysis metadata | 30 days, newest 20 entries |
+| Trusted contacts | Until you delete them |
+| Verification outcomes | 180 days, newest 100 records |
 | Settings (language, theme, consent) | Until changed or the app is uninstalled |
 | Threat cache | Not implemented yet; will be capped at 30 days |
 
 Settings → **Delete local history** removes every stored analysis immediately.
+**Delete trusted contacts** and **Delete verification history** do the same for
+those, separately, so removing one does not silently remove the other.
+
+### Trusted contacts
+
+Only people you deliberately add are stored, in encrypted storage backed by the
+Android Keystore. There is no server copy — a breach of Salone Shield must not
+reveal who anyone's family is.
+
+Adding from your phone uses the **system contact picker**: Android shows its own
+UI, you tap one person, and only that person is handed to the app. Salone Shield
+holds no contacts permission and cannot read the rest of your address book.
+
+A verification record keeps the number you checked, who the message claimed to
+be, and what you concluded. It holds no message text.
 
 ## Permissions
 
-This build declares `INTERNET` only, and requests **no runtime permissions**.
+This build declares `INTERNET` only, and requests **no runtime permissions** —
+not even for contacts, which is why the system picker is used instead of
+`READ_CONTACTS`.
 Internet access is used solely for optional Supabase sign-in, which is inert
 until the app is configured with a backend.
 
 Android cloud backup and device-to-device transfer are disabled for app data,
 so nothing syncs to a Google account.
 
-Future permissions (photos for screenshots, contacts for trusted contacts,
-notification access) will each be explained on their own screen before they are
-requested, and each will be optional.
+Future permissions (photos for screenshots, notification access) will each be
+explained on their own screen before they are requested, and each will be
+optional.
 
 ## Analytics
 

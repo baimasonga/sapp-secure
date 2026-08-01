@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/dashboard/presentation/home_screen.dart';
+import '../features/identity_verification/presentation/verify_person_screen.dart';
 import '../features/message_analysis/presentation/analyse_message_screen.dart';
 import '../features/message_analysis/presentation/risk_result_screen.dart';
 import '../features/onboarding/presentation/language_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/onboarding/presentation/permissions_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/trusted_contacts/presentation/trusted_contacts_screen.dart';
 import 'providers.dart';
 
 /// Named routes, so navigation cannot be broken by a typo in a path string.
@@ -20,6 +22,8 @@ enum AppRoute {
   home('/home'),
   analyse('/analyse'),
   analysisResult('/analysis-result'),
+  verify('/verify'),
+  trustedContacts('/trusted-contacts'),
   settings('/settings'),
   privacy('/privacy');
 
@@ -78,6 +82,19 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoute.analysisResult.path,
         name: AppRoute.analysisResult.name,
         builder: (context, state) => const RiskResultScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.verify.path,
+        name: AppRoute.verify.name,
+        builder: (context, state) => VerifyPersonScreen(
+          // The number under investigation, already normalised by the caller.
+          numberE164: state.extra is String ? state.extra! as String : '',
+        ),
+      ),
+      GoRoute(
+        path: AppRoute.trustedContacts.path,
+        name: AppRoute.trustedContacts.name,
+        builder: (context, state) => const TrustedContactsScreen(),
       ),
       GoRoute(
         path: AppRoute.settings.path,

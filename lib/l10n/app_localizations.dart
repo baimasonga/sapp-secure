@@ -871,6 +871,468 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shows one address but goes to another'**
   String get urlFindingMismatch;
+
+  /// No description provided for @trustedContactsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted contacts'**
+  String get trustedContactsTitle;
+
+  /// No description provided for @trustedContactsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Save the people who might ask you for money. Salone Shield can then tell you when a message claims to be one of them but comes from a different number.'**
+  String get trustedContactsIntro;
+
+  /// No description provided for @trustedContactsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No trusted contacts yet. Add the people you would actually send money to.'**
+  String get trustedContactsEmpty;
+
+  /// No description provided for @trustedContactsPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the people you add are saved, on this phone only. Your contact list is never read or uploaded.'**
+  String get trustedContactsPrivacyNote;
+
+  /// No description provided for @trustedContactsFull.
+  ///
+  /// In en, this message translates to:
+  /// **'You have reached the limit of {max} trusted contacts.'**
+  String trustedContactsFull(int max);
+
+  /// No description provided for @trustedContactAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a trusted contact'**
+  String get trustedContactAdd;
+
+  /// No description provided for @trustedContactFromPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from my contacts'**
+  String get trustedContactFromPhone;
+
+  /// No description provided for @trustedContactManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Type it in myself'**
+  String get trustedContactManually;
+
+  /// No description provided for @trustedContactPickerUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open your contacts. You can type the number instead.'**
+  String get trustedContactPickerUnavailable;
+
+  /// No description provided for @trustedContactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get trustedContactName;
+
+  /// No description provided for @trustedContactNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'How you know them'**
+  String get trustedContactNameHint;
+
+  /// No description provided for @trustedContactNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get trustedContactNumber;
+
+  /// No description provided for @trustedContactNumberHint.
+  ///
+  /// In en, this message translates to:
+  /// **'076 123 456'**
+  String get trustedContactNumberHint;
+
+  /// No description provided for @trustedContactAddNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Add another number'**
+  String get trustedContactAddNumber;
+
+  /// No description provided for @trustedContactRelationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship (optional)'**
+  String get trustedContactRelationship;
+
+  /// No description provided for @trustedContactRelationshipHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Brother, boss, susu group…'**
+  String get trustedContactRelationshipHint;
+
+  /// No description provided for @trustedContactQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Question only they can answer (optional)'**
+  String get trustedContactQuestion;
+
+  /// No description provided for @trustedContactQuestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Where did we meet last Christmas?'**
+  String get trustedContactQuestionHint;
+
+  /// No description provided for @trustedContactQuestionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Never use a password, a PIN, or anything a bank would ask you.'**
+  String get trustedContactQuestionNote;
+
+  /// No description provided for @trustedContactSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save contact'**
+  String get trustedContactSave;
+
+  /// No description provided for @trustedContactSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted contact saved.'**
+  String get trustedContactSaved;
+
+  /// No description provided for @trustedContactInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name and at least one phone number we can read.'**
+  String get trustedContactInvalid;
+
+  /// No description provided for @trustedContactRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get trustedContactRemove;
+
+  /// No description provided for @trustedContactRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted contact removed.'**
+  String get trustedContactRemoved;
+
+  /// No description provided for @trustedContactRemoveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name} from your trusted contacts?'**
+  String trustedContactRemoveConfirm(String name);
+
+  /// No description provided for @trustedContactPrimary.
+  ///
+  /// In en, this message translates to:
+  /// **'Main number'**
+  String get trustedContactPrimary;
+
+  /// No description provided for @trustedContactSetPrimary.
+  ///
+  /// In en, this message translates to:
+  /// **'Use as main number'**
+  String get trustedContactSetPrimary;
+
+  /// No description provided for @trustedContactNumberCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 number} other{{count} numbers}}'**
+  String trustedContactNumberCount(int count);
+
+  /// No description provided for @verifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify the person'**
+  String get verifyTitle;
+
+  /// No description provided for @verifyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you send anything, make sure the person is who they say they are.'**
+  String get verifyIntro;
+
+  /// No description provided for @verifyNumberInMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Number in this message'**
+  String get verifyNumberInMessage;
+
+  /// No description provided for @verifyWhoClaims.
+  ///
+  /// In en, this message translates to:
+  /// **'Who does the message claim to be?'**
+  String get verifyWhoClaims;
+
+  /// No description provided for @verifyChooseContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a trusted contact'**
+  String get verifyChooseContact;
+
+  /// No description provided for @verifyNoContactsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not saved any trusted contacts yet.'**
+  String get verifyNoContactsYet;
+
+  /// No description provided for @verifyAddContactsFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Add trusted contacts'**
+  String get verifyAddContactsFirst;
+
+  /// No description provided for @verifyClaimedNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Name they used'**
+  String get verifyClaimedNameHint;
+
+  /// No description provided for @verifyMatchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Number check'**
+  String get verifyMatchTitle;
+
+  /// No description provided for @verifyMatchMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a number {name} already uses.'**
+  String verifyMatchMatches(String name);
+
+  /// No description provided for @verifyMatchMatchesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'That is reassuring, but a stolen phone or a hijacked account still sends messages from the right number. If money is involved, call and hear their voice.'**
+  String get verifyMatchMatchesBody;
+
+  /// No description provided for @verifyMatchDiffers.
+  ///
+  /// In en, this message translates to:
+  /// **'This is NOT a number {name} has used before.'**
+  String verifyMatchDiffers(String name);
+
+  /// No description provided for @verifyMatchDiffersBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the most common impersonation scam. Do not send anything. Call the number you already have saved for them.'**
+  String get verifyMatchDiffersBody;
+
+  /// No description provided for @verifyMatchUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved number to compare against.'**
+  String get verifyMatchUnknown;
+
+  /// No description provided for @verifyMatchUnknownBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this person as a trusted contact once you know their real number, and the next message can be checked automatically.'**
+  String get verifyMatchUnknownBody;
+
+  /// No description provided for @verifyPreviousImpersonation.
+  ///
+  /// In en, this message translates to:
+  /// **'You checked this number before and confirmed it was an impersonator.'**
+  String get verifyPreviousImpersonation;
+
+  /// No description provided for @verifyPreviousChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'You have checked this number {count} times before.'**
+  String verifyPreviousChecks(int count);
+
+  /// No description provided for @verifyHowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to check'**
+  String get verifyHowTitle;
+
+  /// No description provided for @verifyMethodCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Call the saved number'**
+  String get verifyMethodCall;
+
+  /// No description provided for @verifyMethodCallBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Call the number you already have, not the one in the message.'**
+  String get verifyMethodCallBody;
+
+  /// No description provided for @verifyMethodSms.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a text to the saved number'**
+  String get verifyMethodSms;
+
+  /// No description provided for @verifyMethodSmsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Useful when the line is bad.'**
+  String get verifyMethodSmsBody;
+
+  /// No description provided for @verifyMethodQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a private question'**
+  String get verifyMethodQuestion;
+
+  /// No description provided for @verifyMethodQuestionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Something only the real person knows.'**
+  String get verifyMethodQuestionBody;
+
+  /// No description provided for @verifyMethodRelative.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a relative who knows them'**
+  String get verifyMethodRelative;
+
+  /// No description provided for @verifyMethodRelativeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else who can reach the real person.'**
+  String get verifyMethodRelativeBody;
+
+  /// No description provided for @verifyDialFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the phone app. Dial the number yourself.'**
+  String get verifyDialFailed;
+
+  /// No description provided for @verifyNoSavedNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a trusted contact first so there is a number to call.'**
+  String get verifyNoSavedNumber;
+
+  /// No description provided for @verifyOutcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What did you find out?'**
+  String get verifyOutcomeTitle;
+
+  /// No description provided for @verifyOutcomeSafe.
+  ///
+  /// In en, this message translates to:
+  /// **'I reached them — it is really them'**
+  String get verifyOutcomeSafe;
+
+  /// No description provided for @verifyOutcomeUnsure.
+  ///
+  /// In en, this message translates to:
+  /// **'I could not reach them'**
+  String get verifyOutcomeUnsure;
+
+  /// No description provided for @verifyOutcomeImpersonation.
+  ///
+  /// In en, this message translates to:
+  /// **'It is not them — someone is pretending'**
+  String get verifyOutcomeImpersonation;
+
+  /// No description provided for @verifyOutcomeSafeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. Remember that verifying the person does not make the request itself sensible.'**
+  String get verifyOutcomeSafeNote;
+
+  /// No description provided for @verifyOutcomeUnsureNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. Not reaching someone is not the same as it being safe — do not send anything yet.'**
+  String get verifyOutcomeUnsureNote;
+
+  /// No description provided for @verifyOutcomeImpersonationNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. Do not send anything, and warn the real person that someone is using their name.'**
+  String get verifyOutcomeImpersonationNote;
+
+  /// No description provided for @verifySaveOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Save what I found'**
+  String get verifySaveOutcome;
+
+  /// No description provided for @verifyHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Past checks'**
+  String get verifyHistoryTitle;
+
+  /// No description provided for @verifyHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No checks recorded yet.'**
+  String get verifyHistoryEmpty;
+
+  /// No description provided for @verifyOutcomeSafeShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified safe'**
+  String get verifyOutcomeSafeShort;
+
+  /// No description provided for @verifyOutcomeUnsureShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify'**
+  String get verifyOutcomeUnsureShort;
+
+  /// No description provided for @verifyOutcomeImpersonationShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Impersonation'**
+  String get verifyOutcomeImpersonationShort;
+
+  /// No description provided for @verifyKnownContactBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as {name}'**
+  String verifyKnownContactBadge(String name);
+
+  /// No description provided for @verifyChooseNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Which number are you checking?'**
+  String get verifyChooseNumber;
+
+  /// No description provided for @settingsDeleteContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete trusted contacts'**
+  String get settingsDeleteContacts;
+
+  /// No description provided for @settingsDeleteContactsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes everyone you have saved on this phone.'**
+  String get settingsDeleteContactsBody;
+
+  /// No description provided for @settingsDeleteContactsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted contacts deleted.'**
+  String get settingsDeleteContactsDone;
+
+  /// No description provided for @settingsDeleteVerifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete verification history'**
+  String get settingsDeleteVerifications;
+
+  /// No description provided for @settingsDeleteVerificationsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes the record of numbers you have checked.'**
+  String get settingsDeleteVerificationsBody;
+
+  /// No description provided for @settingsDeleteVerificationsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification history deleted.'**
+  String get settingsDeleteVerificationsDone;
 }
 
 class _AppLocalizationsDelegate

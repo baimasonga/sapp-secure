@@ -435,4 +435,276 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get urlFindingMismatch => 'I de sho wan adres bot i de go pan ɔda wan';
+
+  @override
+  String get trustedContactsTitle => 'Pipul wey yu trust';
+
+  @override
+  String get trustedContactsIntro =>
+      'Sev di pipul dem wey fit aks yu fɔ money. Dɛn Salone Shield go ebul tɛl yu we message se na wan pan dɛm bot i kɔmɔt pan difrɛn nomba.';
+
+  @override
+  String get trustedContactsEmpty =>
+      'Yu nɔ sev eni pesin yet. Ad di pipul dem wey yu go rili sɛn money gi.';
+
+  @override
+  String get trustedContactsPrivacyNote =>
+      'Na di pipul dem wey yu ad nɔmɔ wi de sev, pan dis fon nɔmɔ. Wi nɔ de rid ɔ sɛn yu kɔntakt lis ɔp.';
+
+  @override
+  String trustedContactsFull(int max) {
+    return 'Yu dɔn rich di limit fɔ $max pesin dem.';
+  }
+
+  @override
+  String get trustedContactAdd => 'Ad pesin wey yu trust';
+
+  @override
+  String get trustedContactFromPhone => 'Pik frɔm mi kɔntakt dem';
+
+  @override
+  String get trustedContactManually => 'A go tayp am misɛf';
+
+  @override
+  String get trustedContactPickerUnavailable =>
+      'Wi nɔ ebul opin yu kɔntakt dem. Yu go ebul tayp di nomba.';
+
+  @override
+  String get trustedContactName => 'Nem';
+
+  @override
+  String get trustedContactNameHint => 'Aw yu no am';
+
+  @override
+  String get trustedContactNumber => 'Fon nomba';
+
+  @override
+  String get trustedContactNumberHint => '076 123 456';
+
+  @override
+  String get trustedContactAddNumber => 'Ad ɔda nomba';
+
+  @override
+  String get trustedContactRelationship => 'Aw una tay (yu nɔ nid put am)';
+
+  @override
+  String get trustedContactRelationshipHint => 'Broda, bɔs, susu grup…';
+
+  @override
+  String get trustedContactQuestion =>
+      'Kwɛstyɔn wey na dɛm nɔmɔ go ansa (yu nɔ nid put am)';
+
+  @override
+  String get trustedContactQuestionHint => 'Usay wi bin mit las Krismas?';
+
+  @override
+  String get trustedContactQuestionNote =>
+      'Nɔ yuz paswɔd, PIN, ɔ enitin wey bank kin aks yu.';
+
+  @override
+  String get trustedContactSave => 'Sev di pesin';
+
+  @override
+  String get trustedContactSaved => 'Wi dɔn sev am.';
+
+  @override
+  String get trustedContactInvalid =>
+      'Put nem en at lis wan fon nomba wey wi go ebul rid.';
+
+  @override
+  String get trustedContactRemove => 'Rimuv';
+
+  @override
+  String get trustedContactRemoved => 'Wi dɔn rimuv am.';
+
+  @override
+  String trustedContactRemoveConfirm(String name) {
+    return 'Yu want rimuv $name frɔm di pipul wey yu trust?';
+  }
+
+  @override
+  String get trustedContactPrimary => 'Mein nomba';
+
+  @override
+  String get trustedContactSetPrimary => 'Mek dis na di mein nomba';
+
+  @override
+  String trustedContactNumberCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nomba dɛn',
+      one: '1 nomba',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get verifyTitle => 'Chek di pesin';
+
+  @override
+  String get verifyIntro =>
+      'Bifo yu sɛn enitin, mek yu shɔ se na di pesin dɛn se dɛn na.';
+
+  @override
+  String get verifyNumberInMessage => 'Nomba na dis message';
+
+  @override
+  String get verifyWhoClaims => 'Udat di message se i na?';
+
+  @override
+  String get verifyChooseContact => 'Pik pesin wey yu trust';
+
+  @override
+  String get verifyNoContactsYet => 'Yu nɔ sev eni pesin yet.';
+
+  @override
+  String get verifyAddContactsFirst => 'Ad pipul wey yu trust';
+
+  @override
+  String get verifyClaimedNameHint => 'Di nem wey dɛn yuz';
+
+  @override
+  String get verifyMatchTitle => 'Nomba chek';
+
+  @override
+  String verifyMatchMatches(String name) {
+    return 'Dis na nomba wey $name de yuz.';
+  }
+
+  @override
+  String get verifyMatchMatchesBody =>
+      'Dat gud, bot if dɛn tif di fon ɔ dɛn hack di akaunt, di rayt nomba stil kin sɛn message. If na money biznɛs, call en yɛri di pesin in vɔys.';
+
+  @override
+  String verifyMatchDiffers(String name) {
+    return 'Dis NƆTO nomba wey $name eva yuz.';
+  }
+
+  @override
+  String get verifyMatchDiffersBody =>
+      'Na dis na di skam wey de apin pas ɔl. Nɔ sɛn notin. Call di nomba wey yu dɔn sev fɔ dɛm.';
+
+  @override
+  String get verifyMatchUnknown => 'Wi nɔ gɛt nomba fɔ kompia wit.';
+
+  @override
+  String get verifyMatchUnknownBody =>
+      'We yu no di pesin in tru nomba, sev am as pesin wey yu trust, dɛn nɛks tem wi go ebul chek am wan tem.';
+
+  @override
+  String get verifyPreviousImpersonation =>
+      'Yu bin chek dis nomba bifo en yu kɔnfam se na skamɔ.';
+
+  @override
+  String verifyPreviousChecks(int count) {
+    return 'Yu dɔn chek dis nomba $count tem bifo.';
+  }
+
+  @override
+  String get verifyHowTitle => 'Aw fɔ chek';
+
+  @override
+  String get verifyMethodCall => 'Call di nomba wey yu sev';
+
+  @override
+  String get verifyMethodCallBody =>
+      'Call di nomba wey yu dɔn gɛt, nɔto di wan na di message.';
+
+  @override
+  String get verifyMethodSms => 'Sɛn tɛks to di nomba wey yu sev';
+
+  @override
+  String get verifyMethodSmsBody => 'I gud we di layn nɔ de kliya.';
+
+  @override
+  String get verifyMethodQuestion => 'Aks kwɛstyɔn wey na dɛm nɔmɔ no';
+
+  @override
+  String get verifyMethodQuestionBody => 'Sontin wey na di tru pesin nɔmɔ no.';
+
+  @override
+  String get verifyMethodRelative => 'Aks famili wey no dɛm';
+
+  @override
+  String get verifyMethodRelativeBody =>
+      'Sombodi else wey go ebul rich di tru pesin.';
+
+  @override
+  String get verifyDialFailed =>
+      'Wi nɔ ebul opin di fon app. Dayal di nomba yusɛf.';
+
+  @override
+  String get verifyNoSavedNumber =>
+      'Pik pesin wey yu trust fos so dat nomba go de fɔ call.';
+
+  @override
+  String get verifyOutcomeTitle => 'Wetin yu fɛn?';
+
+  @override
+  String get verifyOutcomeSafe => 'A rich dɛm — na dɛm fɔ tru';
+
+  @override
+  String get verifyOutcomeUnsure => 'A nɔ ebul rich dɛm';
+
+  @override
+  String get verifyOutcomeImpersonation => 'Nɔto dɛm — sombodi de pritɛnd';
+
+  @override
+  String get verifyOutcomeSafeNote =>
+      'Wi sev am. Bot bikɔs na di rayt pesin nɔ min se di tin wey dɛn aks mek sɛns.';
+
+  @override
+  String get verifyOutcomeUnsureNote =>
+      'Wi sev am. Bikɔs yu nɔ rich dɛm nɔ min se i safe — nɔ sɛn notin yet.';
+
+  @override
+  String get verifyOutcomeImpersonationNote =>
+      'Wi sev am. Nɔ sɛn notin, en warn di tru pesin se sombodi de yuz in nem.';
+
+  @override
+  String get verifySaveOutcome => 'Sev wetin a fɛn';
+
+  @override
+  String get verifyHistoryTitle => 'Di chek dem wey yu du bifo';
+
+  @override
+  String get verifyHistoryEmpty => 'Yu nɔ rikɔd eni chek yet.';
+
+  @override
+  String get verifyOutcomeSafeShort => 'I safe';
+
+  @override
+  String get verifyOutcomeUnsureShort => 'Wi nɔ ebul chek';
+
+  @override
+  String get verifyOutcomeImpersonationShort => 'Na skamɔ';
+
+  @override
+  String verifyKnownContactBadge(String name) {
+    return 'Sev as $name';
+  }
+
+  @override
+  String get verifyChooseNumber => 'Us nomba yu de chek?';
+
+  @override
+  String get settingsDeleteContacts => 'Dilit di pipul wey yu trust';
+
+  @override
+  String get settingsDeleteContactsBody =>
+      'Dis go rimuv ɔlman wey yu dɔn sev pan dis fon.';
+
+  @override
+  String get settingsDeleteContactsDone => 'Wi dɔn dilit dɛm.';
+
+  @override
+  String get settingsDeleteVerifications => 'Dilit di chek ɛstri';
+
+  @override
+  String get settingsDeleteVerificationsBody =>
+      'Dis go rimuv di rikɔd fɔ di nomba dem wey yu chek.';
+
+  @override
+  String get settingsDeleteVerificationsDone => 'Wi dɔn dilit di chek ɛstri.';
 }

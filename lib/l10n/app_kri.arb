@@ -173,5 +173,131 @@
   "urlFindingRedirect": "I de kɛr yu go pan ɔda adres",
   "urlFindingTld": "Di domein ɛndin na wan wey scam de yuz",
   "urlFindingExecutable": "I de dawnlod app fayl stret",
-  "urlFindingMismatch": "I de sho wan adres bot i de go pan ɔda wan"
+  "urlFindingMismatch": "I de sho wan adres bot i de go pan ɔda wan",
+  "trustedContactsTitle": "Pipul wey yu trust",
+  "trustedContactsIntro": "Sev di pipul dem wey fit aks yu fɔ money. Dɛn Salone Shield go ebul tɛl yu we message se na wan pan dɛm bot i kɔmɔt pan difrɛn nomba.",
+  "trustedContactsEmpty": "Yu nɔ sev eni pesin yet. Ad di pipul dem wey yu go rili sɛn money gi.",
+  "trustedContactsPrivacyNote": "Na di pipul dem wey yu ad nɔmɔ wi de sev, pan dis fon nɔmɔ. Wi nɔ de rid ɔ sɛn yu kɔntakt lis ɔp.",
+  "trustedContactsFull": "Yu dɔn rich di limit fɔ {max} pesin dem.",
+  "@trustedContactsFull": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "trustedContactAdd": "Ad pesin wey yu trust",
+  "trustedContactFromPhone": "Pik frɔm mi kɔntakt dem",
+  "trustedContactManually": "A go tayp am misɛf",
+  "trustedContactPickerUnavailable": "Wi nɔ ebul opin yu kɔntakt dem. Yu go ebul tayp di nomba.",
+  "trustedContactName": "Nem",
+  "trustedContactNameHint": "Aw yu no am",
+  "trustedContactNumber": "Fon nomba",
+  "trustedContactNumberHint": "076 123 456",
+  "trustedContactAddNumber": "Ad ɔda nomba",
+  "trustedContactRelationship": "Aw una tay (yu nɔ nid put am)",
+  "trustedContactRelationshipHint": "Broda, bɔs, susu grup…",
+  "trustedContactQuestion": "Kwɛstyɔn wey na dɛm nɔmɔ go ansa (yu nɔ nid put am)",
+  "trustedContactQuestionHint": "Usay wi bin mit las Krismas?",
+  "trustedContactQuestionNote": "Nɔ yuz paswɔd, PIN, ɔ enitin wey bank kin aks yu.",
+  "trustedContactSave": "Sev di pesin",
+  "trustedContactSaved": "Wi dɔn sev am.",
+  "trustedContactInvalid": "Put nem en at lis wan fon nomba wey wi go ebul rid.",
+  "trustedContactRemove": "Rimuv",
+  "trustedContactRemoved": "Wi dɔn rimuv am.",
+  "trustedContactRemoveConfirm": "Yu want rimuv {name} frɔm di pipul wey yu trust?",
+  "@trustedContactRemoveConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trustedContactPrimary": "Mein nomba",
+  "trustedContactSetPrimary": "Mek dis na di mein nomba",
+  "trustedContactNumberCount": "{count, plural, =1{1 nomba} other{{count} nomba dɛn}}",
+  "@trustedContactNumberCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verifyTitle": "Chek di pesin",
+  "verifyIntro": "Bifo yu sɛn enitin, mek yu shɔ se na di pesin dɛn se dɛn na.",
+  "verifyNumberInMessage": "Nomba na dis message",
+  "verifyWhoClaims": "Udat di message se i na?",
+  "verifyChooseContact": "Pik pesin wey yu trust",
+  "verifyNoContactsYet": "Yu nɔ sev eni pesin yet.",
+  "verifyAddContactsFirst": "Ad pipul wey yu trust",
+  "verifyClaimedNameHint": "Di nem wey dɛn yuz",
+  "verifyMatchTitle": "Nomba chek",
+  "verifyMatchMatches": "Dis na nomba wey {name} de yuz.",
+  "@verifyMatchMatches": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyMatchMatchesBody": "Dat gud, bot if dɛn tif di fon ɔ dɛn hack di akaunt, di rayt nomba stil kin sɛn message. If na money biznɛs, call en yɛri di pesin in vɔys.",
+  "verifyMatchDiffers": "Dis NƆTO nomba wey {name} eva yuz.",
+  "@verifyMatchDiffers": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyMatchDiffersBody": "Na dis na di skam wey de apin pas ɔl. Nɔ sɛn notin. Call di nomba wey yu dɔn sev fɔ dɛm.",
+  "verifyMatchUnknown": "Wi nɔ gɛt nomba fɔ kompia wit.",
+  "verifyMatchUnknownBody": "We yu no di pesin in tru nomba, sev am as pesin wey yu trust, dɛn nɛks tem wi go ebul chek am wan tem.",
+  "verifyPreviousImpersonation": "Yu bin chek dis nomba bifo en yu kɔnfam se na skamɔ.",
+  "verifyPreviousChecks": "Yu dɔn chek dis nomba {count} tem bifo.",
+  "@verifyPreviousChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verifyHowTitle": "Aw fɔ chek",
+  "verifyMethodCall": "Call di nomba wey yu sev",
+  "verifyMethodCallBody": "Call di nomba wey yu dɔn gɛt, nɔto di wan na di message.",
+  "verifyMethodSms": "Sɛn tɛks to di nomba wey yu sev",
+  "verifyMethodSmsBody": "I gud we di layn nɔ de kliya.",
+  "verifyMethodQuestion": "Aks kwɛstyɔn wey na dɛm nɔmɔ no",
+  "verifyMethodQuestionBody": "Sontin wey na di tru pesin nɔmɔ no.",
+  "verifyMethodRelative": "Aks famili wey no dɛm",
+  "verifyMethodRelativeBody": "Sombodi else wey go ebul rich di tru pesin.",
+  "verifyDialFailed": "Wi nɔ ebul opin di fon app. Dayal di nomba yusɛf.",
+  "verifyNoSavedNumber": "Pik pesin wey yu trust fos so dat nomba go de fɔ call.",
+  "verifyOutcomeTitle": "Wetin yu fɛn?",
+  "verifyOutcomeSafe": "A rich dɛm — na dɛm fɔ tru",
+  "verifyOutcomeUnsure": "A nɔ ebul rich dɛm",
+  "verifyOutcomeImpersonation": "Nɔto dɛm — sombodi de pritɛnd",
+  "verifyOutcomeSafeNote": "Wi sev am. Bot bikɔs na di rayt pesin nɔ min se di tin wey dɛn aks mek sɛns.",
+  "verifyOutcomeUnsureNote": "Wi sev am. Bikɔs yu nɔ rich dɛm nɔ min se i safe — nɔ sɛn notin yet.",
+  "verifyOutcomeImpersonationNote": "Wi sev am. Nɔ sɛn notin, en warn di tru pesin se sombodi de yuz in nem.",
+  "verifySaveOutcome": "Sev wetin a fɛn",
+  "verifyHistoryTitle": "Di chek dem wey yu du bifo",
+  "verifyHistoryEmpty": "Yu nɔ rikɔd eni chek yet.",
+  "verifyOutcomeSafeShort": "I safe",
+  "verifyOutcomeUnsureShort": "Wi nɔ ebul chek",
+  "verifyOutcomeImpersonationShort": "Na skamɔ",
+  "verifyKnownContactBadge": "Sev as {name}",
+  "@verifyKnownContactBadge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyChooseNumber": "Us nomba yu de chek?",
+  "settingsDeleteContacts": "Dilit di pipul wey yu trust",
+  "settingsDeleteContactsBody": "Dis go rimuv ɔlman wey yu dɔn sev pan dis fon.",
+  "settingsDeleteContactsDone": "Wi dɔn dilit dɛm.",
+  "settingsDeleteVerifications": "Dilit di chek ɛstri",
+  "settingsDeleteVerificationsBody": "Dis go rimuv di rikɔd fɔ di nomba dem wey yu chek.",
+  "settingsDeleteVerificationsDone": "Wi dɔn dilit di chek ɛstri."
 }
