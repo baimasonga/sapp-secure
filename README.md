@@ -45,8 +45,8 @@ Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** and **M
 | Local, message-free analysis history (30-day retention) | Working |
 | Settings: theme, delete local data, privacy | Working |
 | Optional Supabase bootstrap | Wired, inert until configured |
-| Supabase schema and RLS | **Verified against a live project** — 19 of 24 checks pass; see below |
-| Supabase Edge Function, auth and report UI | **Written but disabled** — see below |
+| Supabase schema, RLS and Edge Function | **Verified against a live project** — all 24 checks pass; see below |
+| Auth and report UI | Working; reporting stays behind a build flag — see below |
 | Notification monitoring (listener, guard, interrupt filter, controls) | **Written but disabled** — see below |
 | Moderation dashboard | Not built — the app says so plainly rather than hiding it |
 
@@ -76,11 +76,11 @@ specification requires. Both are fixed in `0003_moderation_fixes.sql`, and the
 whole run is recorded in
 [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md#verification-record).
 
-Nineteen of the twenty-four checks pass, including both Edge Function checks
-that can be run before a hashing pepper exists. The remaining five need
-`INDICATOR_PEPPER` set on the project, because they require a report to
-actually be stored — and until the pepper exists the function correctly
-refuses to store one.
+All twenty-four checks now pass, the Edge Function ones included: a report
+submitted with someone else's `reporter_id` in the body is stored against the
+sender, the eleventh report in an hour is refused, a repeat of the same number
+is folded into the first, and the stored row holds a SHA-256 with the raw
+number nowhere in it.
 
 ### Reporting is deliberately switched off
 
@@ -145,7 +145,7 @@ flutter run --dart-define-from-file=.env
 | `ENABLE_ANALYTICS` | Off by default; analytics also require in-app consent |
 | `ENABLE_NOTIFICATION_MONITORING` | Off. Do not enable until the hardware checks in docs/ANDROID_NOTIFICATION_SERVICE.md are done |
 | `ENABLE_EXTERNAL_URL_REPUTATION` | Off; link analysis is local-only |
-| `ENABLE_REPORTING` | Off. RLS verified; Edge Function checks 17–21 still need INDICATOR_PEPPER |
+| `ENABLE_REPORTING` | Off. The verification plan passes; what remains is named moderators, not code |
 
 ## Commands
 

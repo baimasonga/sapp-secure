@@ -119,7 +119,11 @@ it so nobody tries again.
 | 14 | moderator deletes from the audit log | **pass** — 0 rows changed |
 | 15 | A reads B's evidence | **pass** — 0 rows |
 | 16 | `submit-report` with no `Authorization` header | **pass** — 401 `UNAUTHORIZED_NO_AUTH_HEADER`, refused by the platform before the function runs |
-| 17–21 | Edge Function behaviour with a real reporter | **not run** — needs `INDICATOR_PEPPER`; see below |
+| 17 | A's token, B's `reporter_id` in the body | **pass** — 201, stored against **A**. The body's id is ignored entirely; identity comes from the token |
+| 18 | Eleven reports in an hour | **pass** — the eleventh returns 429 and nothing further is stored |
+| 19 | The same number twice inside 24 hours | **pass** — returns `duplicate` with the first report's id, no second row. It matched across `+232 76 123 456` and `+23276123456`, so normalisation works |
+| 20 | Inspect the stored row | **pass** — `reported_number_hash` is a 64-character SHA-256 and the raw number appears in no column. The indicator holds `+232 ** *** 456` and nothing fuller |
+| 21 | Inspect the function logs | **pass**, with scope stated below |
 | 22 | Deployed without `INDICATOR_PEPPER` | **pass** — 500 `not_configured`, and nothing was stored |
 | 23 | delete account A | **pass** after 0003; profile gone, report survives detached |
 | 24 | excerpt and district cleared | **pass** |
@@ -135,31 +139,41 @@ Also verified beyond the plan, because the fixes needed proving:
   `refresh_indicator_confidence` and `bootstrap_grant_role` are executable by
   `postgres` and `service_role` only.
 
-**19 of the 24 checks pass. Five have not been run.**
+**All 24 checks pass.**
 
-### Still outstanding
+### On check 21, precisely
 
-**Checks 17–21 need `INDICATOR_PEPPER`.** `submit-report` is deployed and
-active with `verify_jwt` on. Checks 16 and 22 were executed against the live
-function and pass; the rest require a report to actually be stored, which the
-function correctly refuses to do until the pepper exists:
+The function's access logs were read after the run and contain only
+`POST | <status> | <url>`, a method, a status code and a duration. No request
+body, no telephone number, no excerpt, no token.
 
-```bash
-supabase secrets set INDICATOR_PEPPER="$(openssl rand -hex 32)"
-```
+That is the observed half. The other half is by inspection: the only two
+`console.error` calls in the function emit a fixed string
+(`submit-report is not configured`) and an error *code*
+(`report insert failed`, `insertError?.code`). Neither can carry a payload.
+Both halves agree, which is why this is recorded as a pass rather than
+"nothing showed up".
 
-or Dashboard → Edge Functions → Secrets. Then 17–21 can be run: sign a test
-user in through `/auth/v1/token`, submit with `reporter_id` set to somebody
-else (17), submit eleven times in an hour (18), submit the same number twice
-(19), inspect the stored row for a raw number (20), and read the function logs
-for anything that should not be there (21).
+### A note on how the Edge Function checks were run
 
-**A note on how 16 and 22 were run.** The environment this was executed from
-cannot reach `*.supabase.co` — its network policy refuses the connection. The
-requests were issued by the database itself, using the `http` extension
-enabled for the duration and dropped afterwards, so the project is left as it
-was found. Anyone repeating this from a machine with normal network access
-should just use `curl`.
+The environment this was executed from cannot reach `*.supabase.co` — its
+network policy refuses the connection. The requests were issued by the
+database itself through `pg_net`, enabled for the duration and dropped
+afterwards, with test accounts signed in via `/auth/v1/token` to obtain real
+reporter tokens. Anyone repeating this from a machine with ordinary network
+access should just use `curl`.
+
+### Project state after the run
+
+Everything created for testing was removed: ten reports, one indicator, the
+moderation entries, and all test accounts. `pg_net` and `http` are both
+uninstalled. The only residue is one orphan row in `storage.objects`
+(`22222222-.../proof.jpg`, a metadata row for a file that never existed);
+Supabase blocks deleting storage rows over SQL, so remove it from the
+dashboard.
+
+Leaked-password protection is now enabled. The security advisor reports only
+the three role predicates discussed in 0004, which are executable by design.
 
 **Leaked-password protection is off.** Supabase's linter flags it; enable it
 in Authentication → Policies. It is a dashboard setting, not schema.
@@ -226,6 +240,11 @@ unpeppered hashes.
 | 24 | Same | excerpt and district on those reports are cleared |
 
 ## Then, and only then
+
+The technical gate is met. What is left before the flag is flipped is not
+code: named people to work the moderation queue, and the policy in
+MODERATION_POLICY.md agreed with them. Reporting without moderators collects
+accusations nobody reads.
 
 ```bash
 flutter build appbundle --release --dart-define-from-file=.env
