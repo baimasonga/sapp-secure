@@ -31,6 +31,7 @@ Risk Analysis)** of the build specification.
 | Language selection, onboarding, permission explanations | Working |
 | Home dashboard | Working |
 | Paste-and-analyse a message | Working |
+| Share a message from WhatsApp into the app | Working |
 | Deterministic, explainable risk engine | Working |
 | Sierra Leone phone-number extraction | Working |
 | Offline link analysis | Working (feeds the risk score) |
@@ -52,7 +53,7 @@ lib/
 ├── core/          config, typed failures, localisation delegates, storage, shared widgets
 ├── features/      onboarding, dashboard, message_analysis, settings
 ├── l10n/          app_en.arb, app_kri.arb, generated localisations
-└── services/      risk_engine (pure Dart), supabase
+└── services/      risk_engine (pure Dart), sharing, supabase
 ```
 
 `lib/services/risk_engine/` imports nothing from Flutter, so the scoring logic
@@ -115,11 +116,10 @@ See [PRIVACY.md](PRIVACY.md) and [THREAT_MODEL.md](THREAT_MODEL.md).
 
 ## Known limitations
 
-- **The debug APK build has not been run in this environment.** `flutter
-  analyze` is clean and all tests pass, but the sandbox this was built in
-  cannot reach `dl.google.com` to install the Android SDK, so
-  `flutter build apk --debug` could not be executed. Run it locally before
-  trusting the Gradle configuration.
+- The app has **not been run on a physical device or emulator**. The debug APK
+  builds in CI and every screen is covered by widget tests, but nothing here
+  substitutes for holding it in your hand — check the Krio layout, contrast and
+  touch targets on a real low-end phone before release.
 - The Krio strings are a first draft and **must be reviewed by native speakers**
   before any public release. See [LOCALISATION.md](LOCALISATION.md).
 - The rules engine is keyword-based. It will miss reworded scams and can
@@ -131,6 +131,12 @@ See [PRIVACY.md](PRIVACY.md) and [THREAT_MODEL.md](THREAT_MODEL.md).
 - Supabase tables, row-level security and reporting are not implemented yet, so
   the community-indicator rule has no data source and never fires in practice.
 - No release signing configuration is committed.
+
+## Native code
+
+One Kotlin file, `MainActivity.kt`, and nothing else. It reads
+`Intent.EXTRA_TEXT` from a share the user performed and passes it to Dart over a
+method channel. There is no notification listener and no Accessibility Service.
 
 ## Documentation
 
