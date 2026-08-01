@@ -80,8 +80,8 @@ void main() {
     final l10n = await localisationsFor('en');
     await pumpApp(tester, preferences: await createOnboardedPreferences());
 
-    await scrollTo(tester, find.text(l10n.homeActionReport));
-    await tester.tap(find.text(l10n.homeActionReport));
+    await scrollTo(tester, find.text(l10n.homeActionChecklist));
+    await tester.tap(find.text(l10n.homeActionChecklist));
     await tester.pumpAndSettle();
 
     expect(find.text(l10n.comingSoonTitle), findsOneWidget);
@@ -96,6 +96,21 @@ void main() {
 
     expect(find.byType(ScreenshotScannerScreen), findsOneWidget);
     expect(find.text(l10n.screenshotPrivacyNote), findsOneWidget);
+  });
+
+  testWidgets('reporting explains itself when no backend is configured', (
+    tester,
+  ) async {
+    final l10n = await localisationsFor('en');
+    await pumpApp(tester, preferences: await createOnboardedPreferences());
+
+    await scrollTo(tester, find.text(l10n.homeActionReport));
+    await tester.tap(find.text(l10n.homeActionReport));
+    await tester.pumpAndSettle();
+
+    // This build has no Supabase configured, so the screen says so plainly
+    // rather than offering a form that cannot work.
+    expect(find.text(l10n.reportUnavailableTitle), findsOneWidget);
   });
 
   testWidgets('the dashboard opens the link checker', (tester) async {

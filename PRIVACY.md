@@ -127,14 +127,25 @@ at any time.
 
 ## When data does leave the device
 
-Only community threat reporting will send anything, and that feature is not
-built yet. When it is:
+Community threat reporting is the only feature that sends anything, and it is
+**switched off** in this build. When it is enabled:
 
-- You will confirm exactly what is being submitted before it is sent.
-- Telephone numbers will be normalised and hashed with a server-side pepper,
-  never uploaded in the clear.
-- Screenshots will be uploaded only if you explicitly attach them.
-- Unrelated conversation content will be stripped.
+- You need an account, so that moderators can follow up and so one person
+  cannot flood the system. Nothing else in the app needs one.
+- The report form lists **exactly** what will be sent, generated from the same
+  code that builds the request, before you tick the consent box.
+- Only what you entered is sent. Fields you left blank are omitted entirely.
+- Telephone numbers are sent over TLS and hashed on the server with a secret
+  the app never holds. The database stores the hash and a mask such as
+  `+232 ** *** 456` — never the number.
+- Only a short excerpt you chose and can edit is included, capped at 1000
+  characters. Whole conversations are refused.
+- Which rules matched is sent as rule identifiers, never as message text.
+- District is optional and you can leave it out.
+- A report is not an accusation. Moderators review reports from several
+  independent people before anything is marked verified, and a single report
+  never labels anyone.
+- Deleting your account detaches your reports and clears their free text.
 
 ## Your rights
 

@@ -841,4 +841,263 @@ class AppLocalizationsEn extends AppLocalizations {
   String linkCheckBrandWarning(String brand) {
     return 'This address is made to look like $brand, but it is not their real website.';
   }
+
+  @override
+  String get reportTitle => 'Report a scam';
+
+  @override
+  String get reportIntro =>
+      'Reporting helps warn other people. Nothing is sent until you have seen exactly what will be shared.';
+
+  @override
+  String get reportUnavailableTitle => 'Reporting is not switched on';
+
+  @override
+  String get reportUnavailableBody =>
+      'This build has no reporting backend configured, so nothing can be submitted. Every other check still works, and still works offline.';
+
+  @override
+  String get reportSignInNeeded =>
+      'You need an account to report, so that moderators can follow up and so one person cannot flood the system.';
+
+  @override
+  String get reportThreatType => 'What kind of scam was it?';
+
+  @override
+  String get reportNumber => 'The number that contacted you';
+
+  @override
+  String get reportPaymentNumber => 'The number they asked you to pay';
+
+  @override
+  String get reportLink => 'A link in the message';
+
+  @override
+  String get reportExcerpt => 'A short piece of the message';
+
+  @override
+  String get reportExcerptHelp =>
+      'Include only the part that shows the scam. Do not paste a whole conversation, and remove anything private about you or anyone else.';
+
+  @override
+  String reportExcerptCount(int count, int max) {
+    return '$count of $max characters';
+  }
+
+  @override
+  String get reportDistrict => 'District (optional)';
+
+  @override
+  String get reportDistrictHelp =>
+      'Helps moderators see where a scam is spreading. Leave it out if you would rather not say.';
+
+  @override
+  String get reportWhatIsSent => 'What will be sent';
+
+  @override
+  String get reportWhatIsSentBody =>
+      'Only the items listed below leave your phone. Phone numbers are turned into a code on our server and stored that way, never as the number itself.';
+
+  @override
+  String get reportNothingToSend =>
+      'Add at least a number, a link, or a piece of the message.';
+
+  @override
+  String get reportConsent =>
+      'I understand what will be sent, and I am reporting this honestly.';
+
+  @override
+  String get reportConsentRequired =>
+      'Tick the box to confirm you have read what will be sent.';
+
+  @override
+  String get reportSubmit => 'Send report';
+
+  @override
+  String get reportSubmitting => 'Sending…';
+
+  @override
+  String get reportSubmittedTitle => 'Report sent';
+
+  @override
+  String reportSubmittedBody(String reference) {
+    return 'Thank you. A moderator will look at it. Your reference is $reference.';
+  }
+
+  @override
+  String get reportDuplicateBody =>
+      'You already reported this number recently, so your earlier report still stands. There is no need to send it again.';
+
+  @override
+  String get reportNotAccusation =>
+      'A report is not an accusation. Moderators check reports from several people before anything is marked as verified, and a single report never labels anyone.';
+
+  @override
+  String get reportFailedNetwork =>
+      'The report could not be sent and nothing was saved. Your report is still on this screen — try again when you have a connection.';
+
+  @override
+  String get reportFailedRateLimited =>
+      'You have sent several reports in a short time. Please wait a while before sending another.';
+
+  @override
+  String get reportFailedSuspended =>
+      'This account cannot submit reports at the moment. Contact support if you think that is wrong.';
+
+  @override
+  String get reportFailedUnknown =>
+      'Something went wrong and nothing was saved. You can try again safely.';
+
+  @override
+  String get reportHistoryTitle => 'My reports';
+
+  @override
+  String get reportHistoryEmpty => 'You have not sent any reports yet.';
+
+  @override
+  String get reportHistoryStatus => 'Status';
+
+  @override
+  String get reportStatusPending => 'Waiting for review';
+
+  @override
+  String get reportStatusUnderReview => 'Being reviewed';
+
+  @override
+  String get reportStatusNeedsEvidence => 'More evidence needed';
+
+  @override
+  String get reportStatusVerified => 'Verified';
+
+  @override
+  String get reportStatusRejected => 'Not upheld';
+
+  @override
+  String get reportStatusDuplicate => 'Already reported';
+
+  @override
+  String get reportStatusArchived => 'Closed';
+
+  @override
+  String get threatTypeImpersonation =>
+      'Someone pretended to be a person I know';
+
+  @override
+  String get threatTypeHijackedAccount => 'A friend\'s account was taken over';
+
+  @override
+  String get threatTypeFinancialHelpScam =>
+      'Asked me for money for an emergency';
+
+  @override
+  String get threatTypeVerificationCodeTheft =>
+      'Asked me for a verification code';
+
+  @override
+  String get threatTypeQrCodeScam => 'Asked me to scan a QR code';
+
+  @override
+  String get threatTypeMobileMoneyScam => 'Mobile money scam';
+
+  @override
+  String get threatTypeMaliciousLink => 'A dangerous link';
+
+  @override
+  String get threatTypeFakeJob => 'A fake job offer';
+
+  @override
+  String get threatTypeFakeLoan => 'A fake loan';
+
+  @override
+  String get threatTypeFakeInvestment => 'A fake investment';
+
+  @override
+  String get threatTypeFakePrize => 'A prize I never entered for';
+
+  @override
+  String get threatTypeBlackmail => 'Threats or blackmail';
+
+  @override
+  String get threatTypeOther => 'Something else';
+
+  @override
+  String get authSignInTitle => 'Sign in';
+
+  @override
+  String get authSignUpTitle => 'Create an account';
+
+  @override
+  String get authEmail => 'Email';
+
+  @override
+  String get authPassword => 'Password';
+
+  @override
+  String get authPasswordHelp =>
+      'At least 8 characters. Do not reuse the password from your email or your bank.';
+
+  @override
+  String get authSignIn => 'Sign in';
+
+  @override
+  String get authSignUp => 'Create account';
+
+  @override
+  String get authSwitchToSignUp => 'I do not have an account';
+
+  @override
+  String get authSwitchToSignIn => 'I already have an account';
+
+  @override
+  String get authForgotPassword => 'I forgot my password';
+
+  @override
+  String get authResetSent =>
+      'If that email has an account, a reset link is on its way.';
+
+  @override
+  String get authSignOut => 'Sign out';
+
+  @override
+  String get authSignedOut => 'Signed out.';
+
+  @override
+  String get authGuestNote =>
+      'You do not need an account for anything else. Checking messages, screenshots, links and people all work signed out.';
+
+  @override
+  String get authNeverAsksCode =>
+      'Salone Shield will never ask for your WhatsApp code or your mobile-money PIN — not on this screen, not anywhere.';
+
+  @override
+  String get authErrorInvalid =>
+      'That email and password do not match. Check them and try again.';
+
+  @override
+  String get authErrorNotConfirmed =>
+      'Confirm your email address first. Check your inbox for the link.';
+
+  @override
+  String get authErrorAlreadyRegistered =>
+      'That email already has an account. Try signing in instead.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Choose a longer password — at least 8 characters.';
+
+  @override
+  String get authErrorRateLimited =>
+      'Too many attempts. Wait a few minutes and try again.';
+
+  @override
+  String get authErrorNetwork =>
+      'Could not reach the server. Nothing was saved. Try again when you have a connection.';
+
+  @override
+  String get authErrorUnknown =>
+      'Something went wrong and nothing was saved. You can try again safely.';
+
+  @override
+  String get authCheckEmail =>
+      'Account created. Check your email for the confirmation link before signing in.';
 }

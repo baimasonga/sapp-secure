@@ -347,5 +347,97 @@
         "type": "String"
       }
     }
-  }
+  },
+  "reportTitle": "Report a scam",
+  "reportIntro": "Reporting helps warn other people. Nothing is sent until you have seen exactly what will be shared.",
+  "reportUnavailableTitle": "Reporting is not switched on",
+  "reportUnavailableBody": "This build has no reporting backend configured, so nothing can be submitted. Every other check still works, and still works offline.",
+  "reportSignInNeeded": "You need an account to report, so that moderators can follow up and so one person cannot flood the system.",
+  "reportThreatType": "What kind of scam was it?",
+  "reportNumber": "The number that contacted you",
+  "reportPaymentNumber": "The number they asked you to pay",
+  "reportLink": "A link in the message",
+  "reportExcerpt": "A short piece of the message",
+  "reportExcerptHelp": "Include only the part that shows the scam. Do not paste a whole conversation, and remove anything private about you or anyone else.",
+  "reportExcerptCount": "{count} of {max} characters",
+  "@reportExcerptCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "reportDistrict": "District (optional)",
+  "reportDistrictHelp": "Helps moderators see where a scam is spreading. Leave it out if you would rather not say.",
+  "reportWhatIsSent": "What will be sent",
+  "reportWhatIsSentBody": "Only the items listed below leave your phone. Phone numbers are turned into a code on our server and stored that way, never as the number itself.",
+  "reportNothingToSend": "Add at least a number, a link, or a piece of the message.",
+  "reportConsent": "I understand what will be sent, and I am reporting this honestly.",
+  "reportConsentRequired": "Tick the box to confirm you have read what will be sent.",
+  "reportSubmit": "Send report",
+  "reportSubmitting": "Sending…",
+  "reportSubmittedTitle": "Report sent",
+  "reportSubmittedBody": "Thank you. A moderator will look at it. Your reference is {reference}.",
+  "@reportSubmittedBody": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "reportDuplicateBody": "You already reported this number recently, so your earlier report still stands. There is no need to send it again.",
+  "reportNotAccusation": "A report is not an accusation. Moderators check reports from several people before anything is marked as verified, and a single report never labels anyone.",
+  "reportFailedNetwork": "The report could not be sent and nothing was saved. Your report is still on this screen — try again when you have a connection.",
+  "reportFailedRateLimited": "You have sent several reports in a short time. Please wait a while before sending another.",
+  "reportFailedSuspended": "This account cannot submit reports at the moment. Contact support if you think that is wrong.",
+  "reportFailedUnknown": "Something went wrong and nothing was saved. You can try again safely.",
+  "reportHistoryTitle": "My reports",
+  "reportHistoryEmpty": "You have not sent any reports yet.",
+  "reportHistoryStatus": "Status",
+  "reportStatusPending": "Waiting for review",
+  "reportStatusUnderReview": "Being reviewed",
+  "reportStatusNeedsEvidence": "More evidence needed",
+  "reportStatusVerified": "Verified",
+  "reportStatusRejected": "Not upheld",
+  "reportStatusDuplicate": "Already reported",
+  "reportStatusArchived": "Closed",
+  "threatTypeImpersonation": "Someone pretended to be a person I know",
+  "threatTypeHijackedAccount": "A friend's account was taken over",
+  "threatTypeFinancialHelpScam": "Asked me for money for an emergency",
+  "threatTypeVerificationCodeTheft": "Asked me for a verification code",
+  "threatTypeQrCodeScam": "Asked me to scan a QR code",
+  "threatTypeMobileMoneyScam": "Mobile money scam",
+  "threatTypeMaliciousLink": "A dangerous link",
+  "threatTypeFakeJob": "A fake job offer",
+  "threatTypeFakeLoan": "A fake loan",
+  "threatTypeFakeInvestment": "A fake investment",
+  "threatTypeFakePrize": "A prize I never entered for",
+  "threatTypeBlackmail": "Threats or blackmail",
+  "threatTypeOther": "Something else",
+  "authSignInTitle": "Sign in",
+  "authSignUpTitle": "Create an account",
+  "authEmail": "Email",
+  "authPassword": "Password",
+  "authPasswordHelp": "At least 8 characters. Do not reuse the password from your email or your bank.",
+  "authSignIn": "Sign in",
+  "authSignUp": "Create account",
+  "authSwitchToSignUp": "I do not have an account",
+  "authSwitchToSignIn": "I already have an account",
+  "authForgotPassword": "I forgot my password",
+  "authResetSent": "If that email has an account, a reset link is on its way.",
+  "authSignOut": "Sign out",
+  "authSignedOut": "Signed out.",
+  "authGuestNote": "You do not need an account for anything else. Checking messages, screenshots, links and people all work signed out.",
+  "authNeverAsksCode": "Salone Shield will never ask for your WhatsApp code or your mobile-money PIN — not on this screen, not anywhere.",
+  "authErrorInvalid": "That email and password do not match. Check them and try again.",
+  "authErrorNotConfirmed": "Confirm your email address first. Check your inbox for the link.",
+  "authErrorAlreadyRegistered": "That email already has an account. Try signing in instead.",
+  "authErrorWeakPassword": "Choose a longer password — at least 8 characters.",
+  "authErrorRateLimited": "Too many attempts. Wait a few minutes and try again.",
+  "authErrorNetwork": "Could not reach the server. Nothing was saved. Try again when you have a connection.",
+  "authErrorUnknown": "Something went wrong and nothing was saved. You can try again safely.",
+  "authCheckEmail": "Account created. Check your email for the confirmation link before signing in."
 }

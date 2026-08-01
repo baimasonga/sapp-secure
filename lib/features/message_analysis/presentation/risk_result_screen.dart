@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
-import '../../../core/widgets/coming_soon_sheet.dart';
 import '../../trusted_contacts/application/trusted_contacts_controller.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../services/risk_engine/models/risk_assessment.dart';
@@ -504,7 +503,22 @@ class _ResultButtons extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         OutlinedButton.icon(
-          onPressed: () => showComingSoonSheet(context, l10n.resultReport),
+          onPressed: () => context.pushNamed(
+            AppRoute.report.name,
+            // Only the number, the link and which rules fired — never the
+            // message itself.
+            extra: <String, Object?>{
+              'number': assessment.phoneNumbers.isEmpty
+                  ? null
+                  : assessment.phoneNumbers.first.normalised,
+              'link': assessment.urls.isEmpty
+                  ? null
+                  : assessment.urls.first.original,
+              'signals': assessment.signals
+                  .map((signal) => signal.ruleId)
+                  .toList(),
+            },
+          ),
           icon: const Icon(Icons.flag_outlined),
           label: Text(l10n.resultReport),
         ),

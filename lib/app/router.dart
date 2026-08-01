@@ -9,6 +9,8 @@ import '../features/message_analysis/presentation/analyse_message_screen.dart';
 import '../features/message_analysis/presentation/risk_result_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/screenshot_analysis/presentation/screenshot_scanner_screen.dart';
+import '../features/threat_reporting/presentation/report_history_screen.dart';
+import '../features/threat_reporting/presentation/report_scam_screen.dart';
 import '../features/onboarding/presentation/permissions_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/trusted_contacts/presentation/trusted_contacts_screen.dart';
@@ -25,6 +27,8 @@ enum AppRoute {
   screenshot('/screenshot'),
   linkCheck('/link-check'),
   verify('/verify'),
+  report('/report'),
+  reports('/reports'),
   trustedContacts('/trusted-contacts'),
   settings('/settings'),
   privacy('/privacy');
@@ -95,6 +99,26 @@ final routerProvider = Provider<GoRouter>((ref) {
           // The number under investigation, already normalised by the caller.
           numberE164: state.extra is String ? state.extra! as String : '',
         ),
+      ),
+      GoRoute(
+        path: AppRoute.report.path,
+        name: AppRoute.report.name,
+        builder: (context, state) {
+          // Arrives pre-filled when the user came from a risk result.
+          final extra = state.extra;
+          final prefill = extra is Map<String, Object?> ? extra : const {};
+          return ReportScamScreen(
+            initialNumber: prefill['number'] as String?,
+            initialLink: prefill['link'] as String?,
+            riskSignals:
+                (prefill['signals'] as List?)?.cast<String>() ?? const [],
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.reports.path,
+        name: AppRoute.reports.name,
+        builder: (context, state) => const ReportHistoryScreen(),
       ),
       GoRoute(
         path: AppRoute.trustedContacts.path,

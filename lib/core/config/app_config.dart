@@ -39,10 +39,27 @@ abstract final class AppConfig {
     defaultValue: false,
   );
 
+  /// Community reporting: accounts, submissions and moderation.
+  ///
+  /// Off by default and deliberately so. Reporting is the first feature that
+  /// sends anything off the device, and its safety rests entirely on
+  /// row-level security being correct. Do not switch this on for an
+  /// environment until the RLS test plan in docs/SUPABASE_SETUP.md has been
+  /// run against that environment's project.
+  static const bool enableReporting = bool.fromEnvironment(
+    'ENABLE_REPORTING',
+    defaultValue: false,
+  );
+
   /// The app is fully usable without Supabase: guest analysis is the default
   /// path, so a missing backend configuration must never block startup.
   static bool get isSupabaseConfigured =>
       supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 
   static bool get isProduction => environment == AppEnvironment.production;
+
+  /// Reporting needs both the flag and a configured backend. Either missing
+  /// means the app stays in local-only mode and says so.
+  static bool get isReportingAvailable =>
+      enableReporting && isSupabaseConfigured;
 }

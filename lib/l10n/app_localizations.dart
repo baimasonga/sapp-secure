@@ -1557,6 +1557,456 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This address is made to look like {brand}, but it is not their real website.'**
   String linkCheckBrandWarning(String brand);
+
+  /// No description provided for @reportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a scam'**
+  String get reportTitle;
+
+  /// No description provided for @reportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporting helps warn other people. Nothing is sent until you have seen exactly what will be shared.'**
+  String get reportIntro;
+
+  /// No description provided for @reportUnavailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporting is not switched on'**
+  String get reportUnavailableTitle;
+
+  /// No description provided for @reportUnavailableBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This build has no reporting backend configured, so nothing can be submitted. Every other check still works, and still works offline.'**
+  String get reportUnavailableBody;
+
+  /// No description provided for @reportSignInNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'You need an account to report, so that moderators can follow up and so one person cannot flood the system.'**
+  String get reportSignInNeeded;
+
+  /// No description provided for @reportThreatType.
+  ///
+  /// In en, this message translates to:
+  /// **'What kind of scam was it?'**
+  String get reportThreatType;
+
+  /// No description provided for @reportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'The number that contacted you'**
+  String get reportNumber;
+
+  /// No description provided for @reportPaymentNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'The number they asked you to pay'**
+  String get reportPaymentNumber;
+
+  /// No description provided for @reportLink.
+  ///
+  /// In en, this message translates to:
+  /// **'A link in the message'**
+  String get reportLink;
+
+  /// No description provided for @reportExcerpt.
+  ///
+  /// In en, this message translates to:
+  /// **'A short piece of the message'**
+  String get reportExcerpt;
+
+  /// No description provided for @reportExcerptHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Include only the part that shows the scam. Do not paste a whole conversation, and remove anything private about you or anyone else.'**
+  String get reportExcerptHelp;
+
+  /// No description provided for @reportExcerptCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {max} characters'**
+  String reportExcerptCount(int count, int max);
+
+  /// No description provided for @reportDistrict.
+  ///
+  /// In en, this message translates to:
+  /// **'District (optional)'**
+  String get reportDistrict;
+
+  /// No description provided for @reportDistrictHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Helps moderators see where a scam is spreading. Leave it out if you would rather not say.'**
+  String get reportDistrictHelp;
+
+  /// No description provided for @reportWhatIsSent.
+  ///
+  /// In en, this message translates to:
+  /// **'What will be sent'**
+  String get reportWhatIsSent;
+
+  /// No description provided for @reportWhatIsSentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the items listed below leave your phone. Phone numbers are turned into a code on our server and stored that way, never as the number itself.'**
+  String get reportWhatIsSentBody;
+
+  /// No description provided for @reportNothingToSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least a number, a link, or a piece of the message.'**
+  String get reportNothingToSend;
+
+  /// No description provided for @reportConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand what will be sent, and I am reporting this honestly.'**
+  String get reportConsent;
+
+  /// No description provided for @reportConsentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick the box to confirm you have read what will be sent.'**
+  String get reportConsentRequired;
+
+  /// No description provided for @reportSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Send report'**
+  String get reportSubmit;
+
+  /// No description provided for @reportSubmitting.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get reportSubmitting;
+
+  /// No description provided for @reportSubmittedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report sent'**
+  String get reportSubmittedTitle;
+
+  /// No description provided for @reportSubmittedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you. A moderator will look at it. Your reference is {reference}.'**
+  String reportSubmittedBody(String reference);
+
+  /// No description provided for @reportDuplicateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You already reported this number recently, so your earlier report still stands. There is no need to send it again.'**
+  String get reportDuplicateBody;
+
+  /// No description provided for @reportNotAccusation.
+  ///
+  /// In en, this message translates to:
+  /// **'A report is not an accusation. Moderators check reports from several people before anything is marked as verified, and a single report never labels anyone.'**
+  String get reportNotAccusation;
+
+  /// No description provided for @reportFailedNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'The report could not be sent and nothing was saved. Your report is still on this screen — try again when you have a connection.'**
+  String get reportFailedNetwork;
+
+  /// No description provided for @reportFailedRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'You have sent several reports in a short time. Please wait a while before sending another.'**
+  String get reportFailedRateLimited;
+
+  /// No description provided for @reportFailedSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'This account cannot submit reports at the moment. Contact support if you think that is wrong.'**
+  String get reportFailedSuspended;
+
+  /// No description provided for @reportFailedUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong and nothing was saved. You can try again safely.'**
+  String get reportFailedUnknown;
+
+  /// No description provided for @reportHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My reports'**
+  String get reportHistoryTitle;
+
+  /// No description provided for @reportHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not sent any reports yet.'**
+  String get reportHistoryEmpty;
+
+  /// No description provided for @reportHistoryStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get reportHistoryStatus;
+
+  /// No description provided for @reportStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for review'**
+  String get reportStatusPending;
+
+  /// No description provided for @reportStatusUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Being reviewed'**
+  String get reportStatusUnderReview;
+
+  /// No description provided for @reportStatusNeedsEvidence.
+  ///
+  /// In en, this message translates to:
+  /// **'More evidence needed'**
+  String get reportStatusNeedsEvidence;
+
+  /// No description provided for @reportStatusVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get reportStatusVerified;
+
+  /// No description provided for @reportStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not upheld'**
+  String get reportStatusRejected;
+
+  /// No description provided for @reportStatusDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Already reported'**
+  String get reportStatusDuplicate;
+
+  /// No description provided for @reportStatusArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get reportStatusArchived;
+
+  /// No description provided for @threatTypeImpersonation.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone pretended to be a person I know'**
+  String get threatTypeImpersonation;
+
+  /// No description provided for @threatTypeHijackedAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'A friend\'s account was taken over'**
+  String get threatTypeHijackedAccount;
+
+  /// No description provided for @threatTypeFinancialHelpScam.
+  ///
+  /// In en, this message translates to:
+  /// **'Asked me for money for an emergency'**
+  String get threatTypeFinancialHelpScam;
+
+  /// No description provided for @threatTypeVerificationCodeTheft.
+  ///
+  /// In en, this message translates to:
+  /// **'Asked me for a verification code'**
+  String get threatTypeVerificationCodeTheft;
+
+  /// No description provided for @threatTypeQrCodeScam.
+  ///
+  /// In en, this message translates to:
+  /// **'Asked me to scan a QR code'**
+  String get threatTypeQrCodeScam;
+
+  /// No description provided for @threatTypeMobileMoneyScam.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile money scam'**
+  String get threatTypeMobileMoneyScam;
+
+  /// No description provided for @threatTypeMaliciousLink.
+  ///
+  /// In en, this message translates to:
+  /// **'A dangerous link'**
+  String get threatTypeMaliciousLink;
+
+  /// No description provided for @threatTypeFakeJob.
+  ///
+  /// In en, this message translates to:
+  /// **'A fake job offer'**
+  String get threatTypeFakeJob;
+
+  /// No description provided for @threatTypeFakeLoan.
+  ///
+  /// In en, this message translates to:
+  /// **'A fake loan'**
+  String get threatTypeFakeLoan;
+
+  /// No description provided for @threatTypeFakeInvestment.
+  ///
+  /// In en, this message translates to:
+  /// **'A fake investment'**
+  String get threatTypeFakeInvestment;
+
+  /// No description provided for @threatTypeFakePrize.
+  ///
+  /// In en, this message translates to:
+  /// **'A prize I never entered for'**
+  String get threatTypeFakePrize;
+
+  /// No description provided for @threatTypeBlackmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Threats or blackmail'**
+  String get threatTypeBlackmail;
+
+  /// No description provided for @threatTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get threatTypeOther;
+
+  /// No description provided for @authSignInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get authSignInTitle;
+
+  /// No description provided for @authSignUpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account'**
+  String get authSignUpTitle;
+
+  /// No description provided for @authEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get authEmail;
+
+  /// No description provided for @authPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get authPassword;
+
+  /// No description provided for @authPasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters. Do not reuse the password from your email or your bank.'**
+  String get authPasswordHelp;
+
+  /// No description provided for @authSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get authSignIn;
+
+  /// No description provided for @authSignUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get authSignUp;
+
+  /// No description provided for @authSwitchToSignUp.
+  ///
+  /// In en, this message translates to:
+  /// **'I do not have an account'**
+  String get authSwitchToSignUp;
+
+  /// No description provided for @authSwitchToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'I already have an account'**
+  String get authSwitchToSignIn;
+
+  /// No description provided for @authForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'I forgot my password'**
+  String get authForgotPassword;
+
+  /// No description provided for @authResetSent.
+  ///
+  /// In en, this message translates to:
+  /// **'If that email has an account, a reset link is on its way.'**
+  String get authResetSent;
+
+  /// No description provided for @authSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get authSignOut;
+
+  /// No description provided for @authSignedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out.'**
+  String get authSignedOut;
+
+  /// No description provided for @authGuestNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not need an account for anything else. Checking messages, screenshots, links and people all work signed out.'**
+  String get authGuestNote;
+
+  /// No description provided for @authNeverAsksCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Salone Shield will never ask for your WhatsApp code or your mobile-money PIN — not on this screen, not anywhere.'**
+  String get authNeverAsksCode;
+
+  /// No description provided for @authErrorInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That email and password do not match. Check them and try again.'**
+  String get authErrorInvalid;
+
+  /// No description provided for @authErrorNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your email address first. Check your inbox for the link.'**
+  String get authErrorNotConfirmed;
+
+  /// No description provided for @authErrorAlreadyRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'That email already has an account. Try signing in instead.'**
+  String get authErrorAlreadyRegistered;
+
+  /// No description provided for @authErrorWeakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a longer password — at least 8 characters.'**
+  String get authErrorWeakPassword;
+
+  /// No description provided for @authErrorRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Wait a few minutes and try again.'**
+  String get authErrorRateLimited;
+
+  /// No description provided for @authErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the server. Nothing was saved. Try again when you have a connection.'**
+  String get authErrorNetwork;
+
+  /// No description provided for @authErrorUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong and nothing was saved. You can try again safely.'**
+  String get authErrorUnknown;
+
+  /// No description provided for @authCheckEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created. Check your email for the confirmation link before signing in.'**
+  String get authCheckEmail;
 }
 
 class _AppLocalizationsDelegate

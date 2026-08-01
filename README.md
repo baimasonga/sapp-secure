@@ -24,7 +24,8 @@ It also avoids accusing anyone. Results are phrased as "potential scam",
 
 This repository contains **Milestone 1 (Foundation)**, **Milestone 2 (Manual
 Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** and **Milestone 4
-(Screenshot and Link Analysis)** of the build specification.
+(Screenshot and Link Analysis)** of the build specification, plus the
+**Milestone 5 (Threat Reporting)** backend and client, which ship disabled.
 
 | Feature | State |
 |---|---|
@@ -44,10 +45,24 @@ Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** and **M
 | Local, message-free analysis history (30-day retention) | Working |
 | Settings: theme, delete local data, privacy | Working |
 | Optional Supabase bootstrap | Wired, inert until configured |
-| Reporting, moderation, notification monitoring | Not built — the dashboard says so plainly rather than hiding them |
+| Supabase schema, RLS, Edge Function, auth and report UI | **Written but disabled** — see below |
+| Moderation dashboard, notification monitoring | Not built — the dashboard says so plainly rather than hiding them |
 
 Nothing in the table above is claimed as working unless it is covered by a test
 that runs in CI.
+
+### Reporting is deliberately switched off
+
+`ENABLE_REPORTING` defaults to `false`, and the app says so on the report
+screen rather than hiding it. The schema, row-level security, Edge Function,
+sign-in and report form are all written and unit-tested against fakes — but
+**none of the SQL has been run against a live Supabase project**, so the RLS
+policies are reviewed, not verified.
+
+The anon key ships inside the APK and must be assumed public. The only thing
+protecting reports from anyone holding it is RLS. Until the verification plan
+in [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) passes against a real
+project, that flag stays off.
 
 ## Architecture
 
@@ -57,9 +72,9 @@ Feature-first, with a pure-Dart core that has no Flutter dependency:
 lib/
 ├── app/           bootstrap, router, theme, providers
 ├── core/          config, typed failures, localisation delegates, storage, shared widgets
-├── features/      onboarding, dashboard, message_analysis, screenshot_analysis,
-│                  link_analysis, trusted_contacts, identity_verification,
-│                  settings
+├── features/      onboarding, authentication, dashboard, message_analysis,
+│                  screenshot_analysis, link_analysis, trusted_contacts,
+│                  identity_verification, threat_reporting, settings
 ├── l10n/          app_en.arb, generated localisations
 └── services/      risk_engine (pure Dart), contacts, images, ocr, sharing,
                    supabase
@@ -99,6 +114,7 @@ flutter run --dart-define-from-file=.env
 | `ENABLE_ANALYTICS` | Off by default; analytics also require in-app consent |
 | `ENABLE_NOTIFICATION_MONITORING` | Off; the feature is not implemented yet |
 | `ENABLE_EXTERNAL_URL_REPUTATION` | Off; link analysis is local-only |
+| `ENABLE_REPORTING` | Off. Do not enable until the RLS plan in docs/SUPABASE_SETUP.md passes |
 
 ## Commands
 
@@ -155,8 +171,11 @@ See [PRIVACY.md](PRIVACY.md) and [THREAT_MODEL.md](THREAT_MODEL.md).
 - A number matching a trusted contact is reassuring, not proof: a stolen phone
   or a hijacked account still sends from the right number. The verification
   screen says so.
-- Supabase tables, row-level security and reporting are not implemented yet, so
-  the community-indicator rule has no data source and never fires in practice.
+- **The row-level security policies have never been executed.** They are the
+  single most security-critical code in the project and they are unverified.
+- Reporting needs moderators. Enabling it without people to work the queue
+  would collect accusations nobody reads.
+- The community-indicator rule still has no data source, so it never fires.
 - No release signing configuration is committed.
 
 ## Native code
@@ -184,8 +203,10 @@ There is no notification listener and no Accessibility Service.
 | [THREAT_MODEL.md](THREAT_MODEL.md) | Threats, mitigations, residual risk |
 | [LOCALISATION.md](LOCALISATION.md) | Adding and reviewing translations |
 | [docs/SETUP.md](docs/SETUP.md) | Full development setup |
+| [DATABASE.md](DATABASE.md) | Schema, what is deliberately absent, what the database enforces |
+| [MODERATION_POLICY.md](MODERATION_POLICY.md) | How reports are judged, and by whom |
+| [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Backend setup and the RLS verification plan |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Working agreements |
 
-`DATABASE.md`, `MODERATION_POLICY.md`, `docs/SUPABASE_SETUP.md` and
-`docs/ANDROID_NOTIFICATION_SERVICE.md` will be written alongside the milestones
-that introduce those features.
+`docs/ANDROID_NOTIFICATION_SERVICE.md` will be written alongside the milestone
+that introduces it.

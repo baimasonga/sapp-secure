@@ -12,6 +12,7 @@ import 'package:salone_shield/core/localization/app_localization_delegates.dart'
 import 'package:salone_shield/core/storage/preferences_service.dart';
 import 'package:salone_shield/features/message_analysis/presentation/risk_result_screen.dart';
 import 'package:salone_shield/features/settings/presentation/settings_screen.dart';
+import 'package:salone_shield/features/threat_reporting/presentation/report_scam_screen.dart';
 import 'package:salone_shield/l10n/app_localizations.dart';
 import 'package:salone_shield/services/risk_engine/risk_engine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,6 +66,11 @@ Widget wrapForTest(
         path: AppRoute.analysisResult.path,
         name: AppRoute.analysisResult.name,
         builder: (context, state) => const RiskResultScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.report.path,
+        name: AppRoute.report.name,
+        builder: (context, state) => const ReportScamScreen(),
       ),
       GoRoute(
         path: AppRoute.settings.path,

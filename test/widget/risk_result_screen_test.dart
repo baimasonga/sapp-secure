@@ -104,10 +104,10 @@ void main() {
     );
   });
 
-  testWidgets('verification and reporting are marked as not ready', (
+  testWidgets('reporting is offered and explains itself without a backend', (
     tester,
   ) async {
-    await analyseAndOpenResult(tester, 'send money urgently');
+    await analyseAndOpenResult(tester, 'send money urgently to 076123456');
 
     await scrollTo(
       tester,
@@ -116,6 +116,6 @@ void main() {
     await tester.tap(find.widgetWithText(OutlinedButton, l10n.resultReport));
     await tester.pumpAndSettle();
 
-    expect(find.text(l10n.comingSoonTitle), findsOneWidget);
+    expect(find.text(l10n.reportUnavailableTitle), findsOneWidget);
   });
 }

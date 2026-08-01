@@ -3,7 +3,14 @@
 /// Every failure states what went wrong, whether anything was saved, and
 /// whether retrying is safe — so the UI never has to guess and never has to
 /// show a stack trace or a database error to the user.
-sealed class AppFailure implements Exception {
+///
+/// Abstract rather than sealed: features define their own failures with the
+/// detail their screens need (a sign-in screen must distinguish "wrong
+/// password" from "email not confirmed"), and a sealed hierarchy would force
+/// that vocabulary into core. Nothing switches exhaustively over failures —
+/// every handler has a default branch, because an unrecognised failure must
+/// still produce a sensible message rather than a crash.
+abstract class AppFailure implements Exception {
   const AppFailure({
     required this.debugMessage,
     required this.dataWasSaved,

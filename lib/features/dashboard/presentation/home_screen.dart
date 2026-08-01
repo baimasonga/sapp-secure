@@ -66,7 +66,7 @@ class HomeScreen extends ConsumerWidget {
               icon: Icons.flag_outlined,
               title: l10n.homeActionReport,
               subtitle: l10n.homeActionReportSubtitle,
-              onTap: () => showComingSoonSheet(context, l10n.homeActionReport),
+              onTap: () => context.pushNamed(AppRoute.report.name),
             ),
             _ActionTile(
               icon: Icons.checklist_outlined,
