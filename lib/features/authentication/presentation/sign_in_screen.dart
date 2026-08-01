@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../threat_reporting/application/report_controller.dart';
 import '../domain/auth_gateway.dart';
@@ -119,10 +122,21 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
-            _NeverAsksBanner(text: l10n.authNeverAsksCode),
-            const SizedBox(height: 20),
+            // The one thing this screen must say, given that a fake sign-in
+            // page is exactly how these accounts get stolen.
+            DsNotice(
+              icon: Icons.shield_outlined,
+              tone: DsNoticeTone.accent,
+              text: l10n.authNeverAsksCode,
+            ),
+            const SizedBox(height: DsSpace.x5),
             TextField(
               controller: _email,
               keyboardType: TextInputType.emailAddress,
@@ -130,7 +144,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               enableSuggestions: false,
               decoration: InputDecoration(labelText: l10n.authEmail),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: DsSpace.x4),
             TextField(
               controller: _password,
               obscureText: true,
@@ -143,14 +157,18 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               ),
             ),
             if (_error != null) ...[
-              const SizedBox(height: 16),
-              _Banner(message: _error!, isError: true),
+              const SizedBox(height: DsSpace.x4),
+              DsNotice(
+                icon: Icons.error_outline,
+                tone: DsNoticeTone.danger,
+                text: _error!,
+              ),
             ],
             if (_notice != null) ...[
-              const SizedBox(height: 16),
-              _Banner(message: _notice!, isError: false),
+              const SizedBox(height: DsSpace.x4),
+              DsNotice(icon: Icons.info_outline, text: _notice!),
             ],
-            const SizedBox(height: 24),
+            const SizedBox(height: DsSpace.x6),
             FilledButton.icon(
               onPressed: _busy ? null : _submit,
               icon: _busy
@@ -158,10 +176,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       dimension: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.login),
+                  : const Icon(Icons.login, size: 20),
               label: Text(_isSignUp ? l10n.authSignUp : l10n.authSignIn),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: DsSpace.x3),
             TextButton(
               onPressed: _busy
                   ? null
@@ -179,85 +197,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 onPressed: _busy ? null : _resetPassword,
                 child: Text(l10n.authForgotPassword),
               ),
-            const SizedBox(height: 24),
+            const SizedBox(height: DsSpace.x6),
             Text(
               l10n.authGuestNote,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: AppType.caption.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// The one thing this screen must say, given that a fake sign-in page is
-/// exactly how these accounts get stolen.
-class _NeverAsksBanner extends StatelessWidget {
-  const _NeverAsksBanner({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.shield_outlined, color: scheme.onPrimaryContainer),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                color: scheme.onPrimaryContainer,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Banner extends StatelessWidget {
-  const _Banner({required this.message, required this.isError});
-
-  final String message;
-  final bool isError;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final background = isError
-        ? scheme.errorContainer
-        : scheme.surfaceContainerHighest;
-    final foreground = isError ? scheme.onErrorContainer : scheme.onSurface;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            isError ? Icons.error_outline : Icons.info_outline,
-            color: foreground,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(message, style: TextStyle(color: foreground)),
-          ),
-        ],
       ),
     );
   }

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
 import '../../../app/router.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Four-page onboarding (section 7.3).
@@ -72,27 +75,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 onPageChanged: (index) => setState(() => _page = index),
                 itemBuilder: (context, index) {
                   final page = pages[index];
+                  final scheme = Theme.of(context).colorScheme;
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    padding: const EdgeInsets.symmetric(horizontal: DsSpace.x8),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          page.icon,
-                          size: 96,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(height: 40),
+                        // The one gradient moment on this screen, and the
+                        // same mark the app wears everywhere else.
+                        const DsBrandMark(size: 64),
+                        const SizedBox(height: DsSpace.x8),
+                        DsIconChip(icon: page.icon, size: 72),
+                        const SizedBox(height: DsSpace.x8),
                         Text(
                           page.title,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineSmall,
+                          style: AppType.headline.copyWith(
+                            color: scheme.onSurface,
+                          ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: DsSpace.x3),
                         Text(
                           page.body,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: AppType.body.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
@@ -104,29 +112,31 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 for (var index = 0; index < pages.length; index++)
-                  Container(
+                  AnimatedContainer(
+                    duration: DsMotion.base,
+                    curve: DsMotion.ease,
                     width: index == _page ? 24 : 8,
                     height: 8,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: DsSpace.x1),
                     decoration: BoxDecoration(
                       color: index == _page
                           ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.outlineVariant,
-                      borderRadius: BorderRadius.circular(4),
+                          : Theme.of(context).colorScheme.outline,
+                      borderRadius: DsRadius.all(DsRadius.pill),
                     ),
                   ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(DsSpace.x6),
               child: FilledButton(
                 onPressed: () {
                   if (isLast) {
                     context.goNamed(AppRoute.permissions.name);
                   } else {
                     _pageController.nextPage(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOut,
+                      duration: DsMotion.slow,
+                      curve: DsMotion.ease,
                     );
                   }
                 },

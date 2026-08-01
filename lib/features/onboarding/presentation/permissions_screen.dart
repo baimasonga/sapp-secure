@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
 import '../../../app/providers.dart';
 import '../../../app/router.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Permission explanation (section 7.4).
@@ -47,38 +50,50 @@ class PermissionsScreen extends ConsumerWidget {
           children: [
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                padding: const EdgeInsets.fromLTRB(
+                  DsSpace.screenGutter,
+                  DsSpace.x2,
+                  DsSpace.screenGutter,
+                  DsSpace.x2,
+                ),
                 children: [
                   Text(
                     l10n.permissionsSubtitle,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: AppType.body.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: DsSpace.x5),
                   for (final item in items)
-                    Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: DsSpace.x3),
+                      child: DsCard(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              item.icon,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 16),
+                            DsIconChip(icon: item.icon),
+                            const SizedBox(width: DsSpace.x3),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     item.title,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleMedium,
+                                    style: AppType.subtitle.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(item.body),
+                                  const SizedBox(height: DsSpace.x1),
+                                  Text(
+                                    item.body,
+                                    style: AppType.bodySm.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -86,25 +101,16 @@ class PermissionsScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
-                  const SizedBox(height: 8),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.check_circle_outline, size: 20),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          l10n.permissionNoneRequestedNote,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: DsSpace.x2),
+                  DsNotice(
+                    icon: Icons.check_circle_outline,
+                    text: l10n.permissionNoneRequestedNote,
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(DsSpace.x5),
               child: FilledButton(
                 onPressed: () async {
                   await ref

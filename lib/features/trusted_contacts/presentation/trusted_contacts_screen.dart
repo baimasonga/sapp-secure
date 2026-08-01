@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/trusted_contacts_controller.dart';
 import '../data/trusted_contact_repository.dart';
@@ -33,22 +36,24 @@ class TrustedContactsScreen extends ConsumerWidget {
             ),
           ),
           data: (list) => ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+            padding: const EdgeInsets.fromLTRB(
+              DsSpace.screenGutter,
+              DsSpace.x4,
+              DsSpace.screenGutter,
+              96,
+            ),
             children: [
               Text(
                 l10n.trustedContactsIntro,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: AppType.body.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
-              const SizedBox(height: 16),
-              _PrivacyNote(text: l10n.trustedContactsPrivacyNote),
-              const SizedBox(height: 20),
+              const SizedBox(height: DsSpace.x4),
+              DsNotice(text: l10n.trustedContactsPrivacyNote),
+              const SizedBox(height: DsSpace.x5),
               if (list.isEmpty)
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(l10n.trustedContactsEmpty),
-                  ),
-                )
+                DsCard(sunken: true, child: Text(l10n.trustedContactsEmpty))
               else
                 for (final contact in list)
                   _ContactCard(
@@ -143,39 +148,59 @@ class _ContactCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpace.x3),
+      child: DsCard(
+        padding: const EdgeInsets.fromLTRB(
+          DsSpace.x4,
+          DsSpace.x3,
+          DsSpace.x2,
+          DsSpace.x3,
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            DsIconChip(
+              icon: Icons.person_outline,
+              background: scheme.surfaceContainerHighest,
+              foreground: scheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: DsSpace.x3),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     contact.displayName,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: AppType.subtitle.copyWith(color: scheme.onSurface),
                   ),
                   if (contact.relationshipLabel != null) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: DsSpace.x0_5),
                     Text(
                       contact.relationshipLabel!,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: AppType.caption.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
-                  const SizedBox(height: 8),
-                  Text(contact.primaryNumberE164),
+                  const SizedBox(height: DsSpace.x2),
+                  Text(
+                    contact.primaryNumberE164,
+                    style: AppType.mono.copyWith(
+                      fontSize: 14,
+                      color: scheme.onSurface,
+                    ),
+                  ),
                   if (contact.numbersE164.length > 1) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: DsSpace.x0_5),
                     Text(
                       l10n.trustedContactNumberCount(
                         contact.numbersE164.length,
                       ),
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: AppType.caption.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ],
@@ -196,32 +221,6 @@ class _ContactCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _PrivacyNote extends StatelessWidget {
-  const _PrivacyNote({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(Icons.lock_outline, size: 20, color: scheme.onSurfaceVariant),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-          ),
-        ),
-      ],
     );
   }
 }

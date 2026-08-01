@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
 import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../identity_verification/application/verification_controller.dart';
 import '../../message_analysis/application/analysis_controller.dart';
@@ -27,12 +30,18 @@ class SettingsScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: SafeArea(
         child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
-            _SectionLabel(text: l10n.settingsTheme),
+            DsSectionLabel(l10n.settingsTheme),
             RadioGroup<ThemeMode>(
               groupValue: themeMode,
               onChanged: (mode) => _selectTheme(ref, mode),
-              child: Column(
+              child: DsListGroup(
                 children: [
                   RadioListTile<ThemeMode>(
                     value: ThemeMode.system,
@@ -49,68 +58,100 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const Divider(),
-            _SectionLabel(text: l10n.settingsPrivacyTitle),
-            SwitchListTile(
-              value: preferences.analyticsConsent,
-              title: Text(l10n.settingsAnalytics),
-              subtitle: Text(l10n.settingsAnalyticsBody),
-              onChanged: AppConfig.enableAnalytics
-                  ? (value) async {
-                      await preferences.setAnalyticsConsent(value);
-                      ref.invalidate(preferencesServiceProvider);
-                    }
-                  : null,
+            const SizedBox(height: DsSpace.x6),
+            DsSectionLabel(l10n.settingsPrivacyTitle),
+            DsListGroup(
+              children: [
+                SwitchListTile(
+                  value: preferences.analyticsConsent,
+                  title: Text(l10n.settingsAnalytics),
+                  subtitle: Text(l10n.settingsAnalyticsBody),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: DsSpace.x4,
+                    vertical: DsSpace.x1,
+                  ),
+                  onChanged: AppConfig.enableAnalytics
+                      ? (value) async {
+                          await preferences.setAnalyticsConsent(value);
+                          ref.invalidate(preferencesServiceProvider);
+                        }
+                      : null,
+                ),
+                DsListRow(
+                  leading: Icons.policy_outlined,
+                  title: l10n.settingsPrivacyPolicy,
+                  onTap: () => context.pushNamed(AppRoute.privacy.name),
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.delete_outline),
-              title: Text(l10n.settingsClearHistory),
-              subtitle: Text(l10n.settingsClearHistoryBody),
-              onTap: () async {
-                await preferences.clearHistory();
-                ref.invalidate(recentAnalysesProvider);
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(content: Text(l10n.settingsClearHistoryDone)),
-                  );
-              },
+            const SizedBox(height: DsSpace.x6),
+            DsSectionLabel(l10n.settingsDataTitle),
+            DsListGroup(
+              children: [
+                // Each of these deletes something the app is holding on this
+                // phone. They are grouped so the user can see, in one place,
+                // everything the app has of theirs.
+                DsListRow(
+                  leading: Icons.delete_outline,
+                  title: l10n.settingsClearHistory,
+                  subtitle: l10n.settingsClearHistoryBody,
+                  onTap: () async {
+                    await preferences.clearHistory();
+                    ref.invalidate(recentAnalysesProvider);
+                    if (!context.mounted) return;
+                    _snack(context, l10n.settingsClearHistoryDone);
+                  },
+                ),
+                DsListRow(
+                  leading: Icons.person_remove_outlined,
+                  title: l10n.settingsDeleteContacts,
+                  subtitle: l10n.settingsDeleteContactsBody,
+                  onTap: () async {
+                    await ref.read(trustedContactRepositoryProvider).clear();
+                    await ref
+                        .read(trustedContactsControllerProvider.notifier)
+                        .load();
+                    if (!context.mounted) return;
+                    _snack(context, l10n.settingsDeleteContactsDone);
+                  },
+                ),
+                DsListRow(
+                  leading: Icons.history_toggle_off,
+                  title: l10n.settingsDeleteVerifications,
+                  subtitle: l10n.settingsDeleteVerificationsBody,
+                  onTap: () async {
+                    await ref
+                        .read(verificationHistoryRepositoryProvider)
+                        .clear();
+                    ref.invalidate(verificationHistoryProvider);
+                    if (!context.mounted) return;
+                    _snack(context, l10n.settingsDeleteVerificationsDone);
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.person_remove_outlined),
-              title: Text(l10n.settingsDeleteContacts),
-              subtitle: Text(l10n.settingsDeleteContactsBody),
-              onTap: () async {
-                await ref.read(trustedContactRepositoryProvider).clear();
-                await ref
-                    .read(trustedContactsControllerProvider.notifier)
-                    .load();
-                if (!context.mounted) return;
-                _snack(context, l10n.settingsDeleteContactsDone);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.history_toggle_off),
-              title: Text(l10n.settingsDeleteVerifications),
-              subtitle: Text(l10n.settingsDeleteVerificationsBody),
-              onTap: () async {
-                await ref.read(verificationHistoryRepositoryProvider).clear();
-                ref.invalidate(verificationHistoryProvider);
-                if (!context.mounted) return;
-                _snack(context, l10n.settingsDeleteVerificationsDone);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.policy_outlined),
-              title: Text(l10n.settingsPrivacyPolicy),
-              onTap: () => context.pushNamed(AppRoute.privacy.name),
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: Text(l10n.settingsAbout),
-              subtitle: Text(l10n.settingsVersion(appVersion)),
+            const SizedBox(height: DsSpace.x6),
+            DsCard(
+              sunken: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.settingsAbout,
+                    style: AppType.bodySm.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: AppType.semibold,
+                    ),
+                  ),
+                  const SizedBox(height: DsSpace.x1),
+                  Text(
+                    l10n.settingsVersion(appVersion),
+                    style: AppType.caption.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -130,26 +171,6 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
-}
-
 /// Plain-language privacy summary (section 7.15). The full policy lives in
 /// `PRIVACY.md`; this is what the user reads in the app.
 class PrivacyScreen extends StatelessWidget {
@@ -162,18 +183,25 @@ class PrivacyScreen extends StatelessWidget {
       appBar: AppBar(title: Text(l10n.privacyTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x5,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
             Text(
               l10n.neverAskTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: AppType.title.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: DsSpace.x4),
             Text(
               l10n.privacyBody,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: AppType.body.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),

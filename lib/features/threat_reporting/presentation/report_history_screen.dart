@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/report_controller.dart';
 import '../domain/threat_report.dart';
@@ -20,27 +23,29 @@ class ReportHistoryScreen extends ConsumerWidget {
       body: SafeArea(
         child: reports.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, _) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Text(
-                l10n.reportFailedNetwork,
-                textAlign: TextAlign.center,
-              ),
+          error: (_, _) => Padding(
+            padding: const EdgeInsets.all(DsSpace.x6),
+            child: DsNotice(
+              text: l10n.reportFailedNetwork,
+              icon: Icons.wifi_off,
+              tone: DsNoticeTone.danger,
             ),
           ),
           data: (list) => list.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Text(
-                      l10n.reportHistoryEmpty,
-                      textAlign: TextAlign.center,
-                    ),
+              ? Padding(
+                  padding: const EdgeInsets.all(DsSpace.x6),
+                  child: DsNotice(
+                    text: l10n.reportHistoryEmpty,
+                    icon: Icons.inbox_outlined,
                   ),
                 )
               : ListView.builder(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.fromLTRB(
+                    DsSpace.screenGutter,
+                    DsSpace.x4,
+                    DsSpace.screenGutter,
+                    DsSpace.x8,
+                  ),
                   itemCount: list.length,
                   itemBuilder: (context, index) =>
                       _ReportTile(report: list[index]),
@@ -71,48 +76,79 @@ class _ReportTile extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final date = report.createdAt.toLocal();
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpace.x3),
+      child: DsCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(_iconFor(report.status)),
-                const SizedBox(width: 12),
+                Icon(
+                  _iconFor(report.status),
+                  size: 18,
+                  color: scheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: DsSpace.x2_5),
                 Expanded(
                   child: Text(
                     report.threatType.label(l10n),
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
+                    style: AppType.bodySm.copyWith(
+                      color: scheme.onSurface,
+                      fontWeight: AppType.semibold,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DsSpace.x2_5,
+                    vertical: DsSpace.x1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: scheme.surfaceContainerHighest,
+                    borderRadius: DsRadius.all(DsRadius.pill),
+                  ),
+                  child: Text(
+                    report.status.label(l10n),
+                    style: AppType.caption.copyWith(
+                      fontSize: 11,
+                      color: scheme.onSurfaceVariant,
+                      fontWeight: AppType.semibold,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text('${l10n.reportHistoryStatus}: ${report.status.label(l10n)}'),
-            const SizedBox(height: 4),
-            Text(
-              '${date.year}-${date.month.toString().padLeft(2, '0')}-'
-              '${date.day.toString().padLeft(2, '0')}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
             if (report.maskedNumber != null) ...[
-              const SizedBox(height: 4),
+              const SizedBox(height: DsSpace.x2),
               // Masked, never the whole number, even back to the person who
               // reported it.
               Text(
                 report.maskedNumber!,
-                style: Theme.of(context).textTheme.bodySmall,
+                style: AppType.mono.copyWith(
+                  fontSize: 13,
+                  color: scheme.onSurfaceVariant,
+                ),
               ),
             ],
             if (report.moderatorNote != null) ...[
-              const SizedBox(height: 8),
-              Text(report.moderatorNote!),
+              const SizedBox(height: DsSpace.x2),
+              Text(
+                report.moderatorNote!,
+                style: AppType.caption.copyWith(color: scheme.onSurfaceVariant),
+              ),
             ],
+            const SizedBox(height: DsSpace.x2),
+            Text(
+              // The status is in the pill above; this line is only the date.
+              '${date.year}-${date.month.toString().padLeft(2, '0')}-'
+              '${date.day.toString().padLeft(2, '0')}',
+              style: AppType.caption.copyWith(
+                fontSize: 11.5,
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),

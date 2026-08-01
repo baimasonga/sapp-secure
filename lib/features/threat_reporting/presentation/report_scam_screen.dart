@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../authentication/presentation/sign_in_screen.dart';
 import '../application/report_controller.dart';
@@ -117,10 +120,10 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
     if (!ref.watch(reportingAvailableProvider)) {
       return _Shell(
         title: l10n.reportTitle,
-        child: _Notice(
+        child: DsNotice(
           icon: Icons.cloud_off_outlined,
           title: l10n.reportUnavailableTitle,
-          body: l10n.reportUnavailableBody,
+          text: l10n.reportUnavailableBody,
         ),
       );
     }
@@ -131,23 +134,25 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _Notice(
+            DsNotice(
               icon: Icons.account_circle_outlined,
               title: l10n.authSignInTitle,
-              body: l10n.reportSignInNeeded,
+              text: l10n.reportSignInNeeded,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: DsSpace.x5),
             FilledButton.icon(
               onPressed: () => Navigator.of(context).push<void>(
                 MaterialPageRoute(builder: (_) => const SignInScreen()),
               ),
-              icon: const Icon(Icons.login),
+              icon: const Icon(Icons.login, size: 20),
               label: Text(l10n.authSignIn),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: DsSpace.x4),
             Text(
               l10n.authGuestNote,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: AppType.caption.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -158,10 +163,11 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
     if (state is ReportSubmitted) {
       return _Shell(
         title: l10n.reportTitle,
-        child: _Notice(
+        child: DsNotice(
           icon: Icons.check_circle_outline,
+          tone: DsNoticeTone.accent,
           title: l10n.reportSubmittedTitle,
-          body: state.result.wasDuplicate
+          text: state.result.wasDuplicate
               ? l10n.reportDuplicateBody
               : l10n.reportSubmittedBody(state.result.reportId.substring(0, 8)),
         ),
@@ -174,15 +180,14 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.reportIntro, style: Theme.of(context).textTheme.bodyLarge),
-          const SizedBox(height: 20),
           Text(
-            l10n.reportThreatType,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+            l10n.reportIntro,
+            style: AppType.body.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: DsSpace.x5),
+          DsSectionLabel(l10n.reportThreatType),
           DropdownButtonFormField<ThreatType>(
             initialValue: _threatType,
             isExpanded: true,
@@ -196,7 +201,7 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
                     () => _threatType = value ?? ThreatType.impersonation,
                   ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: DsSpace.x5),
           _Field(controller: _number, label: l10n.reportNumber, phone: true),
           _Field(
             controller: _paymentNumber,
@@ -204,7 +209,6 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
             phone: true,
           ),
           _Field(controller: _link, label: l10n.reportLink),
-          const SizedBox(height: 4),
           TextField(
             controller: _excerpt,
             maxLines: 4,
@@ -217,7 +221,7 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
             ),
             onChanged: (_) => setState(() {}),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: DsSpace.x3),
           TextField(
             controller: _district,
             decoration: InputDecoration(
@@ -226,9 +230,9 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
               helperMaxLines: 2,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: DsSpace.x6),
           _WhatIsSent(draft: _draft),
-          const SizedBox(height: 16),
+          const SizedBox(height: DsSpace.x4),
           CheckboxListTile(
             value: _consent,
             onChanged: submitting
@@ -239,18 +243,14 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
             contentPadding: EdgeInsets.zero,
           ),
           if (state is ReportRejected) ...[
-            const SizedBox(height: 8),
-            _Notice(
+            const SizedBox(height: DsSpace.x2),
+            DsNotice(
               icon: Icons.error_outline,
-              title:
-                  l10n.reportFailedUnknown == _failureText(l10n, state.failure)
-                  ? l10n.reportFailedUnknown
-                  : _failureText(l10n, state.failure),
-              body: '',
-              isError: true,
+              tone: DsNoticeTone.danger,
+              text: _failureText(l10n, state.failure),
             ),
           ],
-          const SizedBox(height: 16),
+          const SizedBox(height: DsSpace.x4),
           FilledButton.icon(
             onPressed: submitting
                 ? null
@@ -262,13 +262,15 @@ class _ReportScamScreenState extends ConsumerState<ReportScamScreen> {
                     dimension: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Icon(Icons.send_outlined),
+                : const Icon(Icons.send_outlined, size: 20),
             label: Text(submitting ? l10n.reportSubmitting : l10n.reportSubmit),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: DsSpace.x5),
           Text(
             l10n.reportNotAccusation,
-            style: Theme.of(context).textTheme.bodySmall,
+            style: AppType.caption.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -288,7 +290,12 @@ class _Shell extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [child],
         ),
       ),
@@ -310,7 +317,7 @@ class _Field extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: DsSpace.x3),
       child: TextField(
         controller: controller,
         keyboardType: phone ? TextInputType.phone : TextInputType.url,
@@ -339,102 +346,44 @@ class _WhatIsSent extends StatelessWidget {
       ..remove('consent_confirmed')
       ..remove('risk_signals');
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return DsCard(
+      sunken: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Icon(Icons.upload_outlined, size: 20, color: scheme.onSurface),
-              const SizedBox(width: 8),
+              const SizedBox(width: DsSpace.x2),
               Text(
                 l10n.reportWhatIsSent,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                style: AppType.bodySm.copyWith(
+                  color: scheme.onSurface,
+                  fontWeight: AppType.semibold,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: DsSpace.x2),
           Text(
             l10n.reportWhatIsSentBody,
-            style: Theme.of(context).textTheme.bodySmall,
+            style: AppType.caption.copyWith(color: scheme.onSurfaceVariant),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: DsSpace.x3),
           if (submission.length <= 1)
             Text(
               l10n.reportNothingToSend,
-              style: TextStyle(color: scheme.error),
+              style: AppType.bodySm.copyWith(color: scheme.error),
             )
           else
             for (final entry in submission.entries)
               Padding(
-                padding: const EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.only(bottom: DsSpace.x1),
                 child: Text(
                   '• ${entry.value}',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: AppType.bodySm.copyWith(color: scheme.onSurface),
                 ),
               ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Notice extends StatelessWidget {
-  const _Notice({
-    required this.icon,
-    required this.title,
-    required this.body,
-    this.isError = false,
-  });
-
-  final IconData icon;
-  final String title;
-  final String body;
-  final bool isError;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final background = isError
-        ? scheme.errorContainer
-        : scheme.surfaceContainerHighest;
-    final foreground = isError ? scheme.onErrorContainer : scheme.onSurface;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 28, color: foreground),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: foreground,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          if (body.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Text(body, style: TextStyle(color: foreground)),
-          ],
         ],
       ),
     );

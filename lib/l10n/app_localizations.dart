@@ -2073,6 +2073,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get navSettings;
+
+  /// No description provided for @settingsDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get settingsDataTitle;
 }
 
 class _AppLocalizationsDelegate

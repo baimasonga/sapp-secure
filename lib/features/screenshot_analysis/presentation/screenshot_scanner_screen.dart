@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
 import '../../../app/router.dart';
 import '../../../core/errors/app_failure.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../message_analysis/application/analysis_controller.dart';
 import '../application/screenshot_controller.dart';
@@ -65,13 +68,20 @@ class _ScreenshotScannerScreenState
       appBar: AppBar(title: Text(l10n.screenshotTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
             Text(
               l10n.screenshotIntro,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: AppType.body.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: DsSpace.x5),
             FilledButton.icon(
               onPressed: isReading ? null : _pick,
               icon: isReading
@@ -79,7 +89,7 @@ class _ScreenshotScannerScreenState
                       dimension: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.image_outlined),
+                  : const Icon(Icons.image_outlined, size: 20),
               label: Text(
                 state is ScreenshotRecognised
                     ? l10n.screenshotChooseAnother
@@ -87,43 +97,37 @@ class _ScreenshotScannerScreenState
               ),
             ),
             if (isReading) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: DsSpace.x4),
               Text(
                 l10n.screenshotReading,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: AppType.bodySm.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
             if (state is ScreenshotFailed) ...[
-              const SizedBox(height: 16),
-              _Banner(
+              const SizedBox(height: DsSpace.x4),
+              DsNotice(
                 icon: Icons.error_outline,
-                message: _errorText(l10n, state.failure),
-                isError: true,
+                tone: DsNoticeTone.danger,
+                text: _errorText(l10n, state.failure),
               ),
             ],
             if (state is ScreenshotRecognised) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: DsSpace.x6),
               if (state.wasEmpty)
-                _Banner(
-                  icon: Icons.search_off,
-                  message: l10n.screenshotEmpty,
-                  isError: false,
-                )
+                DsNotice(icon: Icons.search_off, text: l10n.screenshotEmpty)
               else ...[
-                Text(
-                  l10n.screenshotReviewTitle,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 4),
+                DsSectionLabel(l10n.screenshotReviewTitle),
                 Text(
                   l10n.screenshotReviewBody,
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: AppType.caption.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
-              const SizedBox(height: 12),
+              const SizedBox(height: DsSpace.x3),
               // Always editable: OCR gets Krio spellings and phone numbers
               // wrong often enough that the user must have the last word.
               TextField(
@@ -139,73 +143,17 @@ class _ScreenshotScannerScreenState
                     .read(screenshotControllerProvider.notifier)
                     .updateText(value),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: DsSpace.x4),
               FilledButton.icon(
                 onPressed: _text.text.trim().isEmpty ? null : _analyse,
-                icon: const Icon(Icons.shield_outlined),
+                icon: const Icon(Icons.shield_outlined, size: 20),
                 label: Text(l10n.screenshotAnalyse),
               ),
             ],
-            const SizedBox(height: 24),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.lock_outline,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    l10n.screenshotPrivacyNote,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            const SizedBox(height: DsSpace.x6),
+            DsNotice(text: l10n.screenshotPrivacyNote),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _Banner extends StatelessWidget {
-  const _Banner({
-    required this.icon,
-    required this.message,
-    required this.isError,
-  });
-
-  final IconData icon;
-  final String message;
-  final bool isError;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final background = isError
-        ? scheme.errorContainer
-        : scheme.surfaceContainerHighest;
-    final foreground = isError ? scheme.onErrorContainer : scheme.onSurface;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: foreground),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(message, style: TextStyle(color: foreground)),
-          ),
-        ],
       ),
     );
   }

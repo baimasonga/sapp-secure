@@ -270,21 +270,28 @@ class DsListGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Container(
+    // The fill is a Material rather than a plain box so that rows carrying
+    // their own ink — list tiles, switches, radios — still show a splash.
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: scheme.surface,
         borderRadius: DsRadius.all(DsRadius.lg),
-        border: Border.all(color: scheme.outlineVariant),
         boxShadow: DsShadow.xs,
       ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          for (var i = 0; i < children.length; i++) ...[
-            if (i > 0) Divider(height: 1, color: scheme.outlineVariant),
-            children[i],
+      child: Material(
+        color: scheme.surface,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: DsRadius.all(DsRadius.lg),
+          side: BorderSide(color: scheme.outlineVariant),
+        ),
+        child: Column(
+          children: [
+            for (var i = 0; i < children.length; i++) ...[
+              if (i > 0) Divider(height: 1, color: scheme.outlineVariant),
+              children[i],
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

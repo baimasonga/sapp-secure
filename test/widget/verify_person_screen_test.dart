@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:salone_shield/core/widgets/ds_components.dart';
 import 'package:salone_shield/features/identity_verification/data/verification_history_repository.dart';
 import 'package:salone_shield/features/identity_verification/domain/verification_record.dart';
 import 'package:salone_shield/features/identity_verification/presentation/verify_person_screen.dart';
@@ -86,7 +87,7 @@ void main() {
     // appears only in the card at the top.
     expect(
       find.descendant(
-        of: find.widgetWithText(Card, l10n.verifyMethodCall),
+        of: find.widgetWithText(DsCard, l10n.verifyMethodCall),
         matching: find.text('+23276123456'),
       ),
       findsOneWidget,

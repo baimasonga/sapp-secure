@@ -3,8 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
 import '../../../app/router.dart';
+import '../../../app/theme.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../services/risk_engine/models/risk_level.dart';
 import '../../trusted_contacts/domain/trusted_contact.dart';
 import '../application/verification_controller.dart';
 import '../domain/verification_record.dart';
@@ -32,30 +37,37 @@ class VerifyPersonScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.verifyTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
             Text(
               l10n.verifyIntro,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: AppType.body.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: DsSpace.x5),
             _NumberCard(number: numberE164),
-            const SizedBox(height: 20),
+            const SizedBox(height: DsSpace.x5),
             _ClaimedIdentitySection(
               contacts: contacts,
               state: state,
               onSelect: controller.selectContact,
               onName: controller.setClaimedName,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: DsSpace.x5),
             _MatchSection(state: state),
             if (state.pastRecords.isNotEmpty) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: DsSpace.x4),
               _PastChecks(state: state),
             ],
-            const SizedBox(height: 24),
+            const SizedBox(height: DsSpace.x6),
             _MethodsSection(state: state, controller: controller),
-            const SizedBox(height: 24),
+            const SizedBox(height: DsSpace.x6),
             _OutcomeSection(state: state, controller: controller),
           ],
         ),
@@ -72,16 +84,39 @@ class _NumberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Card(
-      child: ListTile(
-        leading: const Icon(Icons.dialpad),
-        title: Text(l10n.verifyNumberInMessage),
-        subtitle: Text(
-          number,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-        ),
+    final scheme = Theme.of(context).colorScheme;
+    return DsCard(
+      child: Row(
+        children: [
+          DsIconChip(
+            icon: Icons.dialpad,
+            background: scheme.surfaceContainerHighest,
+            foreground: scheme.onSurfaceVariant,
+          ),
+          const SizedBox(width: DsSpace.x3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.verifyNumberInMessage,
+                  style: AppType.caption.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: DsSpace.x0_5),
+                Text(
+                  number,
+                  style: AppType.mono.copyWith(
+                    fontSize: 16,
+                    color: scheme.onSurface,
+                    fontWeight: AppType.semibold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -106,38 +141,34 @@ class _ClaimedIdentitySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.verifyWhoClaims,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 12),
+        DsSectionLabel(l10n.verifyWhoClaims),
         if (contacts.isEmpty)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l10n.verifyNoContactsYet),
-                  const SizedBox(height: 12),
-                  OutlinedButton.icon(
-                    // Contacts is a tab, so this switches tabs rather than
-                    // stacking a second navigation bar on top of this screen.
-                    onPressed: () =>
-                        context.goNamed(AppRoute.trustedContacts.name),
-                    icon: const Icon(Icons.person_add_alt),
-                    label: Text(l10n.verifyAddContactsFirst),
+          DsCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.verifyNoContactsYet,
+                  style: AppType.bodySm.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: DsSpace.x3),
+                OutlinedButton.icon(
+                  // Contacts is a tab, so this switches tabs rather than
+                  // stacking a second navigation bar on top of this screen.
+                  onPressed: () =>
+                      context.goNamed(AppRoute.trustedContacts.name),
+                  icon: const Icon(Icons.person_add_alt, size: 20),
+                  label: Text(l10n.verifyAddContactsFirst),
+                ),
+              ],
             ),
           )
         else
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: DsSpace.x2,
+            runSpacing: DsSpace.x2,
             children: [
               for (final contact in contacts)
                 ChoiceChip(
@@ -147,7 +178,7 @@ class _ClaimedIdentitySection extends StatelessWidget {
                 ),
             ],
           ),
-        const SizedBox(height: 12),
+        const SizedBox(height: DsSpace.x3),
         TextField(
           decoration: InputDecoration(
             labelText: l10n.verifyClaimedNameHint,
@@ -174,26 +205,28 @@ class _MatchSection extends StatelessWidget {
         ? l10n.verifyClaimedNameHint
         : state.effectiveClaimedName;
 
+    // The verdict uses the risk bands' palette so a mismatch here looks
+    // exactly as serious as a critical message elsewhere in the app.
     final (
       IconData icon,
       String title,
       String body,
-      Color background,
-      Color foreground,
+      Color bg,
+      Color fg,
     ) = switch (state.matchStatus) {
       NumberMatchStatus.matchesTrusted => (
         Icons.verified_user_outlined,
         l10n.verifyMatchMatches(name),
         l10n.verifyMatchMatchesBody,
-        const Color(0xFFE3F3E8),
-        const Color(0xFF11492A),
+        RiskPalette.of(context, RiskLevel.low).container,
+        RiskPalette.of(context, RiskLevel.low).onContainer,
       ),
       NumberMatchStatus.differsFromTrusted => (
         Icons.dangerous_outlined,
         l10n.verifyMatchDiffers(name),
         l10n.verifyMatchDiffersBody,
-        const Color(0xFFFCE4E6),
-        const Color(0xFF7A1721),
+        RiskPalette.of(context, RiskLevel.critical).container,
+        RiskPalette.of(context, RiskLevel.critical).onContainer,
       ),
       NumberMatchStatus.noTrustedContact => (
         Icons.help_outline,
@@ -206,32 +239,31 @@ class _MatchSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(DsSpace.x5),
       decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: foreground.withValues(alpha: 0.3), width: 2),
+        color: bg,
+        borderRadius: DsRadius.all(DsRadius.xl),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, size: 32, color: foreground),
-              const SizedBox(width: 12),
+              Icon(icon, size: 26, color: fg),
+              const SizedBox(width: DsSpace.x2_5),
               Expanded(
                 child: Text(
                   title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: foreground,
-                    fontWeight: FontWeight.w700,
+                  style: AppType.subtitle.copyWith(
+                    color: fg,
+                    fontWeight: AppType.bold,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(body, style: TextStyle(color: foreground)),
+          const SizedBox(height: DsSpace.x3),
+          Text(body, style: AppType.bodySm.copyWith(color: fg)),
         ],
       ),
     );
@@ -246,40 +278,14 @@ class _PastChecks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final scheme = Theme.of(context).colorScheme;
     final isImpersonator = state.wasPreviouslyImpersonation;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isImpersonator
-            ? scheme.errorContainer
-            : scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            isImpersonator ? Icons.history_toggle_off : Icons.history,
-            color: isImpersonator ? scheme.onErrorContainer : scheme.onSurface,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              isImpersonator
-                  ? l10n.verifyPreviousImpersonation
-                  : l10n.verifyPreviousChecks(state.pastRecords.length),
-              style: TextStyle(
-                color: isImpersonator
-                    ? scheme.onErrorContainer
-                    : scheme.onSurface,
-                fontWeight: isImpersonator ? FontWeight.w700 : null,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return DsNotice(
+      icon: isImpersonator ? Icons.history_toggle_off : Icons.history,
+      tone: isImpersonator ? DsNoticeTone.danger : DsNoticeTone.neutral,
+      text: isImpersonator
+          ? l10n.verifyPreviousImpersonation
+          : l10n.verifyPreviousChecks(state.pastRecords.length),
     );
   }
 }
@@ -318,13 +324,7 @@ class _MethodsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.verifyHowTitle,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 12),
+        DsSectionLabel(l10n.verifyHowTitle),
         _MethodTile(
           icon: Icons.call_outlined,
           title: l10n.verifyMethodCall,
@@ -386,14 +386,40 @@ class _MethodTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        minVerticalPadding: 14,
-        leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
-        title: Text(title),
-        subtitle: Text(subtitle),
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpace.x2_5),
+      child: DsCard(
         onTap: onTap,
+        padding: const EdgeInsets.all(DsSpace.x3),
+        child: Row(
+          children: [
+            DsIconChip(icon: icon),
+            const SizedBox(width: DsSpace.x3),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppType.bodySm.copyWith(
+                      color: scheme.onSurface,
+                      fontWeight: AppType.semibold,
+                    ),
+                  ),
+                  const SizedBox(height: DsSpace.x0_5),
+                  Text(
+                    subtitle,
+                    style: AppType.caption.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, size: 20, color: scheme.onSurfaceVariant),
+          ],
+        ),
       ),
     );
   }
@@ -436,29 +462,23 @@ class _OutcomeSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.verifyOutcomeTitle,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 12),
+        DsSectionLabel(l10n.verifyOutcomeTitle),
         OutlinedButton.icon(
           onPressed: () => _record(context, VerificationOutcome.verifiedSafe),
-          icon: const Icon(Icons.check_circle_outline),
+          icon: const Icon(Icons.check_circle_outline, size: 20),
           label: Text(l10n.verifyOutcomeSafe),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: DsSpace.x2_5),
         OutlinedButton.icon(
           onPressed: () => _record(context, VerificationOutcome.couldNotVerify),
-          icon: const Icon(Icons.help_outline),
+          icon: const Icon(Icons.help_outline, size: 20),
           label: Text(l10n.verifyOutcomeUnsure),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: DsSpace.x2_5),
         FilledButton.icon(
           onPressed: () =>
               _record(context, VerificationOutcome.confirmedImpersonation),
-          icon: const Icon(Icons.report_gmailerrorred_outlined),
+          icon: const Icon(Icons.report_gmailerrorred_outlined, size: 20),
           label: Text(l10n.verifyOutcomeImpersonation),
         ),
       ],

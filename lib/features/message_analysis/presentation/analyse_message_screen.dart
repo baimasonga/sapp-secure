@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
 import '../../../app/router.dart';
 import '../../../core/errors/app_failure.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/analysis_controller.dart';
 
@@ -84,13 +87,20 @@ class _AnalyseMessageScreenState extends ConsumerState<AnalyseMessageScreen> {
       appBar: AppBar(title: Text(l10n.analyseTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
             Text(
               l10n.analyseInstruction,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: AppType.subtitle.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: DsSpace.x3),
             TextField(
               controller: _controller,
               maxLines: 10,
@@ -113,41 +123,47 @@ class _AnalyseMessageScreenState extends ConsumerState<AnalyseMessageScreen> {
               ),
               onChanged: (_) => setState(() {}),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: DsSpace.x2),
             Text(
               l10n.analyseCharacterCount(
                 _controller.text.length,
                 AnalysisController.maxInputLength,
               ),
-              style: Theme.of(context).textTheme.bodySmall,
+              style: AppType.caption.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             if (state is AnalysisFailed) ...[
-              const SizedBox(height: 12),
-              _InlineError(message: _errorText(l10n, state.failure)),
+              const SizedBox(height: DsSpace.x3),
+              DsNotice(
+                text: _errorText(l10n, state.failure),
+                icon: Icons.error_outline,
+                tone: DsNoticeTone.danger,
+              ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: DsSpace.x4),
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: isRunning ? null : _paste,
-                    icon: const Icon(Icons.content_paste),
+                    icon: const Icon(Icons.content_paste, size: 20),
                     label: Text(l10n.analysePaste),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: DsSpace.x3),
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: isRunning || _controller.text.isEmpty
                         ? null
                         : () => setState(_controller.clear),
-                    icon: const Icon(Icons.backspace_outlined),
+                    icon: const Icon(Icons.backspace_outlined, size: 20),
                     label: Text(l10n.analyseClear),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: DsSpace.x3),
             FilledButton.icon(
               onPressed: isRunning ? null : _analyse,
               icon: isRunning
@@ -155,71 +171,14 @@ class _AnalyseMessageScreenState extends ConsumerState<AnalyseMessageScreen> {
                       dimension: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.shield_outlined),
+                  : const Icon(Icons.shield_outlined, size: 20),
               label: Text(l10n.analyseRun),
             ),
-            const SizedBox(height: 20),
-            _PrivacyNote(text: l10n.analysePrivacyNote),
+            const SizedBox(height: DsSpace.x5),
+            DsNotice(text: l10n.analysePrivacyNote),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _InlineError extends StatelessWidget {
-  const _InlineError({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: scheme.errorContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.error_outline, color: scheme.onErrorContainer),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              message,
-              style: TextStyle(color: scheme.onErrorContainer),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PrivacyNote extends StatelessWidget {
-  const _PrivacyNote({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(Icons.lock_outline, size: 20, color: scheme.onSurfaceVariant),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-          ),
-        ),
-      ],
     );
   }
 }

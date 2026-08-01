@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
+import '../../../app/theme.dart';
 import '../../../core/errors/app_failure.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../services/risk_engine/models/risk_level.dart';
 import '../../../services/risk_engine/url_analyser.dart';
 import '../application/link_check_controller.dart';
 
@@ -52,13 +57,20 @@ class _LinkCheckerScreenState extends ConsumerState<LinkCheckerScreen> {
       appBar: AppBar(title: Text(l10n.linkCheckTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
             Text(
               l10n.linkCheckIntro,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: AppType.body.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: DsSpace.x4),
             TextField(
               controller: _input,
               maxLines: 3,
@@ -72,10 +84,14 @@ class _LinkCheckerScreenState extends ConsumerState<LinkCheckerScreen> {
               ),
             ),
             if (state is LinkCheckFailed) ...[
-              const SizedBox(height: 12),
-              _ErrorBanner(message: _errorText(l10n, state.failure)),
+              const SizedBox(height: DsSpace.x3),
+              DsNotice(
+                text: _errorText(l10n, state.failure),
+                icon: Icons.error_outline,
+                tone: DsNoticeTone.danger,
+              ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: DsSpace.x4),
             FilledButton.icon(
               onPressed: () {
                 FocusScope.of(context).unfocus();
@@ -83,66 +99,17 @@ class _LinkCheckerScreenState extends ConsumerState<LinkCheckerScreen> {
                     .read(linkCheckControllerProvider.notifier)
                     .check(_input.text);
               },
-              icon: const Icon(Icons.travel_explore),
+              icon: const Icon(Icons.travel_explore, size: 20),
               label: Text(l10n.linkCheckRun),
             ),
             if (state is LinkCheckDone) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: DsSpace.x6),
               _LinkResult(analysis: state.analysis),
             ],
-            const SizedBox(height: 24),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.lock_outline,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    l10n.linkCheckNotOpened,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            const SizedBox(height: DsSpace.x6),
+            DsNotice(text: l10n.linkCheckNotOpened),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _ErrorBanner extends StatelessWidget {
-  const _ErrorBanner({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: scheme.errorContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.error_outline, color: scheme.onErrorContainer),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              message,
-              style: TextStyle(color: scheme.onErrorContainer),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -174,115 +141,100 @@ class _LinkResult extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
 
+    // The verdict borrows the risk bands' palette rather than inventing its
+    // own colours, so a dangerous link looks the same as a dangerous message
+    // and both follow the theme into dark mode.
     final (
-      IconData icon,
+      RiskLevel level,
       String title,
       String advice,
-      Color background,
-      Color foreground,
     ) = analysis.isHighlySuspicious
         ? (
-            Icons.dangerous_outlined,
+            RiskLevel.critical,
             l10n.linkCheckResultDangerTitle,
             l10n.linkCheckAdviceDanger,
-            const Color(0xFFFCE4E6),
-            const Color(0xFF7A1721),
           )
         : analysis.isSuspicious
         ? (
-            Icons.warning_amber_rounded,
+            RiskLevel.high,
             l10n.linkCheckResultWarnTitle,
             l10n.linkCheckAdviceWarn,
-            const Color(0xFFFDE8DB),
-            const Color(0xFF6B2F0A),
           )
         : (
-            Icons.verified_user_outlined,
+            RiskLevel.low,
             l10n.linkCheckResultSafeTitle,
             l10n.linkCheckAdviceSafe,
-            const Color(0xFFE3F3E8),
-            const Color(0xFF11492A),
           );
+    final palette = RiskPalette.of(context, level);
+    final foreground = palette.onContainer;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(DsSpace.x5),
           decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: foreground.withValues(alpha: 0.3),
-              width: 2,
-            ),
+            color: palette.container,
+            borderRadius: DsRadius.all(DsRadius.xl),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(icon, size: 32, color: foreground),
-                  const SizedBox(width: 12),
+                  Icon(palette.icon, size: 26, color: foreground),
+                  const SizedBox(width: DsSpace.x2_5),
                   Expanded(
                     child: Text(
                       title,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      style: AppType.subtitle.copyWith(
                         color: foreground,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: AppType.bold,
                       ),
                     ),
                   ),
                 ],
               ),
               if (analysis.impersonatedBrand != null) ...[
-                const SizedBox(height: 12),
+                const SizedBox(height: DsSpace.x3),
                 Text(
                   l10n.linkCheckBrandWarning(analysis.impersonatedBrand!),
-                  style: TextStyle(
+                  style: AppType.bodySm.copyWith(
                     color: foreground,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: AppType.semibold,
                   ),
                 ),
               ],
               if (!analysis.isSuspicious) ...[
-                const SizedBox(height: 12),
+                const SizedBox(height: DsSpace.x3),
                 Text(
                   l10n.linkCheckResultSafeBody,
-                  style: TextStyle(color: foreground),
+                  style: AppType.bodySm.copyWith(color: foreground),
                 ),
               ],
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        Card(
-          child: Column(
-            children: [
-              _Row(label: l10n.linkCheckAddress, value: analysis.original),
-              _Row(label: l10n.linkCheckDomain, value: analysis.host),
-              _Row(
-                label: l10n.linkCheckHttps,
-                value: analysis.isHttps
-                    ? l10n.linkCheckHttpsYes
-                    : l10n.linkCheckHttpsNo,
-              ),
-            ],
-          ),
+        const SizedBox(height: DsSpace.x5),
+        DsListGroup(
+          children: [
+            _Row(label: l10n.linkCheckAddress, value: analysis.original),
+            _Row(label: l10n.linkCheckDomain, value: analysis.host),
+            _Row(
+              label: l10n.linkCheckHttps,
+              value: analysis.isHttps
+                  ? l10n.linkCheckHttpsYes
+                  : l10n.linkCheckHttpsNo,
+            ),
+          ],
         ),
         if (analysis.findings.isNotEmpty) ...[
-          const SizedBox(height: 20),
-          Text(
-            l10n.linkCheckFindings,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
+          const SizedBox(height: DsSpace.x5),
+          DsSectionLabel(l10n.linkCheckFindings),
           for (final finding in analysis.findings)
             Padding(
-              padding: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.only(bottom: DsSpace.x1_5),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -291,22 +243,24 @@ class _LinkResult extends StatelessWidget {
                     size: 18,
                     color: scheme.error,
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(findingLabel(l10n, finding))),
+                  const SizedBox(width: DsSpace.x2),
+                  Expanded(
+                    child: Text(
+                      findingLabel(l10n, finding),
+                      style: AppType.bodySm.copyWith(color: scheme.onSurface),
+                    ),
+                  ),
                 ],
               ),
             ),
         ],
-        const SizedBox(height: 20),
+        const SizedBox(height: DsSpace.x5),
+        DsSectionLabel(l10n.linkCheckWhatToDo),
         Text(
-          l10n.linkCheckWhatToDo,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+          advice,
+          style: AppType.body.copyWith(color: scheme.onSurfaceVariant),
         ),
-        const SizedBox(height: 8),
-        Text(advice, style: Theme.of(context).textTheme.bodyLarge),
-        const SizedBox(height: 20),
+        const SizedBox(height: DsSpace.x5),
         // Copying is offered; opening is not.
         OutlinedButton.icon(
           onPressed: () async {
@@ -316,7 +270,7 @@ class _LinkResult extends StatelessWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(content: Text(l10n.linkCheckCopied)));
           },
-          icon: const Icon(Icons.copy_all_outlined),
+          icon: const Icon(Icons.copy_all_outlined, size: 20),
           label: Text(l10n.linkCheckCopy),
         ),
       ],
@@ -332,12 +286,25 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      dense: true,
-      title: Text(label, style: Theme.of(context).textTheme.bodySmall),
-      subtitle: SelectableText(
-        value.isEmpty ? '—' : value,
-        style: Theme.of(context).textTheme.bodyMedium,
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.all(DsSpace.x4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: AppType.caption.copyWith(color: scheme.onSurfaceVariant),
+          ),
+          const SizedBox(height: DsSpace.x1),
+          SelectableText(
+            value.isEmpty ? '—' : value,
+            style: AppType.mono.copyWith(
+              fontSize: 13.5,
+              color: scheme.onSurface,
+            ),
+          ),
+        ],
       ),
     );
   }

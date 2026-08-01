@@ -1150,4 +1150,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navSettings => 'Settings';
+
+  @override
+  String get settingsDataTitle => 'Your data';
 }

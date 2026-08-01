@@ -464,5 +464,6 @@
   "navHome": "Home",
   "navReports": "Reports",
   "navContacts": "Contacts",
-  "navSettings": "Settings"
+  "navSettings": "Settings",
+  "settingsDataTitle": "Your data"
 }

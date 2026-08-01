@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers.dart';
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/trusted_contacts_controller.dart';
 import '../data/trusted_contact_repository.dart';
@@ -119,14 +122,19 @@ class _EditTrustedContactScreenState
       appBar: AppBar(title: Text(l10n.trustedContactAdd)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
             OutlinedButton.icon(
               onPressed: _pickFromContacts,
-              icon: const Icon(Icons.contacts_outlined),
+              icon: const Icon(Icons.contacts_outlined, size: 20),
               label: Text(l10n.trustedContactFromPhone),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: DsSpace.x5),
             TextField(
               controller: _name,
               textCapitalization: TextCapitalization.words,
@@ -135,10 +143,10 @@ class _EditTrustedContactScreenState
                 hintText: l10n.trustedContactNameHint,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: DsSpace.x4),
             for (var index = 0; index < _numbers.length; index++)
               Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.only(bottom: DsSpace.x3),
                 child: TextField(
                   controller: _numbers[index],
                   keyboardType: TextInputType.phone,
@@ -166,7 +174,7 @@ class _EditTrustedContactScreenState
                 label: Text(l10n.trustedContactAddNumber),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: DsSpace.x2),
             TextField(
               controller: _relationship,
               decoration: InputDecoration(
@@ -174,7 +182,7 @@ class _EditTrustedContactScreenState
                 hintText: l10n.trustedContactRelationshipHint,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: DsSpace.x4),
             TextField(
               controller: _question,
               maxLines: 2,
@@ -183,31 +191,25 @@ class _EditTrustedContactScreenState
                 hintText: l10n.trustedContactQuestionHint,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: DsSpace.x2),
             Text(
               l10n.trustedContactQuestionNote,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: AppType.caption.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             if (_error != null) ...[
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  _error!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onErrorContainer,
-                  ),
-                ),
+              const SizedBox(height: DsSpace.x4),
+              DsNotice(
+                icon: Icons.error_outline,
+                tone: DsNoticeTone.danger,
+                text: _error!,
               ),
             ],
-            const SizedBox(height: 24),
+            const SizedBox(height: DsSpace.x6),
             FilledButton.icon(
               onPressed: _save,
-              icon: const Icon(Icons.save_outlined),
+              icon: const Icon(Icons.save_outlined, size: 20),
               label: Text(l10n.trustedContactSave),
             ),
           ],
