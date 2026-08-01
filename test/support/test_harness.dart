@@ -131,6 +131,11 @@ ProviderContainer containerOf(WidgetTester tester) => ProviderScope.containerOf(
   tester.element(find.byType(Router<Object>).first),
 );
 
+/// How a `DsSectionLabel` renders its text. Section eyebrows are uppercased
+/// in the design system, so a test looking for one has to ask for it the way
+/// the screen draws it.
+String sectionLabel(String text) => text.toUpperCase();
+
 /// Scrolls the first scrollable until [finder] is visible.
 Future<void> scrollTo(WidgetTester tester, Finder finder) async {
   await tester.scrollUntilVisible(

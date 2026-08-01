@@ -53,7 +53,7 @@ void main() {
 
     // High risk, and the number from the message was extracted.
     expect(find.text(l10n.riskLevelHigh), findsOneWidget);
-    await scrollTo(tester, find.text(l10n.resultNumbersTitle));
+    await scrollTo(tester, find.text(sectionLabel(l10n.resultNumbersTitle)));
     expect(find.text('+23277000111'), findsOneWidget);
 
     // Verification is offered right next to the number.
@@ -75,7 +75,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.widgetWithText(FilledButton, l10n.analyseRun));
     await tester.pumpAndSettle();
-    await scrollTo(tester, find.text(l10n.resultNumbersTitle));
+    await scrollTo(tester, find.text(sectionLabel(l10n.resultNumbersTitle)));
 
     // The badge belongs to Mohamed's real number, not the one in the message.
     expect(find.text(l10n.verifyKnownContactBadge('Mohamed')), findsNothing);
@@ -99,7 +99,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.widgetWithText(FilledButton, l10n.analyseRun));
     await tester.pumpAndSettle();
-    await scrollTo(tester, find.text(l10n.resultNumbersTitle));
+    await scrollTo(tester, find.text(sectionLabel(l10n.resultNumbersTitle)));
 
     expect(find.text(l10n.verifyKnownContactBadge('Mohamed')), findsOneWidget);
   });

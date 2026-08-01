@@ -15,6 +15,7 @@ import '../features/onboarding/presentation/permissions_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/trusted_contacts/presentation/trusted_contacts_screen.dart';
 import 'providers.dart';
+import 'shell.dart';
 
 /// Named routes, so navigation cannot be broken by a typo in a path string.
 enum AppRoute {
@@ -62,10 +63,47 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: AppRoute.permissions.name,
         builder: (context, state) => const PermissionsScreen(),
       ),
-      GoRoute(
-        path: AppRoute.home.path,
-        name: AppRoute.home.name,
-        builder: (context, state) => const HomeScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            HomeShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.home.path,
+                name: AppRoute.home.name,
+                builder: (context, state) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.reports.path,
+                name: AppRoute.reports.name,
+                builder: (context, state) => const ReportHistoryScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.trustedContacts.path,
+                name: AppRoute.trustedContacts.name,
+                builder: (context, state) => const TrustedContactsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.settings.path,
+                name: AppRoute.settings.name,
+                builder: (context, state) => const SettingsScreen(),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoute.analyse.path,
@@ -114,21 +152,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                 (prefill['signals'] as List?)?.cast<String>() ?? const [],
           );
         },
-      ),
-      GoRoute(
-        path: AppRoute.reports.path,
-        name: AppRoute.reports.name,
-        builder: (context, state) => const ReportHistoryScreen(),
-      ),
-      GoRoute(
-        path: AppRoute.trustedContacts.path,
-        name: AppRoute.trustedContacts.name,
-        builder: (context, state) => const TrustedContactsScreen(),
-      ),
-      GoRoute(
-        path: AppRoute.settings.path,
-        name: AppRoute.settings.name,
-        builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
         path: AppRoute.privacy.path,

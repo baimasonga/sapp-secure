@@ -123,8 +123,10 @@ class _ClaimedIdentitySection extends StatelessWidget {
                   Text(l10n.verifyNoContactsYet),
                   const SizedBox(height: 12),
                   OutlinedButton.icon(
+                    // Contacts is a tab, so this switches tabs rather than
+                    // stacking a second navigation bar on top of this screen.
                     onPressed: () =>
-                        context.pushNamed(AppRoute.trustedContacts.name),
+                        context.goNamed(AppRoute.trustedContacts.name),
                     icon: const Icon(Icons.person_add_alt),
                     label: Text(l10n.verifyAddContactsFirst),
                   ),

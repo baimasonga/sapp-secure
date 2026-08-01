@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
 import '../../../app/router.dart';
-import '../../../app/theme.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../trusted_contacts/application/trusted_contacts_controller.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../services/risk_engine/models/risk_assessment.dart';
@@ -40,28 +42,33 @@ class RiskResultScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.resultTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.fromLTRB(
+            DsSpace.screenGutter,
+            DsSpace.x4,
+            DsSpace.screenGutter,
+            DsSpace.x8,
+          ),
           children: [
             RiskLevelBanner(
               level: assessment.level,
               score: assessment.score,
               summary: assessment.summary,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: DsSpace.x6),
             _SignalsSection(assessment: assessment),
             if (assessment.phoneNumbers.isNotEmpty) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: DsSpace.x6),
               _NumbersSection(assessment: assessment),
             ],
             if (assessment.urls.isNotEmpty) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: DsSpace.x6),
               _LinksSection(assessment: assessment),
             ],
-            const SizedBox(height: 24),
+            const SizedBox(height: DsSpace.x6),
             _ActionsSection(assessment: assessment),
-            const SizedBox(height: 24),
+            const SizedBox(height: DsSpace.x6),
             _LimitationsSection(assessment: assessment),
-            const SizedBox(height: 28),
+            const SizedBox(height: DsSpace.x7),
             _ResultButtons(assessment: assessment),
           ],
         ),
@@ -70,45 +77,31 @@ class RiskResultScreen extends ConsumerWidget {
   }
 }
 
+/// An eyebrow, and under it the one line of context the section needs. The
+/// icon the old header carried is gone: on this screen the icons were
+/// decoration, and decoration competes with the signals that matter.
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, this.subtitle, this.icon});
+  const _SectionHeader({required this.title, this.subtitle});
 
   final String title;
   final String? subtitle;
-  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: 22, color: theme.colorScheme.primary),
-              const SizedBox(width: 8),
-            ],
-            Expanded(
-              child: Text(
-                title,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
+        DsSectionLabel(title),
         if (subtitle != null) ...[
-          const SizedBox(height: 4),
-          Text(
-            subtitle!,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+          Padding(
+            padding: const EdgeInsets.only(bottom: DsSpace.x2_5),
+            child: Text(
+              subtitle!,
+              style: AppType.caption.copyWith(color: scheme.onSurfaceVariant),
             ),
           ),
         ],
-        const SizedBox(height: 12),
       ],
     );
   }
@@ -128,78 +121,107 @@ class _SignalsSection extends StatelessWidget {
         _SectionHeader(
           title: l10n.resultSignalsTitle,
           subtitle: l10n.resultSignalCount(assessment.signals.length),
-          icon: Icons.search,
         ),
         if (assessment.signals.isEmpty)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(l10n.resultSignalsEmpty),
-            ),
-          )
+          DsNotice(text: l10n.resultSignalsEmpty, icon: Icons.check_circle)
         else
-          for (final signal in assessment.signals)
-            Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      signal.explanation,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(signal.advice),
-                    if (signal.matchedText != null) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        l10n.resultMatchedText(signal.matchedText!),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 4,
-                      children: [
-                        _Chip(text: '+${signal.weight}'),
-                        _Chip(
-                          text: l10n.resultConfidence(
-                            (signal.confidence * 100).round(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          DsListGroup(
+            children: [
+              for (final signal in assessment.signals)
+                _SignalRow(signal: signal),
+            ],
+          ),
       ],
     );
   }
 }
 
-class _Chip extends StatelessWidget {
-  const _Chip({required this.text});
+class _SignalRow extends StatelessWidget {
+  const _SignalRow({required this.signal});
 
-  final String text;
+  final RiskSignal signal;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(20),
+
+    return Padding(
+      padding: const EdgeInsets.all(DsSpace.x4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // The weight, shown because a score the user cannot take apart is a
+          // score they have to take on faith.
+          Container(
+            constraints: const BoxConstraints(minWidth: 38),
+            height: 26,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: DsSpace.x2),
+            decoration: BoxDecoration(
+              color: scheme.primaryContainer,
+              borderRadius: DsRadius.all(DsRadius.sm),
+            ),
+            child: Text(
+              '+${signal.weight}',
+              style: AppType.caption.copyWith(
+                color: scheme.onPrimaryContainer,
+                fontWeight: AppType.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: DsSpace.x3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  signal.explanation,
+                  style: AppType.bodySm.copyWith(
+                    color: scheme.onSurface,
+                    fontWeight: AppType.semibold,
+                  ),
+                ),
+                const SizedBox(height: DsSpace.x0_5),
+                Text(
+                  signal.advice,
+                  style: AppType.caption.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+                if (signal.matchedText != null) ...[
+                  const SizedBox(height: DsSpace.x2),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DsSpace.x2,
+                      vertical: DsSpace.x1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: scheme.surfaceContainerHighest,
+                      borderRadius: DsRadius.all(DsRadius.xs),
+                    ),
+                    child: Text(
+                      l10n.resultMatchedText(signal.matchedText!),
+                      style: AppType.mono.copyWith(
+                        fontSize: 12,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: DsSpace.x2),
+                Text(
+                  l10n.resultConfidence((signal.confidence * 100).round()),
+                  style: AppType.caption.copyWith(
+                    fontSize: 11.5,
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      child: Text(text, style: Theme.of(context).textTheme.labelMedium),
     );
   }
 }
@@ -218,46 +240,82 @@ class _NumbersSection extends ConsumerWidget {
         _SectionHeader(
           title: l10n.resultNumbersTitle,
           subtitle: l10n.resultNumbersNote,
-          icon: Icons.phone_outlined,
         ),
-        Card(
-          child: Column(
-            children: [
-              for (final number in assessment.phoneNumbers)
-                Builder(
-                  builder: (context) {
-                    // A number belonging to someone the user already trusts is
-                    // worth saying out loud — it is the one piece of good news
-                    // the app can offer honestly.
-                    final contact = ref.watch(
-                      contactForNumberProvider(number.normalised),
-                    );
-                    return ListTile(
-                      leading: Icon(
-                        contact == null
-                            ? Icons.dialpad
-                            : Icons.verified_user_outlined,
-                      ),
-                      title: Text(number.normalised),
-                      subtitle: contact != null
-                          ? Text(
-                              l10n.verifyKnownContactBadge(contact.displayName),
-                            )
-                          : (number.raw.trim() == number.normalised
-                                ? null
-                                : Text(number.raw.trim())),
-                      trailing: TextButton(
-                        onPressed: () => context.pushNamed(
-                          AppRoute.verify.name,
-                          extra: number.normalised,
+        DsListGroup(
+          children: [
+            for (final number in assessment.phoneNumbers)
+              Builder(
+                builder: (context) {
+                  // A number belonging to someone the user already trusts is
+                  // worth saying out loud — it is the one piece of good news
+                  // the app can offer honestly.
+                  final contact = ref.watch(
+                    contactForNumberProvider(number.normalised),
+                  );
+                  final scheme = Theme.of(context).colorScheme;
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      DsSpace.x4,
+                      DsSpace.x3,
+                      DsSpace.x3,
+                      DsSpace.x3,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          contact == null
+                              ? Icons.dialpad
+                              : Icons.verified_user_outlined,
+                          size: 18,
+                          color: contact == null
+                              ? scheme.onSurfaceVariant
+                              : DsColor.green500,
                         ),
-                        child: Text(l10n.resultVerifyPerson),
-                      ),
-                    );
-                  },
-                ),
-            ],
-          ),
+                        const SizedBox(width: DsSpace.x3),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                number.normalised,
+                                style: AppType.mono.copyWith(
+                                  fontSize: 14,
+                                  color: scheme.onSurface,
+                                  fontWeight: AppType.semibold,
+                                ),
+                              ),
+                              if (contact != null)
+                                Text(
+                                  l10n.verifyKnownContactBadge(
+                                    contact.displayName,
+                                  ),
+                                  style: AppType.caption.copyWith(
+                                    color: scheme.onSurfaceVariant,
+                                  ),
+                                )
+                              else if (number.raw.trim() != number.normalised)
+                                Text(
+                                  number.raw.trim(),
+                                  style: AppType.caption.copyWith(
+                                    color: scheme.onSurfaceVariant,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => context.pushNamed(
+                            AppRoute.verify.name,
+                            extra: number.normalised,
+                          ),
+                          child: Text(l10n.resultVerifyPerson),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+          ],
         ),
       ],
     );
@@ -295,13 +353,11 @@ class _LinksSection extends StatelessWidget {
         _SectionHeader(
           title: l10n.resultLinksTitle,
           subtitle: l10n.resultLinksNote,
-          icon: Icons.link,
         ),
         for (final url in assessment.urls)
-          Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+          Padding(
+            padding: const EdgeInsets.only(bottom: DsSpace.x3),
+            child: DsCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -309,9 +365,12 @@ class _LinksSection extends StatelessWidget {
                   // not make it easy to open something it just flagged.
                   SelectableText(
                     url.original,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: AppType.mono.copyWith(
+                      fontSize: 13,
+                      color: scheme.onSurface,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: DsSpace.x2),
                   Row(
                     children: [
                       Icon(
@@ -319,17 +378,28 @@ class _LinksSection extends StatelessWidget {
                             ? Icons.warning_amber_rounded
                             : Icons.check_circle_outline,
                         size: 18,
-                        color: url.isSuspicious ? scheme.error : scheme.primary,
+                        color: url.isSuspicious
+                            ? scheme.error
+                            : DsColor.green500,
                       ),
-                      const SizedBox(width: 6),
-                      Expanded(child: Text(url.host.isEmpty ? '—' : url.host)),
+                      const SizedBox(width: DsSpace.x1_5),
+                      Expanded(
+                        child: Text(
+                          url.host.isEmpty ? '—' : url.host,
+                          style: AppType.bodySm.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   for (final finding in url.findings) ...[
-                    const SizedBox(height: 6),
+                    const SizedBox(height: DsSpace.x1_5),
                     Text(
                       '• ${_findingLabel(l10n, finding)}',
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: AppType.caption.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ],
@@ -349,29 +419,52 @@ class _ActionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final palette = RiskPalette.of(context, assessment.level);
+    final scheme = Theme.of(context).colorScheme;
+    final actions = assessment.recommendedActions;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(
-          title: l10n.resultActionsTitle,
-          icon: Icons.checklist_rtl,
-        ),
-        for (final action in assessment.recommendedActions)
+        _SectionHeader(title: l10n.resultActionsTitle),
+        // Numbered, because these are steps in an order, not a menu.
+        for (var index = 0; index < actions.length; index++)
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(Icons.arrow_forward, size: 20, color: palette.accent),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    action,
-                    style: Theme.of(context).textTheme.bodyLarge,
+            padding: const EdgeInsets.only(bottom: DsSpace.x2_5),
+            child: DsCard(
+              padding: const EdgeInsets.symmetric(
+                horizontal: DsSpace.x4,
+                vertical: DsSpace.x3,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 22,
+                    height: 22,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: scheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '${index + 1}',
+                      style: AppType.caption.copyWith(
+                        color: Colors.white,
+                        fontWeight: AppType.bold,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: DsSpace.x3),
+                  Expanded(
+                    child: Text(
+                      actions[index],
+                      style: AppType.bodySm.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
       ],
@@ -387,45 +480,12 @@ class _LimitationsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.help_outline,
-                size: 20,
-                color: scheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  l10n.resultLimitationsTitle,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          for (final limitation in assessment.limitations)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Text(
-                '• $limitation',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-        ],
-      ),
+    return DsNotice(
+      icon: Icons.help_outline,
+      title: l10n.resultLimitationsTitle,
+      text: assessment.limitations
+          .map((limitation) => '• $limitation')
+          .join('\n'),
     );
   }
 }
@@ -496,12 +556,14 @@ class _ResultButtons extends ConsumerWidget {
         // Verification and reporting are specified for later milestones. They
         // are shown, and clearly labelled as not working yet, rather than
         // hidden.
-        OutlinedButton.icon(
+        // Verifying the person is the one action that actually resolves the
+        // question, so it is the only filled button here.
+        FilledButton.icon(
           onPressed: () => _startVerification(context, l10n),
-          icon: const Icon(Icons.person_search_outlined),
+          icon: const Icon(Icons.person_search_outlined, size: 20),
           label: Text(l10n.resultVerifyPerson),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: DsSpace.x3),
         OutlinedButton.icon(
           onPressed: () => context.pushNamed(
             AppRoute.report.name,
@@ -519,10 +581,10 @@ class _ResultButtons extends ConsumerWidget {
                   .toList(),
             },
           ),
-          icon: const Icon(Icons.flag_outlined),
+          icon: const Icon(Icons.flag_outlined, size: 20),
           label: Text(l10n.resultReport),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: DsSpace.x3),
         OutlinedButton.icon(
           onPressed: () async {
             await Clipboard.setData(ClipboardData(text: _warningText(l10n)));
@@ -531,16 +593,16 @@ class _ResultButtons extends ConsumerWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(content: Text(l10n.resultCopiedWarning)));
           },
-          icon: const Icon(Icons.copy_all_outlined),
+          icon: const Icon(Icons.copy_all_outlined, size: 20),
           label: Text(l10n.resultCopyWarning),
         ),
-        const SizedBox(height: 12),
-        FilledButton.icon(
+        const SizedBox(height: DsSpace.x2),
+        TextButton.icon(
           onPressed: () {
             ref.read(analysisControllerProvider.notifier).reset();
             context.pop();
           },
-          icon: const Icon(Icons.refresh),
+          icon: const Icon(Icons.refresh, size: 20),
           label: Text(l10n.resultAnalyseAnother),
         ),
       ],

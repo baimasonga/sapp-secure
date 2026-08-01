@@ -2007,6 +2007,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account created. Check your email for the confirmation link before signing in.'**
   String get authCheckEmail;
+
+  /// No description provided for @homeHeroEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'On this phone'**
+  String get homeHeroEyebrow;
+
+  /// No description provided for @homeHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check before you send'**
+  String get homeHeroTitle;
+
+  /// No description provided for @homeHeroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every check runs on this phone. No message has been uploaded.'**
+  String get homeHeroBody;
+
+  /// No description provided for @homeStatChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{check saved} other{checks saved}}'**
+  String homeStatChecks(int count);
+
+  /// No description provided for @homeStatContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{trusted contact} other{trusted contacts}}'**
+  String homeStatContacts(int count);
+
+  /// No description provided for @homeSectionCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check something'**
+  String get homeSectionCheck;
+
+  /// No description provided for @homeSectionRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent checks'**
+  String get homeSectionRecent;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get navReports;
+
+  /// No description provided for @navContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Contacts'**
+  String get navContacts;
+
+  /// No description provided for @navSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
 }
 
 class _AppLocalizationsDelegate

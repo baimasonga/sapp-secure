@@ -1100,4 +1100,54 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get authCheckEmail =>
       'Account created. Check your email for the confirmation link before signing in.';
+
+  @override
+  String get homeHeroEyebrow => 'On this phone';
+
+  @override
+  String get homeHeroTitle => 'Check before you send';
+
+  @override
+  String get homeHeroBody =>
+      'Every check runs on this phone. No message has been uploaded.';
+
+  @override
+  String homeStatChecks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'checks saved',
+      one: 'check saved',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String homeStatContacts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'trusted contacts',
+      one: 'trusted contact',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeSectionCheck => 'Check something';
+
+  @override
+  String get homeSectionRecent => 'Recent checks';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navReports => 'Reports';
+
+  @override
+  String get navContacts => 'Contacts';
+
+  @override
+  String get navSettings => 'Settings';
 }

@@ -439,5 +439,30 @@
   "authErrorRateLimited": "Too many attempts. Wait a few minutes and try again.",
   "authErrorNetwork": "Could not reach the server. Nothing was saved. Try again when you have a connection.",
   "authErrorUnknown": "Something went wrong and nothing was saved. You can try again safely.",
-  "authCheckEmail": "Account created. Check your email for the confirmation link before signing in."
+  "authCheckEmail": "Account created. Check your email for the confirmation link before signing in.",
+  "homeHeroEyebrow": "On this phone",
+  "homeHeroTitle": "Check before you send",
+  "homeHeroBody": "Every check runs on this phone. No message has been uploaded.",
+  "homeStatChecks": "{count, plural, =1{check saved} other{checks saved}}",
+  "@homeStatChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStatContacts": "{count, plural, =1{trusted contact} other{trusted contacts}}",
+  "@homeStatContacts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSectionCheck": "Check something",
+  "homeSectionRecent": "Recent checks",
+  "navHome": "Home",
+  "navReports": "Reports",
+  "navContacts": "Contacts",
+  "navSettings": "Settings"
 }

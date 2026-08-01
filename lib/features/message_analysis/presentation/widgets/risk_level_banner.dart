@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/design/app_typography.dart';
+import '../../../../app/design/design_tokens.dart';
 import '../../../../app/theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../services/risk_engine/models/risk_level.dart';
@@ -24,6 +26,10 @@ extension RiskLevelL10n on RiskLevel {
 
 /// The headline result: icon, words, and score together — never colour alone
 /// (sections 22 and 28).
+///
+/// The four-segment meter is deliberately banded rather than continuous. A
+/// sliding bar invites the reader to compare 61 with 68; the bands say the
+/// only thing the score actually means, which is which advice applies.
 class RiskLevelBanner extends StatelessWidget {
   const RiskLevelBanner({
     super.key,
@@ -49,59 +55,120 @@ class RiskLevelBanner extends StatelessWidget {
       child: ExcludeSemantics(
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(DsSpace.x5),
           decoration: BoxDecoration(
             color: palette.container,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: palette.accent, width: 2),
+            borderRadius: DsRadius.all(DsRadius.xl),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(palette.icon, size: 40, color: palette.accent),
-                  const SizedBox(width: 12),
+                  Icon(palette.icon, size: 26, color: palette.onContainer),
+                  const SizedBox(width: DsSpace.x2_5),
                   Expanded(
-                    child: Text(
-                      label,
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: DsSpace.x0_5),
+                      child: Text(
+                        label,
+                        style: AppType.subtitle.copyWith(
+                          color: palette.onContainer,
+                          fontWeight: AppType.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '$score',
+                          style: AppType.score.copyWith(
                             color: palette.onContainer,
-                            fontWeight: FontWeight.w700,
                           ),
+                        ),
+                        TextSpan(
+                          text: '/100',
+                          style: AppType.bodySm.copyWith(
+                            color: palette.onContainer.withValues(alpha: 0.6),
+                            fontWeight: AppType.semibold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              Text(
-                scoreLabel,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(color: palette.onContainer),
-              ),
-              const SizedBox(height: 8),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: LinearProgressIndicator(
-                  value: score / 100,
-                  minHeight: 10,
-                  backgroundColor: palette.onContainer.withValues(alpha: 0.15),
-                  valueColor: AlwaysStoppedAnimation<Color>(palette.accent),
-                ),
-              ),
-              const SizedBox(height: 16),
+              const SizedBox(height: DsSpace.x4),
+              RiskMeter(level: level),
+              const SizedBox(height: DsSpace.x4),
               Text(
                 summary,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: palette.onContainer),
+                style: AppType.body.copyWith(color: palette.onContainer),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Four bars, one per band, filled up to the band the score landed in.
+class RiskMeter extends StatelessWidget {
+  const RiskMeter({super.key, required this.level});
+
+  final RiskLevel level;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final reached = RiskLevel.values.indexOf(level);
+    final onContainer = RiskPalette.of(context, level).onContainer;
+
+    return Row(
+      children: [
+        for (final band in RiskLevel.values) ...[
+          if (band != RiskLevel.low) const SizedBox(width: DsSpace.x1_5),
+          Expanded(
+            child: Builder(
+              builder: (context) {
+                final index = RiskLevel.values.indexOf(band);
+                final lit = index <= reached;
+                final isCurrent = index == reached;
+                return Column(
+                  children: [
+                    AnimatedContainer(
+                      duration: DsMotion.base,
+                      curve: DsMotion.ease,
+                      height: 7,
+                      decoration: BoxDecoration(
+                        color: lit
+                            ? RiskPalette.of(context, band).accent
+                            : onContainer.withValues(alpha: 0.14),
+                        borderRadius: DsRadius.all(DsRadius.xs),
+                      ),
+                    ),
+                    const SizedBox(height: DsSpace.x1_5),
+                    Text(
+                      band.shortLabel(l10n),
+                      style: AppType.caption.copyWith(
+                        fontSize: 11,
+                        color: onContainer.withValues(
+                          alpha: isCurrent ? 1 : 0.55,
+                        ),
+                        fontWeight: isCurrent ? AppType.bold : AppType.medium,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

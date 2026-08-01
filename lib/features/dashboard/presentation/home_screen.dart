@@ -2,16 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/design/app_typography.dart';
+import '../../../app/design/design_tokens.dart';
 import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/widgets/coming_soon_sheet.dart';
+import '../../../core/widgets/ds_components.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../services/risk_engine/models/risk_level.dart';
 import '../../message_analysis/application/analysis_controller.dart';
 import '../../message_analysis/presentation/widgets/risk_level_banner.dart';
+import '../../trusted_contacts/application/trusted_contacts_controller.dart';
 
-/// Home dashboard (section 7.5).
+/// Home dashboard (specification section 7.5).
+///
+/// Follows the Gradient layout: brand header, one gradient hero, a single
+/// primary action, a quiet grid of secondary actions, then recent activity.
+/// The hero is the app's one gradient moment — nothing else on this screen
+/// uses one.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -19,64 +28,93 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final recent = ref.watch(recentAnalysesProvider);
+    final contacts =
+        ref.watch(trustedContactsControllerProvider).valueOrNull ?? const [];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.homeTitle),
-        actions: [
-          IconButton(
-            tooltip: l10n.settingsTitle,
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.pushNamed(AppRoute.settings.name),
-          ),
-        ],
-      ),
       body: SafeArea(
+        bottom: false,
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          padding: const EdgeInsets.only(bottom: DsSpace.x8),
           children: [
-            const _SecurityStatusCard(),
-            const SizedBox(height: 20),
-            _ActionTile(
-              icon: Icons.plagiarism_outlined,
-              title: l10n.homeActionAnalyse,
-              subtitle: l10n.homeActionAnalyseSubtitle,
-              primary: true,
-              onTap: () => context.pushNamed(AppRoute.analyse.name),
+            const _Header(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpace.screenGutter,
+                DsSpace.x3,
+                DsSpace.screenGutter,
+                0,
+              ),
+              child: _HeroCard(
+                checkCount: recent.length,
+                contactCount: contacts.length,
+              ),
             ),
-            _ActionTile(
-              icon: Icons.image_search_outlined,
-              title: l10n.homeActionScreenshot,
-              subtitle: l10n.homeActionScreenshotSubtitle,
-              onTap: () => context.pushNamed(AppRoute.screenshot.name),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpace.screenGutter,
+                DsSpace.x4,
+                DsSpace.screenGutter,
+                0,
+              ),
+              child: FilledButton.icon(
+                onPressed: () => context.pushNamed(AppRoute.analyse.name),
+                icon: const Icon(Icons.search, size: 20),
+                label: Text(l10n.homeActionAnalyse),
+              ),
             ),
-            _ActionTile(
-              icon: Icons.link_outlined,
-              title: l10n.homeActionLink,
-              subtitle: l10n.homeActionLinkSubtitle,
-              onTap: () => context.pushNamed(AppRoute.linkCheck.name),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpace.screenGutter,
+                DsSpace.x3,
+                DsSpace.screenGutter,
+                0,
+              ),
+              child: GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: DsSpace.x3,
+                crossAxisSpacing: DsSpace.x3,
+                childAspectRatio: 1.42,
+                children: [
+                  DsActionTile(
+                    icon: Icons.image_search_outlined,
+                    title: l10n.homeActionScreenshot,
+                    subtitle: l10n.homeActionScreenshotSubtitle,
+                    onTap: () => context.pushNamed(AppRoute.screenshot.name),
+                  ),
+                  DsActionTile(
+                    icon: Icons.link,
+                    title: l10n.homeActionLink,
+                    subtitle: l10n.homeActionLinkSubtitle,
+                    onTap: () => context.pushNamed(AppRoute.linkCheck.name),
+                  ),
+                  DsActionTile(
+                    icon: Icons.flag_outlined,
+                    title: l10n.homeActionReport,
+                    subtitle: l10n.homeActionReportSubtitle,
+                    onTap: () => context.pushNamed(AppRoute.report.name),
+                  ),
+                  DsActionTile(
+                    icon: Icons.checklist_outlined,
+                    title: l10n.homeActionChecklist,
+                    subtitle: l10n.homeActionChecklistSubtitle,
+                    onTap: () =>
+                        showComingSoonSheet(context, l10n.homeActionChecklist),
+                  ),
+                ],
+              ),
             ),
-            _ActionTile(
-              icon: Icons.contacts_outlined,
-              title: l10n.trustedContactsTitle,
-              subtitle: l10n.trustedContactsIntro,
-              onTap: () => context.pushNamed(AppRoute.trustedContacts.name),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpace.screenGutter,
+                DsSpace.x7,
+                DsSpace.screenGutter,
+                0,
+              ),
+              child: _RecentSection(entries: recent),
             ),
-            _ActionTile(
-              icon: Icons.flag_outlined,
-              title: l10n.homeActionReport,
-              subtitle: l10n.homeActionReportSubtitle,
-              onTap: () => context.pushNamed(AppRoute.report.name),
-            ),
-            _ActionTile(
-              icon: Icons.checklist_outlined,
-              title: l10n.homeActionChecklist,
-              subtitle: l10n.homeActionChecklistSubtitle,
-              onTap: () =>
-                  showComingSoonSheet(context, l10n.homeActionChecklist),
-            ),
-            const SizedBox(height: 24),
-            _RecentSection(entries: recent),
           ],
         ),
       ),
@@ -84,52 +122,144 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-class _SecurityStatusCard extends StatelessWidget {
-  const _SecurityStatusCard();
+class _Header extends StatelessWidget {
+  const _Header();
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: scheme.primaryContainer,
-        borderRadius: BorderRadius.circular(20),
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        DsSpace.screenGutter,
+        DsSpace.x3,
+        DsSpace.x2,
+        0,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.shield_outlined,
-                size: 32,
-                color: scheme.onPrimaryContainer,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  l10n.homeSecurityStatusTitle,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: scheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w700,
+          const DsBrandMark(),
+          const SizedBox(width: DsSpace.x3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.appName,
+                  style: AppType.subtitle.copyWith(
+                    color: scheme.onSurface,
+                    fontWeight: AppType.bold,
                   ),
                 ),
+                Text(
+                  l10n.appTagline,
+                  style: AppType.caption.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            tooltip: l10n.settingsTitle,
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.goNamed(AppRoute.settings.name),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The hero. Deliberately does not claim to be watching anything: the app
+/// checks what you bring it, and saying otherwise would teach false comfort.
+class _HeroCard extends StatelessWidget {
+  const _HeroCard({required this.checkCount, required this.contactCount});
+
+  final int checkCount;
+  final int contactCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: DsGradient.dusk,
+        borderRadius: DsRadius.all(DsRadius.xl),
+        boxShadow: DsShadow.lg,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          // The mesh wash sits over the dusk sweep and reads as light.
+          for (final gradient in DsGradient.mesh)
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.55,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(gradient: gradient),
+                ),
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.homeSecurityStatusBody,
-            style: TextStyle(color: scheme.onPrimaryContainer),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.neverAskTitle,
-            style: TextStyle(
-              color: scheme.onPrimaryContainer,
-              fontWeight: FontWeight.w700,
+            ),
+          Padding(
+            padding: const EdgeInsets.all(DsSpace.x5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.shield_outlined,
+                      size: 15,
+                      color: Color(0xD9FFFFFF),
+                    ),
+                    const SizedBox(width: DsSpace.x1_5),
+                    Text(
+                      l10n.homeHeroEyebrow.toUpperCase(),
+                      style: AppType.overline.copyWith(
+                        color: const Color(0xB8FFFFFF),
+                        fontFamily: AppType.family,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: DsSpace.x3),
+                Text(
+                  l10n.homeHeroTitle,
+                  style: AppType.headline.copyWith(color: Colors.white),
+                ),
+                const SizedBox(height: DsSpace.x1_5),
+                Text(
+                  l10n.homeHeroBody,
+                  style: AppType.bodySm.copyWith(
+                    color: const Color(0xB8FFFFFF),
+                  ),
+                ),
+                const SizedBox(height: DsSpace.x5),
+                Row(
+                  children: [
+                    _HeroStat(
+                      value: '$checkCount',
+                      label: l10n.homeStatChecks(checkCount),
+                    ),
+                    Container(
+                      width: 1,
+                      height: 30,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: DsSpace.x6,
+                      ),
+                      color: const Color(0x29FFFFFF),
+                    ),
+                    _HeroStat(
+                      value: '$contactCount',
+                      label: l10n.homeStatContacts(contactCount),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],
@@ -138,44 +268,30 @@ class _SecurityStatusCard extends StatelessWidget {
   }
 }
 
-class _ActionTile extends StatelessWidget {
-  const _ActionTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-    this.primary = false,
-  });
+class _HeroStat extends StatelessWidget {
+  const _HeroStat({required this.value, required this.label});
 
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  final bool primary;
+  final String value;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      color: primary ? scheme.secondaryContainer : null,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 10,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          value,
+          style: AppType.title.copyWith(
+            color: Colors.white,
+            fontWeight: AppType.bold,
+          ),
         ),
-        minVerticalPadding: 16,
-        leading: Icon(icon, size: 32, color: scheme.primary),
-        title: Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        Text(
+          label,
+          style: AppType.caption.copyWith(color: const Color(0x99FFFFFF)),
         ),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: onTap,
-      ),
+      ],
     );
   }
 }
@@ -188,43 +304,44 @@ class _RecentSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                l10n.homeRecentTitle,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            if (entries.isNotEmpty)
-              TextButton(
-                onPressed: () async {
-                  await ref.read(preferencesServiceProvider).clearHistory();
-                  ref.invalidate(recentAnalysesProvider);
-                  if (!context.mounted) return;
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(content: Text(l10n.homeRecentCleared)),
-                    );
-                },
-                child: Text(l10n.homeClearRecent),
-              ),
-          ],
+        DsSectionLabel(
+          l10n.homeSectionRecent,
+          trailing: entries.isEmpty
+              ? null
+              : TextButton(
+                  onPressed: () async {
+                    await ref.read(preferencesServiceProvider).clearHistory();
+                    ref.invalidate(recentAnalysesProvider);
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(content: Text(l10n.homeRecentCleared)),
+                      );
+                  },
+                  child: Text(l10n.homeClearRecent),
+                ),
         ),
-        const SizedBox(height: 8),
         if (entries.isEmpty)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(l10n.homeRecentEmpty),
+          DsCard(
+            sunken: true,
+            child: Text(
+              l10n.homeRecentEmpty,
+              style: AppType.bodySm.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           )
         else
-          for (final entry in entries) _RecentTile(entry: entry),
+          for (final entry in entries)
+            Padding(
+              padding: const EdgeInsets.only(bottom: DsSpace.x2_5),
+              child: _RecentTile(entry: entry),
+            ),
       ],
     );
   }
@@ -238,31 +355,58 @@ class _RecentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
     final level = RiskLevel.fromId(entry['level'] as String? ?? 'caution');
     final palette = RiskPalette.of(context, level);
     final score = entry['score'] as int? ?? 0;
     final ruleCount = (entry['rule_ids'] as List?)?.length ?? 0;
     final timestamp = DateTime.tryParse(entry['analysed_at'] as String? ?? '');
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: Icon(palette.icon, color: palette.accent),
-        title: Text(
-          '${level.shortLabel(l10n)} · ${l10n.resultScoreLabel(score)}',
-        ),
-        subtitle: Text(
-          [
-            l10n.resultSignalCount(ruleCount),
-            if (timestamp != null) _formatDate(timestamp),
-          ].join(' · '),
-        ),
+    return DsCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpace.x3,
+        vertical: DsSpace.x3,
+      ),
+      child: Row(
+        children: [
+          DsIconChip(
+            icon: palette.icon,
+            size: 38,
+            background: palette.container,
+            foreground: palette.onContainer,
+          ),
+          const SizedBox(width: DsSpace.x3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${level.shortLabel(l10n)} · ${l10n.resultScoreLabel(score)}',
+                  style: AppType.bodySm.copyWith(
+                    color: scheme.onSurface,
+                    fontWeight: AppType.semibold,
+                  ),
+                ),
+                const SizedBox(height: DsSpace.x0_5),
+                Text(
+                  [
+                    l10n.resultSignalCount(ruleCount),
+                    if (timestamp != null) _formatDate(timestamp),
+                  ].join(' · '),
+                  style: AppType.caption.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
   /// Deliberately coarse: the exact minute a message was checked is not
-  /// information this app needs to keep or display.
+  /// information this app needs to keep or show.
   static String _formatDate(DateTime timestamp) {
     final local = timestamp.toLocal();
     return '${local.year}-${local.month.toString().padLeft(2, '0')}-'

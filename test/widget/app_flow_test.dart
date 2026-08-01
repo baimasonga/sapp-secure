@@ -130,7 +130,8 @@ void main() {
     final l10n = await localisationsFor('en');
     await pumpApp(tester, preferences: await createOnboardedPreferences());
 
-    await tester.tap(find.byIcon(Icons.settings_outlined));
+    // The header icon, not the Settings tab — both carry the same glyph.
+    await tester.tap(find.byTooltip(l10n.settingsTitle));
     await tester.pumpAndSettle();
     await scrollTo(tester, find.text(l10n.settingsPrivacyPolicy));
     await tester.tap(find.text(l10n.settingsPrivacyPolicy));

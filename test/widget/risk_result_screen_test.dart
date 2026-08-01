@@ -35,10 +35,13 @@ void main() {
     expect(find.text(l10n.riskLevelCritical), findsOneWidget);
     // 35 + 12 on weights alone is only "Caution"; the account-takeover
     // escalation floor lifts it to 75.
-    expect(find.text(l10n.resultScoreLabel(75)), findsOneWidget);
-    expect(find.text(l10n.resultSignalsTitle), findsOneWidget);
-    await scrollTo(tester, find.text(l10n.resultActionsTitle));
-    expect(find.text(l10n.resultActionsTitle), findsOneWidget);
+    expect(
+      find.textContaining(RegExp(r'^75/100$'), findRichText: true),
+      findsOneWidget,
+    );
+    expect(find.text(sectionLabel(l10n.resultSignalsTitle)), findsOneWidget);
+    await scrollTo(tester, find.text(sectionLabel(l10n.resultActionsTitle)));
+    expect(find.text(sectionLabel(l10n.resultActionsTitle)), findsOneWidget);
   });
 
   testWidgets('the result never shows a score without an explanation', (
@@ -48,9 +51,9 @@ void main() {
 
     // Section 9.5: what was detected, what to do, and what we could not check
     // must all be present.
-    expect(find.text(l10n.resultSignalsTitle), findsOneWidget);
-    await scrollTo(tester, find.text(l10n.resultActionsTitle));
-    expect(find.text(l10n.resultActionsTitle), findsOneWidget);
+    expect(find.text(sectionLabel(l10n.resultSignalsTitle)), findsOneWidget);
+    await scrollTo(tester, find.text(sectionLabel(l10n.resultActionsTitle)));
+    expect(find.text(sectionLabel(l10n.resultActionsTitle)), findsOneWidget);
     await scrollTo(tester, find.text(l10n.resultLimitationsTitle));
     expect(find.text(l10n.resultLimitationsTitle), findsOneWidget);
   });
@@ -71,7 +74,7 @@ void main() {
   ) async {
     await analyseAndOpenResult(tester, 'Send the money to 076123456 now');
 
-    await scrollTo(tester, find.text(l10n.resultNumbersTitle));
+    await scrollTo(tester, find.text(sectionLabel(l10n.resultNumbersTitle)));
     expect(find.text('+23276123456'), findsOneWidget);
     expect(find.text(l10n.resultNumbersNote), findsOneWidget);
   });
@@ -84,7 +87,7 @@ void main() {
       'Verify your account at https://whatsapp-verify.tk/login',
     );
 
-    await scrollTo(tester, find.text(l10n.resultLinksTitle));
+    await scrollTo(tester, find.text(sectionLabel(l10n.resultLinksTitle)));
     expect(find.text(l10n.resultLinksNote), findsOneWidget);
     expect(find.text('• ${l10n.urlFindingBrandLookalike}'), findsOneWidget);
     // The link is shown as selectable text, never as a launchable link.

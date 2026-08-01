@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../app/design/app_typography.dart';
+import '../../app/design/design_tokens.dart';
 import '../../l10n/app_localizations.dart';
+import 'ds_components.dart';
 
 /// Shown for features that are specified but not yet built.
 ///
@@ -12,39 +15,55 @@ Future<void> showComingSoonSheet(BuildContext context, String featureName) {
   return showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
-    builder: (context) => Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.construction_outlined, size: 28),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  featureName,
-                  style: Theme.of(context).textTheme.titleLarge,
+    // Scrollable and bottom-inset aware: on a short screen this sheet still
+    // has to be able to show its own dismiss button.
+    builder: (context) => SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(
+          DsSpace.x6,
+          0,
+          DsSpace.x6,
+          DsSpace.x6,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const DsIconChip(icon: Icons.construction_outlined),
+                const SizedBox(width: DsSpace.x3),
+                Expanded(
+                  child: Text(
+                    featureName,
+                    style: AppType.title.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
                 ),
+              ],
+            ),
+            const SizedBox(height: DsSpace.x5),
+            Text(
+              l10n.comingSoonTitle,
+              style: AppType.subtitle.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.comingSoonTitle,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          Text(l10n.comingSoonBody),
-          const SizedBox(height: 24),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.actionClose),
-          ),
-        ],
+            ),
+            const SizedBox(height: DsSpace.x2),
+            Text(
+              l10n.comingSoonBody,
+              style: AppType.bodySm.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: DsSpace.x6),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.actionClose),
+            ),
+          ],
+        ),
       ),
     ),
   );
