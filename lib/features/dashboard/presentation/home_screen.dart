@@ -72,14 +72,8 @@ class HomeScreen extends ConsumerWidget {
                 DsSpace.screenGutter,
                 0,
               ),
-              child: GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: DsSpace.x3,
-                crossAxisSpacing: DsSpace.x3,
-                childAspectRatio: 1.42,
-                children: [
+              child: _ActionGrid(
+                tiles: [
                   DsActionTile(
                     icon: Icons.image_search_outlined,
                     title: l10n.homeActionScreenshot,
@@ -120,6 +114,74 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The secondary actions, in a grid that is as tall as its contents.
+///
+/// This was a `GridView.count` with a fixed `childAspectRatio`, which is a
+/// promise the text cannot keep: the tile height came from its *width*, so on
+/// a 360dp phone each tile got about 110dp regardless of how much text was
+/// inside it. At the system font size that fits; a notch above it the labels
+/// overflowed by well over a hundred pixels and painted across the section
+/// below. It looked fine in tests only because the default test surface is
+/// 800dp wide — wider than any phone — which made the tiles tall enough to
+/// hide the problem.
+///
+/// Height now comes from the content. [IntrinsicHeight] keeps the two tiles
+/// in a row matched to the taller of them, so the grid still reads as a grid
+/// rather than as four cards of assorted sizes.
+class _ActionGrid extends StatelessWidget {
+  const _ActionGrid({required this.tiles});
+
+  final List<Widget> tiles;
+
+  /// Above this, two columns leave each label a strip too narrow to read and
+  /// a single column is simply better. Chosen by where the wrapping starts to
+  /// break words rather than lines.
+  static const double _singleColumnScale = 1.6;
+
+  @override
+  Widget build(BuildContext context) {
+    final scale = MediaQuery.textScalerOf(context).scale(1);
+
+    if (scale >= _singleColumnScale) {
+      return Column(
+        children: [
+          for (var index = 0; index < tiles.length; index++)
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: index == tiles.length - 1 ? 0 : DsSpace.x3,
+              ),
+              child: tiles[index],
+            ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        for (var index = 0; index < tiles.length; index += 2)
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: index + 2 >= tiles.length ? 0 : DsSpace.x3,
+            ),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(child: tiles[index]),
+                  const SizedBox(width: DsSpace.x3),
+                  if (index + 1 < tiles.length)
+                    Expanded(child: tiles[index + 1])
+                  else
+                    const Spacer(),
+                ],
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -296,11 +358,16 @@ class _HeroCard extends StatelessWidget {
                       color: DsColor.onGradientMuted,
                     ),
                     const SizedBox(width: DsSpace.x1_5),
-                    Text(
-                      l10n.homeHeroEyebrow.toUpperCase(),
-                      style: AppType.overline.copyWith(
-                        color: DsColor.onGradientMuted,
-                        fontFamily: AppType.family,
+                    // Wraps rather than runs off the card: the eyebrow is
+                    // uppercase and letter-spaced, so it outgrows a phone
+                    // width sooner than its length suggests.
+                    Expanded(
+                      child: Text(
+                        l10n.homeHeroEyebrow.toUpperCase(),
+                        style: AppType.overline.copyWith(
+                          color: DsColor.onGradientMuted,
+                          fontFamily: AppType.family,
+                        ),
                       ),
                     ),
                   ],

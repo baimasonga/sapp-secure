@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -136,12 +137,27 @@ ProviderContainer containerOf(WidgetTester tester) => ProviderScope.containerOf(
 /// the screen draws it.
 String sectionLabel(String text) => text.toUpperCase();
 
-/// Scrolls the first scrollable until [finder] is visible.
+/// Scrolls the page until [finder] is visible.
+///
+/// Drives the scroll position directly rather than dragging. A drag starts at
+/// the centre of the viewport, and on the analyser that point is inside the
+/// multiline text field — which is itself scrollable, so the gesture went to
+/// the field and the page never moved. The target then stayed unbuilt, and the
+/// failure read as "no such widget" rather than "the scroll went to the wrong
+/// place". It only showed up once these tests ran at a phone width, because on
+/// a wide surface the target was already on screen and nothing scrolled at all.
 Future<void> scrollTo(WidgetTester tester, Finder finder) async {
-  await tester.scrollUntilVisible(
-    finder,
-    200,
-    scrollable: find.byType(Scrollable).first,
-  );
+  final state = tester.state<ScrollableState>(find.byType(Scrollable).first);
+  final position = state.position;
+
+  while (finder.evaluate().isEmpty &&
+      position.pixels < position.maxScrollExtent) {
+    position.jumpTo(math.min(position.pixels + 200, position.maxScrollExtent));
+    await tester.pump();
+  }
+
+  await tester.pumpAndSettle();
+  if (finder.evaluate().isEmpty) return;
+  await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
 }

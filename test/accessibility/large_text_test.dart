@@ -20,6 +20,19 @@ import 'contrast_test.dart' show contrastRatio;
 /// A RenderFlex overflow raises a Flutter error during paint, so these tests
 /// fail by themselves when something breaks — there is nothing to assert
 /// beyond getting the frame painted.
+///
+/// **The surface size is part of the test.** These ran at the default 800x600
+/// for a while, which is wider than any phone, and a dashboard that overflowed
+/// by 178 pixels on a real handset passed every one of them. A layout bug that
+/// depends on width cannot be found on a surface no user has.
+
+/// A 6-inch Android phone: 1080x2400 at 3x, which is 360x800 in logical
+/// pixels and close to the middle of the range this app is used on.
+void usePhoneSurface(WidgetTester tester) {
+  tester.view.physicalSize = const Size(1080, 2400);
+  tester.view.devicePixelRatio = 3.0;
+  addTearDown(tester.view.reset);
+}
 
 Widget atScale(Widget child, double scale, {required dynamic preferences}) =>
     wrapForTest(
@@ -41,6 +54,7 @@ void main() {
   for (final scale in scales) {
     group('at ${(scale * 100).round()}% text', () {
       testWidgets('the dashboard survives', (tester) async {
+        usePhoneSurface(tester);
         await tester.pumpWidget(
           atScale(
             const HomeScreen(),
@@ -53,6 +67,7 @@ void main() {
       });
 
       testWidgets('the analyser survives', (tester) async {
+        usePhoneSurface(tester);
         await tester.pumpWidget(
           atScale(
             const AnalyseMessageScreen(),
@@ -65,6 +80,7 @@ void main() {
       });
 
       testWidgets('settings survives', (tester) async {
+        usePhoneSurface(tester);
         await tester.pumpWidget(
           atScale(
             const SettingsScreen(),
@@ -77,6 +93,7 @@ void main() {
       });
 
       testWidgets('trusted contacts survives', (tester) async {
+        usePhoneSurface(tester);
         await tester.pumpWidget(
           atScale(
             const TrustedContactsScreen(),
@@ -89,6 +106,7 @@ void main() {
       });
 
       testWidgets('the notification screen survives', (tester) async {
+        usePhoneSurface(tester);
         await tester.pumpWidget(
           atScale(
             const NotificationMonitoringScreen(),
@@ -103,6 +121,7 @@ void main() {
       testWidgets('the risk result survives, including the meter', (
         tester,
       ) async {
+        usePhoneSurface(tester);
         final preferences = await createTestPreferences();
         final l10n = await localisationsFor('en');
         await tester.pumpWidget(
@@ -135,6 +154,7 @@ void main() {
 
   group('touch targets', () {
     testWidgets('the primary action is at least 48dp tall', (tester) async {
+      usePhoneSurface(tester);
       await tester.pumpWidget(
         wrapForTest(
           const HomeScreen(),
@@ -153,6 +173,7 @@ void main() {
     testWidgets('every icon button on the dashboard is reachable', (
       tester,
     ) async {
+      usePhoneSurface(tester);
       await tester.pumpWidget(
         wrapForTest(
           const HomeScreen(),
@@ -177,6 +198,7 @@ void main() {
     testWidgets('the risk banner reads as one sentence, not scattered parts', (
       tester,
     ) async {
+      usePhoneSurface(tester);
       final handle = tester.ensureSemantics();
       final preferences = await createTestPreferences();
       final l10n = await localisationsFor('en');
@@ -202,6 +224,7 @@ void main() {
     });
 
     testWidgets('the settings icon says what it is', (tester) async {
+      usePhoneSurface(tester);
       final handle = tester.ensureSemantics();
       final l10n = await localisationsFor('en');
       await tester.pumpWidget(
