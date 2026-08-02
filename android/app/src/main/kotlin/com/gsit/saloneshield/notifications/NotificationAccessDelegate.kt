@@ -22,6 +22,29 @@ class NotificationAccessDelegate(private val activity: Activity) {
     private var methodChannel: MethodChannel? = null
     private var eventChannel: EventChannel? = null
 
+    /**
+     * Whether the user is actually looking at the app.
+     *
+     * The event channel stays registered for as long as the activity lives,
+     * which includes the app sitting in the recents list with the screen off.
+     * Without this flag a decisive scam arriving in that state would be handed
+     * to a screen nobody is watching and would never raise a notification —
+     * silence the user would reasonably read as safety.
+     *
+     * Volatile because the listener fires on the notification service's
+     * thread and this is written on the main one.
+     */
+    @Volatile
+    private var isResumed: Boolean = false
+
+    fun onResume() {
+        isResumed = true
+    }
+
+    fun onPause() {
+        isResumed = false
+    }
+
     fun attach(messenger: BinaryMessenger) {
         methodChannel = MethodChannel(messenger, METHOD_CHANNEL).apply {
             setMethodCallHandler { call, result ->
@@ -47,9 +70,13 @@ class NotificationAccessDelegate(private val activity: Activity) {
                     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                         if (events == null) return
                         NotificationInbox.setListener { entry ->
+                            // Declining while backgrounded leaves the entry in
+                            // the queue and lets the service interrupt.
+                            if (!isResumed) return@setListener false
                             // The sink is not thread-safe and the listener
                             // fires on the service's thread.
                             activity.runOnUiThread { events.success(entry.toMap()) }
+                            true
                         }
                     }
 

@@ -37,19 +37,34 @@ object NotificationInbox {
     private val entries = ArrayDeque<Entry>()
     private var nextId = 1L
 
-    /** Set while Dart is listening; null when the app is not running. */
+    /**
+     * Set while Dart is both listening and in front of the user; null
+     * otherwise. Returns whether it took the entry — a listener that is
+     * registered but backgrounded declines, so the entry is queued and the
+     * user is interrupted instead of the message landing silently in a screen
+     * nobody is looking at.
+     */
     @Volatile
-    private var listener: ((Entry) -> Unit)? = null
+    private var listener: ((Entry) -> Boolean)? = null
 
     val isDartListening: Boolean get() = listener != null
 
+    /**
+     * Mints an entry without queueing it.
+     *
+     * Creation and queueing are separate because an entry Dart accepts must
+     * *not* also sit in the queue: the next drain would hand the app a second
+     * copy of a message it already showed.
+     */
     @Synchronized
-    fun add(packageName: String, text: String, nowMillis: Long, interrupt: Boolean): Entry {
-        prune(nowMillis)
-        val entry = Entry(nextId++, packageName, text, nowMillis, interrupt)
+    fun create(packageName: String, text: String, nowMillis: Long, interrupt: Boolean): Entry =
+        Entry(nextId++, packageName, text, nowMillis, interrupt)
+
+    @Synchronized
+    fun enqueue(entry: Entry) {
+        prune(entry.receivedAtMillis)
         entries.addLast(entry)
         while (entries.size > MAX_ENTRIES) entries.removeFirst()
-        return entry
     }
 
     /** Hands over everything waiting and empties the queue in one step. */
@@ -72,15 +87,14 @@ object NotificationInbox {
         return entries.size
     }
 
-    fun setListener(listener: ((Entry) -> Unit)?) {
+    fun setListener(listener: ((Entry) -> Boolean)?) {
         this.listener = listener
     }
 
     /** True when Dart took the entry, so it does not also need queueing. */
     fun deliverToDart(entry: Entry): Boolean {
         val target = listener ?: return false
-        target(entry)
-        return true
+        return target(entry)
     }
 
     private fun prune(nowMillis: Long) {

@@ -66,16 +66,20 @@ class NotificationSecurityService : NotificationListenerService() {
         val verdict = guardFor(monitored).inspect(candidate)
         if (verdict !is NotificationGuard.Verdict.Accepted) return
 
-        val entry = NotificationInbox.add(
+        val entry = NotificationInbox.create(
             packageName = candidate.packageName,
             text = verdict.text,
             nowMillis = candidate.postedAtMillis,
             interrupt = verdict.interrupt,
         )
 
-        // With the app open the user is already looking at Salone Shield, so
-        // it says so on screen rather than adding to their notification shade.
+        // With the app in front of the user it says so on screen rather than
+        // adding to their notification shade. An entry taken this way is
+        // deliberately not queued: the next drain would otherwise hand the app
+        // a second copy of a message it has already shown.
         if (NotificationInbox.deliverToDart(entry)) return
+
+        NotificationInbox.enqueue(entry)
         if (verdict.interrupt) postCheckPrompt()
     }
 

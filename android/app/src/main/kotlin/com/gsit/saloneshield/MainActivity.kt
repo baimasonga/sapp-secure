@@ -54,6 +54,18 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Only while the app is in front does a message go straight to the
+        // screen instead of raising a notification.
+        notificationAccess.onResume()
+    }
+
+    override fun onPause() {
+        notificationAccess.onPause()
+        super.onPause()
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)

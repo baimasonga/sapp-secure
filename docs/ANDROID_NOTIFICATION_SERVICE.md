@@ -115,23 +115,189 @@ Both run in CI on every push.
 ## Before you enable it
 
 Everything above is covered by unit and widget tests, and nothing above has run
-on a physical Android device. The following need a real phone, and the flag
-should stay off in any build that has not had them done:
+on a physical Android device. The checks below need a real phone, and the flag
+should stay off in any build that has not had them done.
 
-- [ ] The service is bound at all — grant notification access and confirm
-      `onNotificationPosted` fires.
-- [ ] A WhatsApp message produces exactly one queued entry, not one per
-      notification update as the conversation grows.
-- [ ] `android.isFromSelf` actually suppresses the user's own outgoing
-      messages on the WhatsApp versions in use.
-- [ ] The "worth checking" notification appears, opens the app, and never
-      shows message text on the lock screen.
-- [ ] Revoking access in Android settings stops delivery and clears the queue.
-- [ ] Battery: a day of ordinary messaging with monitoring on, measured
-      against a day with it off (specification milestone 7).
-- [ ] Performance: no dropped frames or ANRs on a low-end device while a busy
-      group chat is active.
-- [ ] Doze and background restrictions: whether the listener survives the
-      device's aggressive-battery settings, which vary widely by manufacturer.
+### What you need
 
-Then build with `--dart-define=ENABLE_NOTIFICATION_MONITORING=true`.
+- An Android phone you can put a **second, disposable WhatsApp number** on, or
+  a second phone to send from. Do not test with a real conversation: you will
+  be reading your own notifications deliberately, and test messages need to
+  look like scams.
+- USB debugging on, and `adb devices` listing the phone.
+- Ideally a low-end device as well — check 7 is about a phone with 2 GB of
+  RAM, not the developer's own handset.
+
+**Test messages.** These are the two patterns that interrupt (weight ≥ 30 in
+`initial_rules.json`). Send them from the second number:
+
+| For | Send |
+| --- | --- |
+| An interrupting message | `Please send the code I just sent you` |
+| A second interrupting message | `Scan this QR to link your WhatsApp` |
+| A non-interrupting message | `Hello, are you free this afternoon?` |
+
+### Build and install
+
+```bash
+flutter build apk --debug \
+  --dart-define=ENABLE_NOTIFICATION_MONITORING=true
+adb install -r build/app/outputs/flutter-apk/app-debug.apk
+```
+
+Use the **debug** build: release strips the app of anything that makes a
+failure legible, and this is the one part of the app with no logging of its own
+(deliberately — a log line is a copy of a message on disk).
+
+Grant notification access on the phone, or from the desktop:
+
+```bash
+adb shell cmd notification allow_listener \
+  com.gsit.saloneshield/com.gsit.saloneshield.NotificationSecurityService
+
+# Confirm the grant took:
+adb shell settings get secure enabled_notification_listeners
+```
+
+Then in Salone Shield: **Settings → Notification monitoring**, turn on the
+master switch and tick WhatsApp. Nothing is read until all three are on.
+
+### The checks
+
+Each says what to do, and what counts as a pass. **A check with no observation
+recorded is not done** — tick the box in a copy of this list, not from memory.
+
+**1. The service is bound at all.**
+
+```bash
+adb shell dumpsys notification_listener | grep -i saloneshield
+```
+
+Send the non-interrupting message. Pass: the app's monitoring screen lists one
+waiting message within a second or two. Fail with an empty list means the
+service is not bound — recheck the grant, and force-stop and reopen, because
+Android binds listeners lazily after an install.
+
+**2. One entry per message, not one per update.**
+
+Send the non-interrupting message, then have the sender send two more in the
+same chat. WhatsApp re-posts one growing notification as a conversation
+builds, so the risk is three notifications turning into six entries.
+
+Pass: three messages, three entries. The guard's 60-second digest window
+suppresses exact reposts; what this is really testing is whether WhatsApp
+*changes* the text each time, in which case the digest will not match and you
+will see duplicates the unit tests cannot predict.
+
+**3. `android.isFromSelf` suppresses your own messages.**
+
+Reply from the phone under test. Pass: no new entry. This extra is not
+documented as stable across WhatsApp versions, which is exactly why it is on
+this list — if it fails, the user's own outgoing messages get analysed, which
+is noise rather than a leak.
+
+**4. The interrupt notification, and what it does not say.**
+
+Close Salone Shield entirely (swipe it from recents). Send the
+verification-code message. Pass, all four:
+
+- a "worth checking" notification appears;
+- it contains **no part of the message text** — check on the lock screen, with
+  the screen locked, which is where a leak would matter;
+- tapping it opens the app;
+- the message is waiting there and the risk result names the
+  verification-code request.
+
+**5. Backgrounded, not closed.** *(New — see the note below.)*
+
+Open Salone Shield, then press Home so it is backgrounded but alive. Send the
+QR message. Pass: the notification still appears. A build before this was
+fixed will show nothing at all, and the message will only surface when the app
+is next brought forward.
+
+**6. Revoking access stops delivery.**
+
+```bash
+adb shell cmd notification disallow_listener \
+  com.gsit.saloneshield/com.gsit.saloneshield.NotificationSecurityService
+```
+
+Send a message. Pass: nothing arrives, and reopening the app shows an empty
+queue and an honest "access not granted" state — not a stale message from
+before the revocation.
+
+**7. Battery.**
+
+A day of ordinary messaging with monitoring on, against a day with it off.
+
+```bash
+adb shell dumpsys batterystats --reset          # at the start of each day
+adb shell dumpsys batterystats com.gsit.saloneshield > day-on.txt
+```
+
+Pass: no measurable difference. The service does no work per notification
+beyond a preferences read and a regex pass, so a visible difference means
+something is wrong rather than something is expensive.
+
+**8. Performance on a low-end device.**
+
+With a busy group chat active:
+
+```bash
+adb shell dumpsys gfxinfo com.gsit.saloneshield framestats
+adb logcat -s ActivityManager | grep -i ANR
+```
+
+Pass: no ANRs, and no rise in janky frames while messages arrive.
+
+**9. Doze and manufacturer battery restrictions.**
+
+```bash
+adb shell dumpsys deviceidle force-idle
+# send a message, then:
+adb shell dumpsys deviceidle unforce
+```
+
+Also test with the phone's own aggressive-battery setting on — Xiaomi, Oppo,
+Tecno and Infinix are the ones that matter for Sierra Leone, and they differ
+from each other more than they differ from stock Android.
+
+Pass is **not** "it always survives". Pass is that you know what happens, and
+the app does not claim to be watching when the system has stopped it. If the
+listener dies under a manufacturer's battery saver, that belongs in the
+monitoring screen as a warning to the user.
+
+### Then
+
+Build with the flag on:
+
+```bash
+flutter build apk --release --split-per-abi \
+  --dart-define=APP_ENV=production \
+  --dart-define=ENABLE_NOTIFICATION_MONITORING=true
+```
+
+and update `docs/PLAY_STORE.md` — the Data Safety answers change once
+monitoring is on in the submitted build.
+
+### Two defects found while writing this list
+
+Both were found by reading the code against the checks, not on a phone, and
+both are fixed:
+
+- **A delivered message was queued as well.** `onNotificationPosted` enqueued
+  the entry and *then* handed it to the app, leaving the copy in the queue. The
+  next drain — any app resume within fifteen minutes — showed the user the same
+  message twice. Check 2 would have found this and it would have looked like a
+  WhatsApp quirk. `NotificationInbox` now separates `create` from `enqueue`, and
+  an entry the app accepts is never queued.
+- **A backgrounded app swallowed the interrupt.** The event channel stays
+  registered until the activity is destroyed, so an app sitting in recents with
+  the screen off still counted as "open", the message went to a screen nobody
+  was looking at, and no notification was posted. The user would have seen
+  nothing and had no reason to suspect anything — silence that reads as safety,
+  which `INCIDENT_RESPONSE.md` classes as S1. The delegate now tracks whether
+  the activity is resumed and declines the entry otherwise. Check 5 exists to
+  confirm the fix on real hardware.
+
+`NotificationInboxTest` covers both.
