@@ -104,6 +104,30 @@ jobs:
       - name: Confirm backups stay disabled
         run: grep -q 'android:allowBackup="false"' android/app/src/main/AndroidManifest.xml
 
+      - name: Build the release APKs and report what a user would download
+        # Split per ABI, because the single fat APK is not what anyone
+        # installs and quoting its size flatters the figure. The ceiling is
+        # deliberately loose: it exists to catch a runaway regression - an
+        # accidentally bundled model, tree-shaking switched off, a font family
+        # added by mistake - not to police a few hundred kilobytes.
+        run: |
+          flutter build apk --release --split-per-abi \
+            --dart-define=APP_ENV=production
+          echo "### Download size per ABI" >> "$GITHUB_STEP_SUMMARY"
+          CEILING_MB=45
+          FAILED=0
+          for APK in build/app/outputs/flutter-apk/*-release.apk; do
+            BYTES=$(stat -c%s "$APK")
+            MB=$((BYTES / 1000000))
+            echo "- $(basename "$APK"): ${MB} MB" >> "$GITHUB_STEP_SUMMARY"
+            echo "$(basename "$APK"): ${MB} MB"
+            if [ "$MB" -gt "$CEILING_MB" ]; then
+              echo "::error::$(basename "$APK") is ${MB} MB, over the ${CEILING_MB} MB ceiling."
+              FAILED=1
+            fi
+          done
+          exit $FAILED
+
       - uses: actions/upload-artifact@v4
         with:
           name: salone-shield-debug-apk
@@ -148,6 +172,12 @@ jobs:
             --dart-define=ENABLE_ANALYTICS=false \
             --dart-define=ENABLE_NOTIFICATION_MONITORING=false \
             --dart-define=ENABLE_EXTERNAL_URL_REPUTATION=false
+
+      - name: Report the bundle size
+        run: |
+          AAB=build/app/outputs/bundle/release/app-release.aab
+          MB=$(( $(stat -c%s "$AAB") / 1000000 ))
+          echo "App bundle: ${MB} MB" | tee -a "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
         with:

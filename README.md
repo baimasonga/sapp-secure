@@ -264,4 +264,5 @@ There is no Accessibility Service, and CI fails the build if one appears.
 | [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Backend setup and the RLS verification plan |
 | [docs/ANDROID_NOTIFICATION_SERVICE.md](docs/ANDROID_NOTIFICATION_SERVICE.md) | The notification listener, what it refuses to do, and what to verify on hardware |
 | [docs/MODERATION_DASHBOARD.md](docs/MODERATION_DASHBOARD.md) | The moderator web app: what it shows, what it cannot show, and how to create the first admin |
+| [docs/PLAY_STORE.md](docs/PLAY_STORE.md) | Listing copy, Data Safety answers tied to the build flags, and what still needs a designer |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Working agreements |
