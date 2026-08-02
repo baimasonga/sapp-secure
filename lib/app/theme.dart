@@ -27,16 +27,28 @@ abstract final class AppTheme {
     final textPrimary = isDark ? DsColor.gray50 : DsColor.gray900;
     final textSecondary = isDark ? DsColor.gray300 : DsColor.gray700;
     final borderSubtle = isDark ? const Color(0x12FFFFFF) : DsColor.gray150;
-    final accent = isDark ? DsColor.iris500 : DsColor.iris600;
+
+    // The accent differs by brightness for a contrast reason, not a taste one.
+    // In light mode iris600 carries white text at 5.8:1. On a near-black
+    // canvas that same iris600 is too dark to read *as* text (4.1:1), so dark
+    // mode uses iris400, which reaches 5.6:1 as text — and then takes dark
+    // text on top of it when it is used as a button fill.
+    final accent = isDark ? DsColor.iris400 : DsColor.iris600;
+    final onAccent = isDark ? DsColor.gray1000 : Colors.white;
+
+    // A text field has to be findable. Its border is a component boundary
+    // rather than decoration, so it clears 3:1 where the hairline between two
+    // cards deliberately does not.
+    final borderField = isDark ? DsColor.gray600 : DsColor.gray500;
 
     final scheme = ColorScheme(
       brightness: brightness,
       primary: accent,
-      onPrimary: Colors.white,
+      onPrimary: onAccent,
       primaryContainer: isDark ? const Color(0x297263E9) : DsColor.iris50,
       onPrimaryContainer: isDark ? DsColor.iris300 : DsColor.iris700,
       secondary: accent,
-      onSecondary: Colors.white,
+      onSecondary: onAccent,
       secondaryContainer: isDark ? const Color(0x297263E9) : DsColor.iris50,
       onSecondaryContainer: isDark ? DsColor.iris300 : DsColor.iris700,
       error: DsColor.red500,
@@ -84,7 +96,7 @@ abstract final class AppTheme {
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(minTouchTarget),
           backgroundColor: accent,
-          foregroundColor: Colors.white,
+          foregroundColor: onAccent,
           disabledBackgroundColor: isDark ? DsColor.gray800 : DsColor.gray200,
           disabledForegroundColor: isDark ? DsColor.gray600 : DsColor.gray400,
           elevation: 0,
@@ -141,11 +153,11 @@ abstract final class AppTheme {
         helperMaxLines: 3,
         border: OutlineInputBorder(
           borderRadius: DsRadius.all(DsRadius.lg),
-          borderSide: BorderSide(color: borderSubtle),
+          borderSide: BorderSide(color: borderField),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: DsRadius.all(DsRadius.lg),
-          borderSide: BorderSide(color: borderSubtle),
+          borderSide: BorderSide(color: borderField),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: DsRadius.all(DsRadius.lg),
@@ -271,13 +283,19 @@ class RiskPalette {
       RiskLevel.low => RiskPalette._(
         container: isDark ? const Color(0x292FA96B) : DsColor.green50,
         onContainer: isDark ? const Color(0xFF6FD6A0) : DsColor.green700,
-        accent: DsColor.green500,
+        // A darker green than the token in light mode: green500 on green50 is
+        // 2.7:1, and this accent draws the meter bar and the icon, which carry
+        // meaning and so need 3:1.
+        accent: isDark ? DsColor.green500 : const Color(0xFF249160),
         icon: Icons.verified_user_outlined,
       ),
       RiskLevel.caution => RiskPalette._(
         container: isDark ? const Color(0x29E29A2B) : DsColor.amber50,
-        onContainer: isDark ? const Color(0xFFF0BD6A) : DsColor.amber700,
-        accent: DsColor.amber500,
+        // Amber is the hardest band to keep legible: the token amber700 on
+        // amber50 is 3.9:1, and this is the text of a warning. Darkened until
+        // it clears 4.5:1, with the accent following it to clear 3:1.
+        onContainer: isDark ? const Color(0xFFF0BD6A) : const Color(0xFF8F5E10),
+        accent: isDark ? DsColor.amber500 : const Color(0xFFB5791B),
         icon: Icons.info_outline,
       ),
       RiskLevel.high => RiskPalette._(

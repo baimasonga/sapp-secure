@@ -449,7 +449,7 @@ class _ActionsSection extends StatelessWidget {
                     child: Text(
                       '${index + 1}',
                       style: AppType.caption.copyWith(
-                        color: Colors.white,
+                        color: scheme.onPrimary,
                         fontWeight: AppType.bold,
                       ),
                     ),

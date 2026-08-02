@@ -235,8 +235,14 @@ class _Header extends StatelessWidget {
             ),
           ),
           IconButton(
+            // Both a tooltip and a semantic label: a tooltip is a hover
+            // affordance and there is no hover on a phone, so on its own it
+            // leaves a screen reader announcing only "button".
             tooltip: l10n.settingsTitle,
-            icon: const Icon(Icons.settings_outlined),
+            icon: Icon(
+              Icons.settings_outlined,
+              semanticLabel: l10n.settingsTitle,
+            ),
             onPressed: () => context.goNamed(AppRoute.settings.name),
           ),
         ],
@@ -287,13 +293,13 @@ class _HeroCard extends StatelessWidget {
                     const Icon(
                       Icons.shield_outlined,
                       size: 15,
-                      color: Color(0xD9FFFFFF),
+                      color: DsColor.onGradientMuted,
                     ),
                     const SizedBox(width: DsSpace.x1_5),
                     Text(
                       l10n.homeHeroEyebrow.toUpperCase(),
                       style: AppType.overline.copyWith(
-                        color: const Color(0xB8FFFFFF),
+                        color: DsColor.onGradientMuted,
                         fontFamily: AppType.family,
                       ),
                     ),
@@ -302,33 +308,41 @@ class _HeroCard extends StatelessWidget {
                 const SizedBox(height: DsSpace.x3),
                 Text(
                   l10n.homeHeroTitle,
-                  style: AppType.headline.copyWith(color: Colors.white),
+                  style: AppType.headline.copyWith(color: DsColor.onGradient),
                 ),
                 const SizedBox(height: DsSpace.x1_5),
                 Text(
                   l10n.homeHeroBody,
                   style: AppType.bodySm.copyWith(
-                    color: const Color(0xB8FFFFFF),
+                    color: DsColor.onGradientMuted,
                   ),
                 ),
                 const SizedBox(height: DsSpace.x5),
+                // Each stat takes half the width rather than its natural
+                // size: at 200% text the two labels together are wider than
+                // the phone, and the half that overflowed was the wording.
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _HeroStat(
-                      value: '$checkCount',
-                      label: l10n.homeStatChecks(checkCount),
+                    Expanded(
+                      child: _HeroStat(
+                        value: '$checkCount',
+                        label: l10n.homeStatChecks(checkCount),
+                      ),
                     ),
                     Container(
                       width: 1,
                       height: 30,
                       margin: const EdgeInsets.symmetric(
-                        horizontal: DsSpace.x6,
+                        horizontal: DsSpace.x4,
                       ),
                       color: const Color(0x29FFFFFF),
                     ),
-                    _HeroStat(
-                      value: '$contactCount',
-                      label: l10n.homeStatContacts(contactCount),
+                    Expanded(
+                      child: _HeroStat(
+                        value: '$contactCount',
+                        label: l10n.homeStatContacts(contactCount),
+                      ),
                     ),
                   ],
                 ),
@@ -356,13 +370,13 @@ class _HeroStat extends StatelessWidget {
         Text(
           value,
           style: AppType.title.copyWith(
-            color: Colors.white,
+            color: DsColor.onGradient,
             fontWeight: AppType.bold,
           ),
         ),
         Text(
           label,
-          style: AppType.caption.copyWith(color: const Color(0x99FFFFFF)),
+          style: AppType.caption.copyWith(color: DsColor.onGradientMuted),
         ),
       ],
     );

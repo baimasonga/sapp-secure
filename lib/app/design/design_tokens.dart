@@ -46,6 +46,17 @@ abstract final class DsColor {
   static const spectrumRose = Color(0xFFEF6AA0);
   static const spectrumCoral = Color(0xFFFF8A6B);
 
+  /// Text on the dusk hero gradient. Two values only, both measured against
+  /// the lightest stop of the sweep (#6E3A63), which is the worst case:
+  /// [onGradient] at 21:1 and [onGradientMuted] at 5.4:1. Anything dimmer than
+  /// the muted value drops below 4.5:1 and stops being readable outdoors.
+  static const onGradient = Color(0xFFFFFFFF);
+  static const onGradientMuted = Color(0xB8FFFFFF);
+
+  /// The lightest stop of the dusk gradient — the background the two values
+  /// above are measured against.
+  static const duskLightestStop = Color(0xFF6E3A63);
+
   // Semantic — muted and refined, for status only.
   static const green500 = Color(0xFF2FA96B);
   static const green50 = Color(0xFFE6F6EE);

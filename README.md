@@ -254,6 +254,8 @@ There is no Accessibility Service, and CI fails the build if one appears.
 | [docs/RISK_ENGINE.md](docs/RISK_ENGINE.md) | Rules, weights, escalation, editing rules |
 | [PRIVACY.md](PRIVACY.md) | What is and is not collected |
 | [SECURITY.md](SECURITY.md) | Security posture and reporting a vulnerability |
+| [ACCESSIBILITY.md](ACCESSIBILITY.md) | What is enforced in CI, what the audit changed, what still needs a device |
+| [INCIDENT_RESPONSE.md](INCIDENT_RESPONSE.md) | Severity, playbooks, and the gaps that are not covered |
 | [THREAT_MODEL.md](THREAT_MODEL.md) | Threats, mitigations, residual risk |
 | [LOCALISATION.md](LOCALISATION.md) | Adding and reviewing translations |
 | [docs/SETUP.md](docs/SETUP.md) | Full development setup |
