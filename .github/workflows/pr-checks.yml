@@ -61,10 +61,21 @@ jobs:
 
       - name: Scan for credential-shaped strings
         run: |
-          # Supabase service-role keys, private keys and hard-coded project URLs
-          # must never reach the repository. .env.example holds keys with no
-          # values. This file is excluded because it contains the patterns.
-          if grep -rInE 'service_role|BEGIN [A-Z ]*PRIVATE KEY|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}' \
+          # Supabase keys, private keys and hard-coded project URLs must never
+          # reach the repository. .env.example holds keys with no values. This
+          # file is excluded because it contains the patterns.
+          #
+          # The bare word "service_role" is deliberately NOT matched. It is the
+          # name of a Postgres role, and the SQL migrations have to say it out
+          # loud to grant and revoke against it — matching it flagged correct
+          # code as a leak on every push. What actually matters is a *key*, and
+          # every Supabase key is a JWT, which the eyJ… pattern below catches
+          # wherever it appears. An assignment to a service-role variable is
+          # matched separately: a service-role variable assigned a literal of
+          # key-like length. Reading one out of the environment, which the Edge
+          # Function legitimately does, is not an assignment of a literal and
+          # does not match.
+          if grep -rInE 'SERVICE_ROLE_KEY[[:space:]]*[:=][[:space:]]*['"'"'"]?[A-Za-z0-9._-]{16,}|BEGIN [A-Z ]*PRIVATE KEY|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}' \
                --exclude-dir=.git --exclude-dir=build --exclude-dir=.dart_tool \
                --exclude=pr-checks.yml . ; then
             echo "::error::Possible credential committed. Review the matches above."
@@ -76,6 +87,39 @@ jobs:
             echo "::error::Hard-coded Supabase project URL. Pass it with --dart-define."
             exit 1
           fi
+
+  moderation-dashboard:
+    name: Moderation dashboard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Build the dashboard for the web
+        # No Supabase values are passed, so this proves the bundle compiles,
+        # not that it can reach anything. The dashboard says plainly that it is
+        # unconfigured rather than starting into an empty shell.
+        run: flutter build web -t lib/moderation_main.dart --release
+
+      - name: Confirm no key was baked into the bundle
+        # A web bundle is public. The dashboard's authority comes from the
+        # moderator's session, never from a key in the build, so a JWT of any
+        # kind in the output means something has gone badly wrong.
+        run: |
+          if grep -rIqE 'eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}' build/web ; then
+            echo "::error::A JWT was compiled into the dashboard bundle."
+            exit 1
+          fi
+
+      - name: Confirm the dashboard is not indexable
+        run: grep -q 'noindex' web/index.html
 
   dependencies:
     name: Dependency audit

@@ -48,7 +48,7 @@ Risk Analysis)** and **Milestone 3 (Verification and Trusted Contacts)** and **M
 | Supabase schema, RLS and Edge Function | **Verified against a live project** — all 24 checks pass; see below |
 | Auth and report UI | Working; reporting stays behind a build flag — see below |
 | Notification monitoring (listener, guard, interrupt filter, controls) | **Written but disabled** — see below |
-| Moderation dashboard | Not built — the app says so plainly rather than hiding it |
+| Moderation dashboard (Flutter web) | Queue, verdicts, audit log, rules — built and tested against fakes |
 
 Nothing in the table above is claimed as working unless it is covered by a test
 that runs in CI.
@@ -146,6 +146,21 @@ flutter run --dart-define-from-file=.env
 | `ENABLE_NOTIFICATION_MONITORING` | Off. Do not enable until the hardware checks in docs/ANDROID_NOTIFICATION_SERVICE.md are done |
 | `ENABLE_EXTERNAL_URL_REPUTATION` | Off; link analysis is local-only |
 | `ENABLE_REPORTING` | Off. The verification plan passes; what remains is named moderators, not code |
+
+## The moderation dashboard
+
+A second Flutter target in this repository, sharing the app's domain models and
+design system:
+
+```bash
+flutter build web -t lib/moderation_main.dart --release \
+  --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...
+```
+
+It carries the anon key only and authenticates as the moderator, so everything
+it can do is decided by row-level security rather than by its own code. CI
+fails the build if a JWT of any kind ends up in the bundle. See
+[docs/MODERATION_DASHBOARD.md](docs/MODERATION_DASHBOARD.md).
 
 ## Commands
 
@@ -246,4 +261,5 @@ There is no Accessibility Service, and CI fails the build if one appears.
 | [MODERATION_POLICY.md](MODERATION_POLICY.md) | How reports are judged, and by whom |
 | [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Backend setup and the RLS verification plan |
 | [docs/ANDROID_NOTIFICATION_SERVICE.md](docs/ANDROID_NOTIFICATION_SERVICE.md) | The notification listener, what it refuses to do, and what to verify on hardware |
+| [docs/MODERATION_DASHBOARD.md](docs/MODERATION_DASHBOARD.md) | The moderator web app: what it shows, what it cannot show, and how to create the first admin |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Working agreements |
