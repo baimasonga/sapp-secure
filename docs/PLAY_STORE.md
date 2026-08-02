@@ -64,6 +64,39 @@ These need a designer and are not invented here:
 - [ ] Privacy policy hosted at a public URL. `PRIVACY.md` is the text; Play
       requires it reachable on the web.
 
+## Download size
+
+Measured, not estimated — from the split-per-ABI release build in CI
+(`Android build` → *Build the release APKs and report what a user would
+download*), commit `ee63ad0`:
+
+| ABI | APK |
+|---|---|
+| `armeabi-v7a` | 26.2 MB |
+| `arm64-v8a` | 33.0 MB |
+| `x86_64` | 35.0 MB |
+
+Nearly all of that is the ML Kit Latin text recogniser, which is bundled
+rather than downloaded on demand so that screenshot scanning works on a phone
+with no data left. That is the trade this app should make: the people it is
+for are the ones most likely to be out of bundle at the moment a scam arrives.
+
+Two caveats on these numbers:
+
+- **The fat APK is not quoted here on purpose.** `flutter build apk --release`
+  without `--split-per-abi` produces a single file carrying every ABI, and
+  nobody installs that. Quoting it would overstate the download.
+- **The Play download will be smaller than the table.** Play serves an app
+  bundle split by ABI, density, and language, so a user gets less than the
+  per-ABI APK. No AAB figure is quoted because the bundle job only runs on
+  `main`; take the real number from that job's summary before using one in
+  any listing copy.
+
+The CI ceiling is 45 MB per ABI. It is loose deliberately: it exists to catch
+a runaway regression — a second recogniser bundled by accident, tree-shaking
+switched off — not to police a few hundred kilobytes. The 10 MB of headroom
+above `x86_64` is what that costs.
+
 ## Data Safety
 
 Answers must match the code. Where a feature is behind a build flag, the
