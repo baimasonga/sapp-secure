@@ -1,0 +1,125 @@
+name: Test build (all features on)
+
+# A build with every feature flag switched on, for testing on a real phone.
+#
+# Run it from the Actions tab: "Test build (all features on)" → Run workflow.
+# It produces a debug APK you can install with `adb install -r`.
+#
+# This is deliberately **not** the release path and never runs automatically.
+# Two of the flags it sets are off by default for reasons that still hold:
+# notification monitoring has not been verified on hardware, and reporting
+# writes to a live database. See docs/SETUP.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      reporting:
+        description: 'Enable community reporting (needs Supabase secrets)'
+        type: boolean
+        default: true
+      notification_monitoring:
+        description: 'Enable notification monitoring (unverified on hardware)'
+        type: boolean
+        default: true
+      analytics:
+        description: 'Offer the analytics opt-in (still off until the user agrees)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: '3.44.8'
+
+jobs:
+  test-apk:
+    name: All-features debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Check the backend is configured if reporting was asked for
+        # Reporting without a backend is not a smaller feature, it is a
+        # screen that fails every time it is used. Better to stop here and
+        # say which secret is missing.
+        if: inputs.reporting
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          MISSING=""
+          [ -z "$SUPABASE_URL" ] && MISSING="$MISSING SUPABASE_URL"
+          [ -z "$SUPABASE_ANON_KEY" ] && MISSING="$MISSING SUPABASE_ANON_KEY"
+          if [ -n "$MISSING" ]; then
+            echo "::error::Reporting was requested but these repository secrets are not set:$MISSING"
+            echo "Add them under Settings → Secrets and variables → Actions."
+            echo "Use the anon/publishable key. The service-role key must never be in a mobile build."
+            exit 1
+          fi
+
+      - name: Refuse a service-role key
+        # The anon key is public by design and ships inside every APK. The
+        # service-role key bypasses row-level security entirely, and the one
+        # way it could reach a phone is somebody pasting it into the wrong
+        # secret. A JWT with that role in it stops the build.
+        if: inputs.reporting
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          PAYLOAD=$(echo "$SUPABASE_ANON_KEY" | cut -d. -f2 | tr '_-' '/+')
+          DECODED=$(echo "$PAYLOAD==" | base64 -d 2>/dev/null || true)
+          if echo "$DECODED" | grep -q 'service_role'; then
+            echo "::error::SUPABASE_ANON_KEY holds a service-role key. Rotate it immediately and use the anon key."
+            exit 1
+          fi
+
+      - name: Build the APK
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          flutter build apk --debug \
+            --dart-define=APP_ENV=staging \
+            --dart-define=SUPABASE_URL="$SUPABASE_URL" \
+            --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
+            --dart-define=ENABLE_REPORTING=${{ inputs.reporting }} \
+            --dart-define=ENABLE_NOTIFICATION_MONITORING=${{ inputs.notification_monitoring }} \
+            --dart-define=ENABLE_ANALYTICS=${{ inputs.analytics }}
+
+      - name: Say what was built
+        run: |
+          {
+            echo "### Test build"
+            echo ""
+            echo "| Feature | State |"
+            echo "|---|---|"
+            echo "| Community reporting | ${{ inputs.reporting }} |"
+            echo "| Notification monitoring | ${{ inputs.notification_monitoring }} |"
+            echo "| Analytics opt-in offered | ${{ inputs.analytics }} |"
+            echo "| External URL reputation | not implemented — the flag gates no code |"
+            echo ""
+            echo "Environment: staging. Install with \`adb install -r app-debug.apk\`."
+            echo ""
+            echo "Notification monitoring still needs the nine checks in"
+            echo "docs/ANDROID_NOTIFICATION_SERVICE.md before it belongs in a release."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: salone-shield-all-features-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 14

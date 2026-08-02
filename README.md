@@ -144,8 +144,12 @@ flutter run --dart-define-from-file=.env
 | `SUPABASE_ANON_KEY` | Supabase anon/publishable key. **Never** the service-role key |
 | `ENABLE_ANALYTICS` | Off by default; analytics also require in-app consent |
 | `ENABLE_NOTIFICATION_MONITORING` | Off. Do not enable until the hardware checks in docs/ANDROID_NOTIFICATION_SERVICE.md are done |
-| `ENABLE_EXTERNAL_URL_REPUTATION` | Off; link analysis is local-only |
+| `ENABLE_EXTERNAL_URL_REPUTATION` | Off, and unimplemented: link analysis is local-only and the flag currently gates no code |
 | `ENABLE_REPORTING` | Off. The verification plan passes; what remains is named moderators, not code |
+
+To build with the flags on, see [Turning the features
+on](docs/SETUP.md#turning-the-features-on), or run the **Test build (all
+features on)** workflow from the Actions tab.
 
 ## The moderation dashboard
 
